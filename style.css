@@ -111,8 +111,8 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: clamp(26px, 6vw, 34px);
-  height: clamp(26px, 6vw, 34px);
+  width: 32px;  /* Tamaño fijo controlado para el icono */
+  height: 32px;
   flex-shrink: 0;
   animation: pulse-flame 2.2s infinite ease-in-out;
 }
@@ -144,7 +144,7 @@ body {
     opacity: 1;
     transform: scale(1);
   }
-}
+} /* <-- ¡Aquí faltaba cerrar esta llave! */
 
 .brand-title {
   font-size: clamp(0.98rem, 3.8vw, 1.25rem);
