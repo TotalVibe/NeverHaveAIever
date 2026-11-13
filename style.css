@@ -384,7 +384,7 @@ body {
   transform-origin: center top;
   /* Step upwards with negative Y so the top rounded borders peek out above the main card! */
   transform: 
-    translateY(calc(var(--layer-idx) * 5px)) 
+    translateY(calc(var(--layer-idx) * -5px)) 
     scale(calc(1 - (var(--layer-idx) * 0.014)));
   opacity: calc(1 - (var(--layer-idx) * 0.03));
   pointer-events: none;
@@ -460,7 +460,7 @@ body {
 /* Card Waiting right underneath (Face-down with vector texture) */
 .game-card.next {
   z-index: 10;
-  transform: translateY(5px) scale(0.985);
+  transform: translateY(-5px) scale(0.985);
   pointer-events: none;
 }
 
