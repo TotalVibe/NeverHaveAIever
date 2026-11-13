@@ -104,6 +104,25 @@ body {
   align-items: center;
   gap: clamp(6px, 1.5vw, 10px);
   min-width: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.brand-heading {
+  margin: 0;
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+.brand:focus-visible {
+  outline: 2px solid var(--text-muted);
+  outline-offset: 4px;
+  border-radius: 4px;
 }
 
 .brand-icon {
@@ -147,12 +166,11 @@ body {
 } /* <-- ¡Aquí faltaba cerrar esta llave! */
 
 .brand-title {
-  font-size: clamp(0.98rem, 3.8vw, 1.25rem);
-  font-weight: 800;
-  background: linear-gradient(135deg, #fff 30%, #ff758c 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  letter-spacing: -0.4px;
+  font-size: clamp(0.68rem, 2.6vw, 0.82rem);
+  font-weight: 700;
+  color: #64748b;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
   white-space: nowrap;
 }
 
@@ -274,7 +292,7 @@ body {
 }
 
 .target-btn.target-bottom {
-  bottom: clamp(24px, 3vh, 32px);
+  bottom: 72px;
   left: 50%;
   transform: translateX(-50%);
   flex-direction: row;
@@ -359,6 +377,7 @@ body {
   width: clamp(275px, 42vw, 380px);
   height: clamp(330px, 54dvh, 480px);
   margin: clamp(16px, 2.5vh, 28px) auto 0;
+  transform: translateY(-10px);
   touch-action: none;
   perspective: 1200px;
   -webkit-perspective: 1200px;
@@ -375,7 +394,7 @@ body {
   z-index: 1;
 }
 
-/* Individual Stack Layer: Stepped upwards with negative Y so their borders pop out above the main card! */
+/* Individual Stack Layer: Stepped down so the deck peeks out below the active card. */
 .deck-card-layer {
   position: absolute;
   top: 0;
@@ -384,17 +403,17 @@ body {
   height: 100%;
   border-radius: var(--radius-card);
   background: linear-gradient(180deg, #1c2032 0%, #131622 100%);
-  /* High-contrast crisp border matching the top card */
+  /* High-contrast crisp border matching the bottom edge of the top card */
   border: 2px solid rgba(255, 255, 255, calc(0.55 - (var(--layer-idx) * 0.035)));
-  border-top: 2.5px solid rgba(255, 255, 255, calc(0.85 - (var(--layer-idx) * 0.045)));
+  border-bottom: 2.5px solid rgba(255, 255, 255, calc(0.85 - (var(--layer-idx) * 0.045)));
   box-shadow: 
-    0 -3px 8px rgba(0, 0, 0, 0.5),
-    0 8px 24px rgba(0, 0, 0, 0.6),
+    0 -3px 8px rgba(0, 0, 0, 0.38),
+    0 8px 24px rgba(0, 0, 0, 0.45),
     inset 0 1.5px 0.5px rgba(255, 255, 255, 0.45);
-  transform-origin: center top;
-  /* Step upwards with negative Y so the top rounded borders peek out above the main card! */
+  transform-origin: center bottom;
+  /* Step down with positive Y so the bottom rounded borders peek out below the main card. */
   transform: 
-    translateY(calc(var(--layer-idx) * -5px)) 
+    translateY(calc(var(--layer-idx) * 3px))
     scale(calc(1 - (var(--layer-idx) * 0.014)));
   opacity: calc(1 - (var(--layer-idx) * 0.03));
   pointer-events: none;
@@ -464,7 +483,7 @@ body {
 .game-card.current .card-front,
 .game-card.current .card-back {
   border: 2px solid rgba(255, 255, 255, 0.28);
-  box-shadow: 0 20px 48px -10px rgba(0, 0, 0, 0.9), 0 0 1px 1px rgba(255, 255, 255, 0.16);
+  box-shadow: 0 20px 48px -10px rgba(0, 0, 0, 0.75), 0 0 1px 1px rgba(255, 255, 255, 0.16);
 }
 
 /* Card Waiting right underneath (Face-down with vector texture) */
@@ -477,7 +496,7 @@ body {
 .game-card.next .card-front,
 .game-card.next .card-back {
   border: 2px solid rgba(255, 255, 255, 0.32);
-  box-shadow: 0 -4px 14px rgba(0, 0, 0, 0.7);
+  box-shadow: 0 -4px 14px rgba(0, 0, 0, 0.55);
 }
 
 /* =========================================================
@@ -920,7 +939,7 @@ body {
     height: 36px;
   }
   .brand-title {
-    font-size: 0.85rem;
+    font-size: 0.68rem;
   }
   .header-actions {
     gap: 4px;
@@ -995,9 +1014,15 @@ body {
     height: 100%;
     padding: 4px 8px;
   }
+  .target-btn.target-bottom {
+    bottom: 48px;
+  }
   .card-stack {
-    height: clamp(200px, 72dvh, 280px);
+    height: clamp(100px, calc(100dvh - 222px), 168px);
     width: clamp(240px, 40vw, 340px);
+  }
+  .deck-card-layer {
+    transform: translateY(calc(var(--layer-idx) * 1.5px)) scale(calc(1 - (var(--layer-idx) * 0.014)));
   }
   .prompt-text {
     font-size: 1.1rem;

@@ -15,7 +15,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Dancing+Script:wght@700&family=Elsie+Swash+Caps:wght@400;900&family=Great+Vibes&display=swap" rel="stylesheet">
   <meta name="description" content="Never Have AI ever party webapp with Tinder-like sliding features to choose the next question topic by dragging towards an emoji.">
-  <link rel="stylesheet" href="style.css?v=4">
+  <link rel="stylesheet" href="style.css?v=6">
 </head>
 <body>
 
@@ -31,13 +31,15 @@
   <!-- Top Navigation Bar -->
  <!-- Top Navigation Bar -->
   <header class="app-header">
-    <div class="brand">
-      <span class="brand-icon">
-        <img src="images/devil.png" alt="Devil" class="brand-logo-img devil-img">
-        <img src="images/angel.png" alt="Angel" class="brand-logo-img angel-img">
-      </span>
-      <h1 class="brand-title">Never Have AI ever</h1>
-    </div>
+    <h1 class="brand-heading">
+      <button class="brand" id="brand-home-btn" type="button" title="Restart game">
+        <span class="brand-icon">
+          <img src="images/devil.png" alt="" class="brand-logo-img devil-img">
+          <img src="images/angel.png" alt="" class="brand-logo-img angel-img">
+        </span>
+        <span class="brand-title">Never Have AI ever</span>
+      </button>
+    </h1>
 
     <div class="header-actions">
       <button class="icon-btn" id="undo-btn" title="Undo previous card (Z)" aria-label="Undo previous card">
@@ -156,6 +158,6 @@
     </div>
   </div>
 
-  <script type="module" src="app.js?v=4"></script>
+  <script type="module" src="app.js?v=5"></script>
 </body>
 </html>

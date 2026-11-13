@@ -25,6 +25,7 @@ class NeverHaveIEverApp {
     this.hasVibratedThreshold = false;
     this.cardHistory = []; // Store past cards for undo feature
     this.idleHintTimer = null;
+    this.restartRequested = false;
 
     // DOM Elements
     this.stackContainer = document.getElementById('card-stack');
@@ -152,7 +153,7 @@ class NeverHaveIEverApp {
     };
 
     const card2 = this.createCardElement(cardData2, 'next', true); // Face-down on top of stack
-    const card1 = this.createCardElement(cardData1, 'current', false); // Face-up on top
+    const card1 = this.createCardElement(cardData1, 'current', true); // Start with the decorated reverse visible
 
     this.stackContainer.appendChild(card2);
     this.stackContainer.appendChild(card1);
@@ -416,7 +417,8 @@ class NeverHaveIEverApp {
 
     this.cardHistory.push({
       category: this.activeCard.dataset.category,
-      text: this.activeCard.dataset.fullText
+      text: this.activeCard.dataset.fullText,
+      faceDown: this.activeCard.classList.contains('face-down')
     });
     if (this.cardHistory.length > 15) this.cardHistory.shift();
 
@@ -522,7 +524,24 @@ class NeverHaveIEverApp {
         this.bindCardGesture(this.activeCard);
       }
       this.isAnimating = false;
+      if (this.restartRequested) this.restartGame();
     }, 480);
+  }
+
+  restartGame() {
+    if (this.isAnimating) {
+      this.restartRequested = true;
+      return;
+    }
+
+    this.restartRequested = false;
+    this.cardHistory = [];
+    Object.values(this.usedQuestions).forEach(used => used.clear());
+    this.activeCardCategory = 'spicy';
+    this.cardCount = 1;
+    this.renderInitialDeck();
+    this.updateAmbientGlow(this.activeCardCategory);
+    this.resetIdleHint();
   }
 
   undoLastCard() {
@@ -533,7 +552,7 @@ class NeverHaveIEverApp {
     this.isAnimating = true;
 
     const prevCardData = this.cardHistory.pop();
-    const restoredCard = this.createCardElement(prevCardData, 'current', false);
+    const restoredCard = this.createCardElement(prevCardData, 'current', prevCardData.faceDown);
 
     restoredCard.style.transition = 'none';
     restoredCard.style.transform = 'translate3d(0, -500px, 0) scale(0.9)';
@@ -563,6 +582,7 @@ class NeverHaveIEverApp {
 
     setTimeout(() => {
       this.isAnimating = false;
+      if (this.restartRequested) this.restartGame();
     }, 460);
   }
 
@@ -601,6 +621,7 @@ class NeverHaveIEverApp {
     });
 
     document.getElementById('undo-btn').addEventListener('click', () => this.undoLastCard());
+    document.getElementById('brand-home-btn').addEventListener('click', () => this.restartGame());
 
     // Info Modal
     const infoBtn = document.getElementById('info-btn');
