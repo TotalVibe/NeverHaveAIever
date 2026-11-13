@@ -40,20 +40,23 @@
     </div>
 
     <div class="header-actions">
-      <!-- Sound Effects Toggle -->
-      <button class="icon-btn" id="sound-toggle-btn" title="Toggle Sound (M)" aria-label="Toggle Sound">
-        🔊
-      </button>
-
       <button class="icon-btn" id="undo-btn" title="Undo previous card (Z)" aria-label="Undo previous card">
         <svg viewBox="0 0 24 24" aria-hidden="true">
           <path d="M9 14 4 9l5-5M4 9h10a6 6 0 0 1 0 12h-2" />
         </svg>
       </button>
 
+      <!-- Sound Effects Toggle -->
+      <button class="icon-btn" id="sound-toggle-btn" title="Toggle Sound (M)" aria-label="Toggle Sound">
+        🔊
+      </button>
+
       <!-- How to play / info -->
-      <button class="icon-btn" id="info-btn" title="Game Rules & Guide" aria-label="Game Rules">
-        ℹ️
+      <button class="icon-btn" id="info-btn" title="How to play" aria-label="How to play">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="9" />
+          <path d="M9.6 9a2.45 2.45 0 1 1 4.1 1.8c-.9.8-1.7 1.2-1.7 2.7M12 17h.01" />
+        </svg>
       </button>
     </div>
   </header>
@@ -100,7 +103,7 @@
   <div class="modal-overlay" id="info-modal">
     <div class="modal-content">
       <div class="modal-header">
-        <h2 class="modal-title">How To Play 🔥</h2>
+        <h2 class="modal-title">How to play</h2>
         <button class="modal-close" id="close-info-btn">✕</button>
       </div>
 
@@ -139,7 +142,7 @@
       </div>
 
       <div style="font-size: 0.88rem; line-height: 1.6; color: #cbd5e1; margin-bottom: 16px;">
-        <h3 style="color: #fff; font-size: 1rem; margin-bottom: 6px;">🎮 Controls:</h3>
+        <h3 style="color: #fff; font-size: 1rem; margin-bottom: 6px;">Controls</h3>
         <ul style="padding-left: 20px; margin-bottom: 12px;">
           <li><strong>Swipe / Drag Card</strong>: Drag the active card towards or on top of any of the 4 emojis to choose that topic for the next card.</li>
           <li><strong>Tap Emoji</strong>: Directly tap any of the 4 emoji buttons to immediately choose that topic!</li>
@@ -148,7 +151,7 @@
       </div>
 
       <button class="btn-primary" onclick="document.getElementById('info-modal').classList.remove('active')">
-        Got It! Let's Play 🔥
+        Let's play
       </button>
     </div>
   </div>

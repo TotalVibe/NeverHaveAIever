@@ -265,7 +265,7 @@ body {
 
 /* Top & Bottom Targets */
 .target-btn.target-top {
-  top: clamp(0px, 0.5vh, 8px);
+  top: clamp(24px, 3vh, 32px);
   left: 50%;
   transform: translateX(-50%);
   flex-direction: row;
@@ -274,7 +274,7 @@ body {
 }
 
 .target-btn.target-bottom {
-  bottom: clamp(0px, 0.5vh, 8px);
+  bottom: clamp(24px, 3vh, 32px);
   left: 50%;
   transform: translateX(-50%);
   flex-direction: row;
@@ -289,8 +289,8 @@ body {
   top: 50%;
   transform: translateY(-50%);
   width: clamp(52px, 8vw, 70px);
-  height: clamp(58px, 10vh, 76px);
-  padding: 8px 4px;
+  height: clamp(90px, 14vh, 104px);
+  padding: 16px 4px;
 }
 
 .target-btn.target-right {
@@ -299,8 +299,8 @@ body {
   top: 50%;
   transform: translateY(-50%);
   width: clamp(52px, 8vw, 70px);
-  height: clamp(58px, 10vh, 76px);
-  padding: 8px 4px;
+  height: clamp(90px, 14vh, 104px);
+  padding: 16px 4px;
 }
 
 /* Target Hover / Proximity Highlight States */
@@ -941,7 +941,8 @@ body {
   .target-btn.target-left,
   .target-btn.target-right {
     width: 46px;
-    padding: 6px 2px;
+    height: clamp(84px, 12vh, 92px);
+    padding: 14px 2px;
   }
   .target-btn .emoji {
     font-size: 1.3rem;
