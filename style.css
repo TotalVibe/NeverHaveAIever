@@ -294,8 +294,8 @@ body {
   --target-dark-gradient: linear-gradient(to right, rgba(21, 24, 36, 0), rgba(21, 24, 36, 0.92));
   --target-edge-gradient: linear-gradient(to right, rgba(255, 146, 43, 0), rgba(255, 146, 43, 0.95));
   --target-glow: rgba(255, 146, 43, 0.2);
-  /* On wide screens, pushes far to the left edge of the 960px arena; on mobile hugs edge */
-  left: clamp(2px, 2.5vw, 36px);
+  /* Keep the side targets tucked toward the arena edges across screen sizes. */
+  left: clamp(0px, 1.2vw, 18px);
   top: 50%;
   transform: translateY(-50%);
   width: clamp(52px, 8vw, 70px);
@@ -318,8 +318,8 @@ body {
   --target-dark-gradient: linear-gradient(to left, rgba(21, 24, 36, 0), rgba(21, 24, 36, 0.92));
   --target-edge-gradient: linear-gradient(to left, rgba(32, 201, 151, 0), rgba(32, 201, 151, 0.95));
   --target-glow: rgba(32, 201, 151, 0.2);
-  /* On wide screens, pushes far to the right edge of the 960px arena; on mobile hugs edge */
-  right: clamp(2px, 2.5vw, 36px);
+  /* Keep the side targets tucked toward the arena edges across screen sizes. */
+  right: clamp(0px, 1.2vw, 18px);
   top: 50%;
   transform: translateY(-50%);
   width: clamp(52px, 8vw, 70px);
@@ -810,7 +810,13 @@ body {
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
+  animation: cheers-overlay-lifecycle 2.5s linear both;
   transition-delay: 0s;
+}
+
+@keyframes cheers-overlay-lifecycle {
+  0%, 92% { opacity: 1; visibility: visible; }
+  100% { opacity: 0; visibility: hidden; }
 }
 
 .cheers-image {

@@ -26,6 +26,7 @@ class NeverHaveIEverApp {
     this.cardHistory = []; // Store past cards for undo feature
     this.idleHintTimer = null;
     this.isCelebrating = false;
+    this.cheersTimer = null;
     this.restartRequested = false;
 
     // DOM Elements
@@ -137,18 +138,25 @@ class NeverHaveIEverApp {
     this.cheersOverlay.setAttribute('aria-hidden', 'false');
     document.body.classList.add('celebration-shake');
 
+    this.cheersTimer = setTimeout(() => this.finishCheersCelebration(), 2750);
     sounds.playCheers();
     if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches && 'vibrate' in navigator) {
-      try { navigator.vibrate([35, 20, 45]); } catch (err) {}
+      try {
+        navigator.vibrate([12, 63, 15, 60, 18, 57, 21, 54, 24, 51, 27, 48, 30, 45, 33, 362, 110]);
+      } catch (err) {}
     }
+  }
 
-    setTimeout(() => {
-      this.cheersOverlay.classList.remove('active');
-      this.cheersOverlay.setAttribute('aria-hidden', 'true');
-      document.body.classList.remove('celebration-shake');
-      this.isCelebrating = false;
-      this.resetIdleHint();
-    }, 2500);
+  finishCheersCelebration() {
+    if (!this.isCelebrating) return;
+
+    clearTimeout(this.cheersTimer);
+    this.cheersTimer = null;
+    this.cheersOverlay.classList.remove('active');
+    this.cheersOverlay.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('celebration-shake');
+    this.isCelebrating = false;
+    this.resetIdleHint();
   }
 
   updateAmbientGlow(category) {
@@ -679,6 +687,12 @@ class NeverHaveIEverApp {
   }
 
   bindEvents() {
+    this.cheersOverlay.addEventListener('animationend', (event) => {
+      if (event.target === this.cheersOverlay && event.animationName === 'cheers-overlay-lifecycle') {
+        this.finishCheersCelebration();
+      }
+    });
+
     this.stackContainer.addEventListener('click', (e) => {
       if (!(e.target instanceof Element)) return;
       const doneItButton = e.target.closest('.done-it-btn');
