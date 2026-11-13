@@ -18,17 +18,18 @@ A modern, tactile **Never Have AI ever** party web application featuring Tinder-
 - **🖐️ 10 Fingers Down Game Mode**: Integrated finger/drink counter in the header with milestone celebration when reaching 0.
 - **👥 Pass-The-Phone Mode**: Add player names to rotate turns automatically with each swipe.
 - **➕ Custom Card Creator**: Add your own inside jokes or party questions to any category (persisted in `localStorage`).
-- **↺ Undo & 📋 Share**: Revisit accidentally swiped cards or copy prompts to clipboard.
+- **↺ Undo**: Revisit accidentally swiped cards from the header or with the `Z` shortcut.
 - **⌨️ Keyboard Shortcuts**:
   - `↑` (Arrow Up): Spicy
   - `←` (Arrow Left): Cringe
   - `→` (Arrow Right): Party
   - `↓` (Arrow Down): Wholesome
-  - `Space`: Random Topic
+  - `Space`: Choose a random topic
   - `Z`: Undo previous card
   - `H`: React "I Have!"
   - `N`: React "Never!"
   - `M`: Toggle Sound (Mute/Unmute)
+- **Idle Hint**: "Drag card or tap emoji" fades in after 7 seconds without interaction.
 
 ## 🚀 How to Run
 

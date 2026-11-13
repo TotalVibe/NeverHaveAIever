@@ -24,6 +24,7 @@ class NeverHaveIEverApp {
     this.currentDominantDirection = null;
     this.hasVibratedThreshold = false;
     this.cardHistory = []; // Store past cards for undo feature
+    this.idleHintTimer = null;
 
     // DOM Elements
     this.stackContainer = document.getElementById('card-stack');
@@ -80,6 +81,32 @@ class NeverHaveIEverApp {
     this.bindEvents();
     this.bindKeyboard();
     this.updateAmbientGlow(this.activeCardCategory);
+    this.bindIdleHintEvents();
+    this.resetIdleHint();
+  }
+
+  bindIdleHintEvents() {
+    document.addEventListener('pointerdown', () => this.resetIdleHint());
+    document.addEventListener('pointermove', () => this.resetIdleHint());
+    document.addEventListener('keydown', () => this.resetIdleHint());
+  }
+
+  resetIdleHint() {
+    clearTimeout(this.idleHintTimer);
+    if (this.activeCard) {
+      this.activeCard.classList.remove('hint-visible');
+    }
+
+    this.idleHintTimer = setTimeout(() => {
+      if (
+        !this.isDragging &&
+        !this.isAnimating &&
+        this.activeCard &&
+        !this.infoModal.classList.contains('active')
+      ) {
+        this.activeCard.classList.add('hint-visible');
+      }
+    }, 7000);
   }
 
   showToast(message) {
@@ -171,6 +198,7 @@ class NeverHaveIEverApp {
             <div class="prompt-prefix">Never Have I Ever...</div>
             <div class="prompt-text">${cleanQuestion}</div>
           </div>
+          <div class="card-hint">Drag card or tap emoji</div>
         </div>
 
         <!-- Back Face (Vector Texture + Fancy Cursive 2-Line Title - NO DEVIL EMOJI) -->
@@ -299,6 +327,7 @@ class NeverHaveIEverApp {
     const onPointerUp = (e) => {
       if (!this.isDragging) return;
       this.isDragging = false;
+      this.resetIdleHint();
 
       if (currentPointerId !== null && card.releasePointerCapture) {
         try { card.releasePointerCapture(currentPointerId); } catch (err) {}
@@ -368,6 +397,7 @@ class NeverHaveIEverApp {
   executeSwipe(direction) {
     if (this.isAnimating || !this.activeCard) return;
     this.isAnimating = true;
+    this.resetIdleHint();
 
     const categoryMapping = {
       top: 'spicy',       // 😈 Spicy (Top)
@@ -526,6 +556,7 @@ class NeverHaveIEverApp {
     this.activeCardCategory = prevCardData.category;
     this.updateAmbientGlow(prevCardData.category);
     this.bindCardGesture(this.activeCard);
+    this.resetIdleHint();
 
     sounds.playSwoosh('bottom');
     this.showToast('Restored previous card ↺');
@@ -536,6 +567,7 @@ class NeverHaveIEverApp {
   }
 
   handleTargetTap(direction) {
+    this.resetIdleHint();
     if (this.isAnimating || !this.activeCard) return;
 
     sounds.init();
@@ -568,21 +600,7 @@ class NeverHaveIEverApp {
       this.showToast(isEnabled ? 'Sound ON 🔊' : 'Sound MUTED 🔇');
     });
 
-    // Undo Button
-    const undoBtn = document.getElementById('undo-btn');
-    if (undoBtn) {
-      undoBtn.addEventListener('click', () => this.undoLastCard());
-    }
-
-    // Shuffle Button
-    const shuffleBtn = document.getElementById('shuffle-btn');
-    if (shuffleBtn) {
-      shuffleBtn.addEventListener('click', () => {
-        const dirs = ['top', 'left', 'right', 'bottom'];
-        const randomDir = dirs[Math.floor(Math.random() * dirs.length)];
-        this.handleTargetTap(randomDir);
-      });
-    }
+    document.getElementById('undo-btn').addEventListener('click', () => this.undoLastCard());
 
     // Info Modal
     const infoBtn = document.getElementById('info-btn');
