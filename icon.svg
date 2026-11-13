@@ -13,16 +13,37 @@
       <stop offset="100%" stop-color="#3a1329" stop-opacity="0" />
     </radialGradient>
 
-    <!-- Devil Face Gradient -->
-    <linearGradient id="devilGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#c84bff" />
-      <stop offset="55%" stop-color="#8b2be2" />
-      <stop offset="100%" stop-color="#5a149c" />
+    <!-- Classic 3D Emoji Sphere Shading -->
+    <radialGradient id="devil3D" cx="38%" cy="28%" r="72%">
+      <stop offset="0%" stop-color="#e382ff" />
+      <stop offset="35%" stop-color="#a838f5" />
+      <stop offset="75%" stop-color="#6d17b8" />
+      <stop offset="100%" stop-color="#3f0873" />
+    </radialGradient>
+
+    <!-- Horn Shading -->
+    <linearGradient id="hornGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#d86bff" />
+      <stop offset="60%" stop-color="#7c1ec9" />
+      <stop offset="100%" stop-color="#450a7a" />
+    </linearGradient>
+
+    <!-- Forehead Gloss Highlight -->
+    <linearGradient id="glossGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.42" />
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+    </linearGradient>
+
+    <!-- Golden Halo Gradient -->
+    <linearGradient id="haloGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#fff59d" />
+      <stop offset="50%" stop-color="#ffca28" />
+      <stop offset="100%" stop-color="#ff8f00" />
     </linearGradient>
 
     <!-- Angel Halo Glow -->
-    <filter id="haloGlow" x="-30%" y="-30%" width="160%" height="160%">
-      <feGaussianBlur stdDeviation="4" result="blur" />
+    <filter id="haloGlow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="4.5" result="blur" />
       <feMerge>
         <feMergeNode in="blur" />
         <feMergeNode in="SourceGraphic" />
@@ -45,30 +66,33 @@
   <circle cx="256" cy="442" r="12" fill="#6e8efb" />
   <circle cx="70" cy="256" r="12" fill="#ff9429" />
 
-  <!-- Centered & Enlarged Devil + Angel Halo Group -->
+  <!-- Centered & Enlarged Classic 3D Devil Emoji + Halo -->
   <g transform="translate(256, 276) scale(1.45)">
-    <!-- Left & Right Devil Horns -->
-    <path d="M -52,-54 C -74,-78 -72,-104 -54,-114 C -56,-94 -44,-80 -28,-72 Z" fill="url(#devilGrad)" />
-    <path d="M 52,-54 C 74,-78 72,-104 54,-114 C 56,-94 44,-80 28,-72 Z" fill="url(#devilGrad)" />
+    <!-- Curved Devil Horns (Classic Emoji Silhouette) -->
+    <path d="M -38,-56 C -68,-74 -76,-104 -60,-118 C -58,-98 -42,-86 -18,-76 Z" fill="url(#hornGrad)" />
+    <path d="M 38,-56 C 68,-74 76,-104 60,-118 C 58,-98 42,-86 18,-76 Z" fill="url(#hornGrad)" />
 
-    <!-- Devil Head -->
-    <circle cx="0" cy="-6" r="76" fill="url(#devilGrad)" />
+    <!-- 3D Shaded Devil Head -->
+    <circle cx="0" cy="-6" r="76" fill="url(#devil3D)" />
 
-    <!-- Glowing Golden Angel Halo Ring Floating Above Horns -->
-    <ellipse cx="0" cy="-106" rx="46" ry="12" fill="none" stroke="#ffd54f" stroke-width="7" filter="url(#haloGlow)" />
-    <ellipse cx="0" cy="-106" rx="46" ry="12" fill="none" stroke="#fff3b0" stroke-width="2.5" />
+    <!-- Specular Forehead Gloss -->
+    <ellipse cx="0" cy="-42" rx="48" ry="26" fill="url(#glossGrad)" />
 
-    <!-- Mischievous Angled Eyebrows -->
-    <path d="M -42,-30 L -14,-18" stroke="#1b072e" stroke-width="7" stroke-linecap="round" />
-    <path d="M 42,-30 L 14,-18" stroke="#1b072e" stroke-width="7" stroke-linecap="round" />
+    <!-- Glowing Golden Angel Halo Ring -->
+    <ellipse cx="0" cy="-104" rx="48" ry="12.5" fill="none" stroke="url(#haloGrad)" stroke-width="8" filter="url(#haloGlow)" />
+    <ellipse cx="0" cy="-105.5" rx="46" ry="10.5" fill="none" stroke="#fffde7" stroke-width="2" opacity="0.85" />
 
-    <!-- Eyes -->
-    <ellipse cx="-26" cy="-10" rx="8" ry="10" fill="#1b072e" />
-    <ellipse cx="26" cy="-10" rx="8" ry="10" fill="#1b072e" />
-    <circle cx="-23" cy="-13" r="2.5" fill="#ffffff" />
-    <circle cx="29" cy="-13" r="2.5" fill="#ffffff" />
+    <!-- Classic Arched Mischievous Eyebrows -->
+    <path d="M -48,-24 C -36,-35 -20,-28 -11,-15" fill="none" stroke="#24053d" stroke-width="6.5" stroke-linecap="round" />
+    <path d="M 48,-24 C 36,-35 20,-28 11,-15" fill="none" stroke="#24053d" stroke-width="6.5" stroke-linecap="round" />
 
-    <!-- Cheeky Smirk -->
-    <path d="M -32,18 Q 0,44 32,18" fill="none" stroke="#1b072e" stroke-width="7" stroke-linecap="round" />
+    <!-- Classic Emoji Oval Eyes -->
+    <ellipse cx="-26" cy="-7" rx="9.5" ry="12.5" fill="#24053d" />
+    <ellipse cx="26" cy="-7" rx="9.5" ry="12.5" fill="#24053d" />
+    <circle cx="-29" cy="-11" r="3" fill="#ffffff" opacity="0.75" />
+    <circle cx="23" cy="-11" r="3" fill="#ffffff" opacity="0.75" />
+
+    <!-- Tapered Crescent Smirk -->
+    <path d="M -36,18 C -16,38 16,38 36,18 C 20,48 -20,48 -36,18 Z" fill="#24053d" />
   </g>
 </svg>
