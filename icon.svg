@@ -45,8 +45,8 @@
   <circle cx="256" cy="442" r="12" fill="#6e8efb" />
   <circle cx="70" cy="256" r="12" fill="#ff9429" />
 
-  <!-- Centered Devil + Angel Halo Group -->
-  <g transform="translate(256, 268)">
+  <!-- Centered & Enlarged Devil + Angel Halo Group -->
+  <g transform="translate(256, 276) scale(1.45)">
     <!-- Left & Right Devil Horns -->
     <path d="M -52,-54 C -74,-78 -72,-104 -54,-114 C -56,-94 -44,-80 -28,-72 Z" fill="url(#devilGrad)" />
     <path d="M 52,-54 C 74,-78 72,-104 54,-114 C 56,-94 44,-80 28,-72 Z" fill="url(#devilGrad)" />
