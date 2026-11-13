@@ -1,49 +1,57 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
   <defs>
-    <!-- Dark Rounded Background -->
-    <radialGradient id="bgGrad" cx="50%" cy="50%" r="70%">
-      <stop offset="0%" stop-color="#1d1326" />
-      <stop offset="100%" stop-color="#0d0e14" />
+    <!-- Fondo oscuro redondeado con sutil halo violeta -->
+    <radialGradient id="bgDark" cx="50%" cy="54%" r="65%">
+      <stop offset="0%" stop-color="#2e0f3d" />
+      <stop offset="55%" stop-color="#15091d" />
+      <stop offset="100%" stop-color="#09070d" />
     </radialGradient>
 
-    <!-- Inner Plum Glow -->
-    <radialGradient id="centerGlow" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" stop-color="#5c1d3c" stop-opacity="0.75" />
-      <stop offset="70%" stop-color="#3a1329" stop-opacity="0.45" />
-      <stop offset="100%" stop-color="#3a1329" stop-opacity="0" />
+    <!-- Resplandor detrás del personaje -->
+    <radialGradient id="auraGlow" cx="50%" cy="52%" r="48%">
+      <stop offset="0%" stop-color="#a82be2" stop-opacity="0.45" />
+      <stop offset="65%" stop-color="#5c1285" stop-opacity="0.15" />
+      <stop offset="100%" stop-color="#5c1285" stop-opacity="0" />
     </radialGradient>
 
-    <!-- Classic 3D Emoji Sphere Shading -->
-    <radialGradient id="devil3D" cx="38%" cy="28%" r="72%">
-      <stop offset="0%" stop-color="#e382ff" />
-      <stop offset="35%" stop-color="#a838f5" />
-      <stop offset="75%" stop-color="#6d17b8" />
-      <stop offset="100%" stop-color="#3f0873" />
+    <!-- Esfera 3D del demonio -->
+    <radialGradient id="devilHead3D" cx="38%" cy="26%" r="74%">
+      <stop offset="0%" stop-color="#ea94ff" />
+      <stop offset="32%" stop-color="#b33ef7" />
+      <stop offset="72%" stop-color="#6e16ba" />
+      <stop offset="100%" stop-color="#3c066e" />
     </radialGradient>
 
-    <!-- Horn Shading -->
-    <linearGradient id="hornGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#d86bff" />
-      <stop offset="60%" stop-color="#7c1ec9" />
-      <stop offset="100%" stop-color="#450a7a" />
+    <!-- Degradado 3D para los cuernos -->
+    <linearGradient id="horn3D" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f078b8" />
+      <stop offset="45%" stop-color="#a6246d" />
+      <stop offset="100%" stop-color="#4d0936" />
     </linearGradient>
 
-    <!-- Forehead Gloss Highlight -->
-    <linearGradient id="glossGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.42" />
+    <!-- Brillo especular en la frente -->
+    <linearGradient id="foreheadGloss" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.48" />
       <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
     </linearGradient>
 
-    <!-- Golden Halo Gradient -->
-    <linearGradient id="haloGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#fff59d" />
-      <stop offset="50%" stop-color="#ffca28" />
-      <stop offset="100%" stop-color="#ff8f00" />
+    <!-- Halo dorado -->
+    <linearGradient id="goldHalo" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#fff9b0" />
+      <stop offset="48%" stop-color="#ffca28" />
+      <stop offset="100%" stop-color="#f57c00" />
     </linearGradient>
 
-    <!-- Angel Halo Glow -->
-    <filter id="haloGlow" x="-40%" y="-40%" width="180%" height="180%">
-      <feGaussianBlur stdDeviation="4.5" result="blur" />
+    <!-- Degradado 3D de la lengua -->
+    <linearGradient id="tongue3D" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ff5277" />
+      <stop offset="60%" stop-color="#d91642" />
+      <stop offset="100%" stop-color="#8f0725" />
+    </linearGradient>
+
+    <!-- Resplandor del halo -->
+    <filter id="haloAura" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="6" result="blur" />
       <feMerge>
         <feMergeNode in="blur" />
         <feMergeNode in="SourceGraphic" />
@@ -51,48 +59,49 @@
     </filter>
   </defs>
 
-  <!-- App Icon Rounded Square -->
-  <rect width="512" height="512" rx="120" fill="url(#bgGrad)" />
+  <!-- Cuadrado redondeado de fondo -->
+  <rect width="512" height="512" rx="120" fill="url(#bgDark)" />
+  <circle cx="256" cy="270" r="220" fill="url(#auraGlow)" />
 
-  <!-- Subtle Inner Glow -->
-  <circle cx="256" cy="256" r="165" fill="url(#centerGlow)" />
+  <!-- Grupo principal centrado y grande -->
+  <g transform="translate(256, 286)">
+    <!-- Cuernos curvos -->
+    <path d="M -82,-96 C -132,-124 -144,-176 -118,-198 C -114,-164 -86,-142 -42,-126 Z" fill="url(#horn3D)" />
+    <path d="M 82,-96 C 132,-124 144,-176 118,-198 C 114,-164 86,-142 42,-126 Z" fill="url(#horn3D)" />
 
-  <!-- Orbit Ring -->
-  <circle cx="256" cy="256" r="186" fill="none" stroke="#591c3a" stroke-width="5" />
+    <!-- Cabeza grande del demonio -->
+    <circle cx="0" cy="0" r="144" fill="url(#devilHead3D)" />
 
-  <!-- 4 Cardinal Swipe Dots (Pink Top, Emerald Right, Periwinkle Bottom, Orange Left) -->
-  <circle cx="256" cy="70" r="12" fill="#ff2a7a" />
-  <circle cx="442" cy="256" r="12" fill="#1fd196" />
-  <circle cx="256" cy="442" r="12" fill="#6e8efb" />
-  <circle cx="70" cy="256" r="12" fill="#ff9429" />
+    <!-- Brillo de la frente -->
+    <ellipse cx="0" cy="-76" rx="86" ry="44" fill="url(#foreheadGloss)" />
 
-  <!-- Centered & Enlarged Classic 3D Devil Emoji + Halo -->
-  <g transform="translate(256, 276) scale(1.45)">
-    <!-- Curved Devil Horns (Classic Emoji Silhouette) -->
-    <path d="M -38,-56 C -68,-74 -76,-104 -60,-118 C -58,-98 -42,-86 -18,-76 Z" fill="url(#hornGrad)" />
-    <path d="M 38,-56 C 68,-74 76,-104 60,-118 C 58,-98 42,-86 18,-76 Z" fill="url(#hornGrad)" />
+    <!-- Halo dorado flotante -->
+    <ellipse cx="0" cy="-190" rx="84" ry="20" fill="none" stroke="url(#goldHalo)" stroke-width="14" filter="url(#haloAura)" />
+    <ellipse cx="0" cy="-192" rx="82" ry="17" fill="none" stroke="#fffde7" stroke-width="3.5" opacity="0.9" />
 
-    <!-- 3D Shaded Devil Head -->
-    <circle cx="0" cy="-6" r="76" fill="url(#devil3D)" />
+    <!-- Ojos blancos expresivos -->
+    <ellipse cx="-48" cy="-16" rx="28" ry="34" fill="#ffffff" />
+    <ellipse cx="48" cy="-16" rx="28" ry="34" fill="#ffffff" />
 
-    <!-- Specular Forehead Gloss -->
-    <ellipse cx="0" cy="-42" rx="48" ry="26" fill="url(#glossGrad)" />
+    <!-- Pupilas mirando ligeramente al centro -->
+    <circle cx="-41" cy="-13" r="15" fill="#1e0533" />
+    <circle cx="41" cy="-13" r="15" fill="#1e0533" />
+    <!-- Reflejos de luz en las pupilas -->
+    <circle cx="-46" cy="-19" r="5" fill="#ffffff" />
+    <circle cx="36" cy="-19" r="5" fill="#ffffff" />
 
-    <!-- Glowing Golden Angel Halo Ring -->
-    <ellipse cx="0" cy="-104" rx="48" ry="12.5" fill="none" stroke="url(#haloGrad)" stroke-width="8" filter="url(#haloGlow)" />
-    <ellipse cx="0" cy="-105.5" rx="46" ry="10.5" fill="none" stroke="#fffde7" stroke-width="2" opacity="0.85" />
+    <!-- Cejas arqueadas traviesas -->
+    <path d="M -84,-36 C -64,-58 -32,-48 -16,-24" fill="none" stroke="#24043d" stroke-width="12" stroke-linecap="round" />
+    <path d="M 84,-36 C 64,-58 32,-48 16,-24" fill="none" stroke="#24043d" stroke-width="12" stroke-linecap="round" />
 
-    <!-- Classic Arched Mischievous Eyebrows -->
-    <path d="M -48,-24 C -36,-35 -20,-28 -11,-15" fill="none" stroke="#24053d" stroke-width="6.5" stroke-linecap="round" />
-    <path d="M 48,-24 C 36,-35 20,-28 11,-15" fill="none" stroke="#24053d" stroke-width="6.5" stroke-linecap="round" />
+    <!-- Boca sonriente abierta -->
+    <path d="M -74,34 C -36,68 36,68 74,34 C 54,94 -54,94 -74,34 Z" fill="#24043d" />
 
-    <!-- Classic Emoji Oval Eyes -->
-    <ellipse cx="-26" cy="-7" rx="9.5" ry="12.5" fill="#24053d" />
-    <ellipse cx="26" cy="-7" rx="9.5" ry="12.5" fill="#24053d" />
-    <circle cx="-29" cy="-11" r="3" fill="#ffffff" opacity="0.75" />
-    <circle cx="23" cy="-11" r="3" fill="#ffffff" opacity="0.75" />
-
-    <!-- Tapered Crescent Smirk -->
-    <path d="M -36,18 C -16,38 16,38 36,18 C 20,48 -20,48 -36,18 Z" fill="#24053d" />
+    <!-- Lengua sacada hacia un lado -->
+    <g transform="translate(26, 62) rotate(-14)">
+      <path d="M -26,-6 L 26,-6 L 26,32 C 26,52 -26,52 -26,32 Z" fill="url(#tongue3D)" />
+      <!-- Línea central de la lengua -->
+      <path d="M 0,0 L 0,30" stroke="#8f0725" stroke-width="4.5" stroke-linecap="round" opacity="0.7" />
+    </g>
   </g>
 </svg>
