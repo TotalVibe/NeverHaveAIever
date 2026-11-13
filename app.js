@@ -1,5 +1,5 @@
 import { CATEGORIES, QUESTIONS } from './questions.js';
-import { sounds } from './sound.js';
+import { sounds } from './sound.js?v=3';
 import { ConfettiEngine } from './confetti.js';
 
 class NeverHaveIEverApp {
@@ -28,6 +28,8 @@ class NeverHaveIEverApp {
     this.isCelebrating = false;
     this.cheersTimer = null;
     this.restartRequested = false;
+    this.targetIntroTimer = null;
+    this.targetHideTimer = null;
 
     // DOM Elements
     this.stackContainer = document.getElementById('card-stack');
@@ -43,6 +45,7 @@ class NeverHaveIEverApp {
 
     // Modals
     this.infoModal = document.getElementById('info-modal');
+    this.customiseModal = document.getElementById('customise-modal');
     this.toastEl = document.getElementById('toast');
 
     this.init();
@@ -84,9 +87,35 @@ class NeverHaveIEverApp {
     this.renderInitialDeck();
     this.bindEvents();
     this.bindKeyboard();
+    this.targetIntroTimer = setTimeout(() => this.revealTargetButtons(), 2000);
     this.updateAmbientGlow(this.activeCardCategory);
     this.bindIdleHintEvents();
     this.resetIdleHint();
+  }
+
+  revealTargetButtons() {
+    const arena = document.querySelector('.game-arena');
+    arena.classList.remove('intro-hidden', 'intro-hiding');
+    arena.classList.add('intro-revealed');
+  }
+
+  hideTargetButtons() {
+    const arena = document.querySelector('.game-arena');
+    const shouldAnimate = arena.classList.contains('intro-revealed');
+    clearTimeout(this.targetIntroTimer);
+    clearTimeout(this.targetHideTimer);
+    arena.classList.remove('intro-revealed', 'intro-hidden');
+    if (!shouldAnimate) {
+      arena.classList.remove('intro-hiding');
+      arena.classList.add('intro-hidden');
+      return;
+    }
+
+    arena.classList.add('intro-hiding');
+    this.targetHideTimer = setTimeout(() => {
+      arena.classList.remove('intro-hiding');
+      arena.classList.add('intro-hidden');
+    }, 360);
   }
 
   bindIdleHintEvents() {
@@ -252,11 +281,23 @@ class NeverHaveIEverApp {
           <div class="vector-pattern"></div>
           <div class="card-back-frame">
             <div class="card-back-emblem">
-              <div class="crest-diamond">◈</div>
+              <div class="crest-diamond" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="M12 2.8 13.9 9l6.3 2-6.3 2-1.9 6.2L10.1 13 3.8 11l6.3-2L12 2.8Z" />
+                  <path d="m19 14 .9 2.4 2.3.8-2.3.8L19 20.5l-.8-2.5-2.4-.8 2.4-.8.8-2.4Z" />
+                </svg>
+              </div>
               <div class="emblem-title">
                 <span class="cursive-line">Never Have</span>
                 <span class="cursive-line">Ai Ever</span>
               </div>
+              <button class="customise-btn" type="button" aria-label="Customise cards with AI">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M12 2.8 13.9 9l6.3 2-6.3 2-1.9 6.2L10.1 13 3.8 11l6.3-2L12 2.8Z" />
+                  <path d="m19 14 .9 2.4 2.3.8-2.3.8L19 20.5l-.8-2.5-2.4-.8 2.4-.8.8-2.4Z" />
+                </svg>
+                <span>CUSTOMISE</span>
+              </button>
               <div class="emblem-line"></div>
               <div class="emblem-sub">Swipe to Reveal</div>
             </div>
@@ -604,6 +645,7 @@ class NeverHaveIEverApp {
     }
 
     this.isAnimating = true;
+    this.hideTargetButtons();
     clearTimeout(this.idleHintTimer);
     this.activeCard?.classList.remove('hint-visible');
     this.stackContainer.classList.remove('reshuffle-arriving');
@@ -625,6 +667,7 @@ class NeverHaveIEverApp {
         this.stackContainer.classList.remove('reshuffle-arriving');
         this.isAnimating = false;
         this.resetIdleHint();
+        this.targetIntroTimer = setTimeout(() => this.revealTargetButtons(), 250);
       }, landingDuration);
     }, shuffleDuration);
   }
@@ -687,6 +730,15 @@ class NeverHaveIEverApp {
   }
 
   bindEvents() {
+    const groupDescriptionExamples = [
+      'A bride-to-be, her ex, his new boyfriend, and eight friends with Ibiza screenshots.',
+      'Six coworkers, one office crush, and a group chat that should never be subpoenaed.',
+      'Four gay besties, three exes, and absolutely no one trusted with the aux cord.',
+      'Two couples, one situationship, and a holiday photo nobody has explained.',
+      'A birthday girl, her chaotic roommates, and the friend who keeps saying “one more bar.”'
+    ];
+    let nextGroupDescriptionExample = 0;
+
     this.cheersOverlay.addEventListener('animationend', (event) => {
       if (event.target === this.cheersOverlay && event.animationName === 'cheers-overlay-lifecycle') {
         this.finishCheersCelebration();
@@ -695,11 +747,47 @@ class NeverHaveIEverApp {
 
     this.stackContainer.addEventListener('click', (e) => {
       if (!(e.target instanceof Element)) return;
+      const customiseButton = e.target.closest('.customise-btn');
+      if (customiseButton) {
+        e.preventDefault();
+        e.stopPropagation();
+        sounds.playClick();
+        const descriptionField = this.customiseModal.querySelector('.customise-group-description');
+        descriptionField.placeholder = groupDescriptionExamples[nextGroupDescriptionExample];
+        nextGroupDescriptionExample = (nextGroupDescriptionExample + 1) % groupDescriptionExamples.length;
+        this.customiseModal.classList.add('active');
+        this.customiseModal.querySelector('.customise-modal-close').focus();
+        return;
+      }
+
       const doneItButton = e.target.closest('.done-it-btn');
       if (!doneItButton) return;
       e.preventDefault();
       e.stopPropagation();
       this.celebrateDoneIt();
+    });
+
+    const closeCustomiseModal = () => {
+      this.customiseModal.classList.remove('active');
+      this.stackContainer.querySelector('.game-card.current .customise-btn')?.focus();
+    };
+    this.customiseModal.querySelector('.customise-modal-close').addEventListener('click', () => {
+      sounds.playClick();
+      closeCustomiseModal();
+    });
+    this.customiseModal.querySelector('.customise-modal-done').addEventListener('click', () => {
+      sounds.playClick();
+      closeCustomiseModal();
+    });
+    this.customiseModal.querySelectorAll('.customise-audience-option').forEach((option) => {
+      option.addEventListener('click', () => {
+        const isSelected = option.getAttribute('aria-pressed') === 'true';
+        option.setAttribute('aria-pressed', String(!isSelected));
+        sounds.playClick();
+      });
+    });
+    this.customiseModal.addEventListener('click', (e) => {
+      if (e.target === this.customiseModal) closeCustomiseModal();
     });
 
     // 4 Directional Emoji Buttons
@@ -747,6 +835,11 @@ class NeverHaveIEverApp {
 
   bindKeyboard() {
     window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && this.customiseModal.classList.contains('active')) {
+        this.customiseModal.classList.remove('active');
+        this.stackContainer.querySelector('.game-card.current .customise-btn')?.focus();
+        return;
+      }
       if (this.isCelebrating) return;
       if (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA') return;
 

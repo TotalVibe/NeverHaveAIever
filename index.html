@@ -15,7 +15,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Dancing+Script:wght@700&family=Elsie+Swash+Caps:wght@400;900&family=Great+Vibes&display=swap" rel="stylesheet">
   <meta name="description" content="Never Have AI ever party webapp with Tinder-like sliding features to choose the next question topic by dragging towards an emoji.">
-  <link rel="stylesheet" href="style.css?v=23">
+  <link rel="stylesheet" href="style.css?v=38">
 </head>
 <body>
 
@@ -66,7 +66,7 @@
   </header>
 
   <!-- Main Game Arena with 4 Directional Emoji Targets & Tinder Card Deck -->
-  <main class="game-arena">
+  <main class="game-arena intro-hidden">
     
     <!-- TOP TARGET: 😈 Spicy (Wild, intimate, cheeky secrets) -->
     <button class="target-btn target-top" id="target-top" title="Drag UP or Tap for Spicy & Wild">
@@ -154,12 +154,46 @@
         </ul>
       </div>
 
+      <p class="info-attribution">© 2026 Mollevi · <a href="https://www.mollevi.com" target="_blank" rel="noopener noreferrer">mollevi.com</a></p>
+
       <button class="btn-primary" onclick="document.getElementById('info-modal').classList.remove('active')">
         Let's play
       </button>
     </div>
   </div>
 
-  <script type="module" src="app.js?v=9"></script>
+  <div class="modal-overlay" id="customise-modal" role="dialog" aria-modal="true" aria-labelledby="customise-modal-title">
+    <div class="modal-content customise-modal-content">
+      <div class="customise-modal-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24">
+          <path d="M12 2.8 13.9 9l6.3 2-6.3 2-1.9 6.2L10.1 13 3.8 11l6.3-2L12 2.8Z" />
+          <path d="m19 14 .9 2.4 2.3.8-2.3.8L19 20.5l-.8-2.5-2.4-.8 2.4-.8.8-2.4Z" />
+        </svg>
+      </div>
+      <div class="modal-header">
+        <h2 class="modal-title" id="customise-modal-title">Customise your cards</h2>
+        <button class="modal-close customise-modal-close" type="button" aria-label="Close">✕</button>
+      </div>
+      <span class="customise-preview-badge">BETA PREVIEW</span>
+      <p class="customise-modal-message">Choose your crowd, then tell us who's playing and what kind of chaos we're dealing with.</p>
+      <div class="customise-audience-grid" role="group" aria-label="Preview audience options">
+        <button class="customise-audience-option" type="button" aria-pressed="false">Mostly women</button>
+        <button class="customise-audience-option" type="button" aria-pressed="false">Mostly men</button>
+        <button class="customise-audience-option" type="button" aria-pressed="false">Gay guys' night</button>
+        <button class="customise-audience-option" type="button" aria-pressed="false">Mixed crew</button>
+        <button class="customise-audience-option" type="button" aria-pressed="false">Best friends</button>
+        <button class="customise-audience-option" type="button" aria-pressed="false">Coworkers</button>
+        <button class="customise-audience-option" type="button" aria-pressed="false">Couples</button>
+        <button class="customise-audience-option" type="button" aria-pressed="false">Bachelor party</button>
+        <button class="customise-audience-option" type="button" aria-pressed="false">Bachelorette party</button>
+      </div>
+      <label class="customise-description-label" for="customise-group-description">Describe your group</label>
+      <textarea class="customise-group-description" id="customise-group-description" rows="3" placeholder=""></textarea>
+      <p class="customise-preview-note">Preview only: your description isn’t saved or used to generate cards yet.</p>
+      <button class="btn-primary customise-modal-done" type="button">SAVE AND PLAY</button>
+    </div>
+  </div>
+
+  <script type="module" src="app.js?v=16"></script>
 </body>
 </html>

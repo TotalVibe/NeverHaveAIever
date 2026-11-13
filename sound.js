@@ -283,37 +283,72 @@ class SoundEffects {
     if (!this.ctx) return;
 
     const now = this.ctx.currentTime;
-    const rollHits = 8;
+    const impact = now + 0.98;
+    const build = this.ctx.createOscillator();
+    const buildFilter = this.ctx.createBiquadFilter();
+    const buildGain = this.ctx.createGain();
+    build.type = 'triangle';
+    build.frequency.setValueAtTime(196, now + 0.04);
+    build.frequency.exponentialRampToValueAtTime(1046.5, impact - 0.04);
+    buildFilter.type = 'lowpass';
+    buildFilter.frequency.setValueAtTime(420, now + 0.04);
+    buildFilter.frequency.exponentialRampToValueAtTime(5200, impact - 0.04);
+    buildGain.gain.setValueAtTime(0.001, now + 0.04);
+    buildGain.gain.linearRampToValueAtTime(0.13, impact - 0.08);
+    buildGain.gain.exponentialRampToValueAtTime(0.001, impact);
+    build.connect(buildFilter);
+    buildFilter.connect(buildGain);
+    buildGain.connect(this.ctx.destination);
+    build.start(now + 0.04);
+    build.stop(impact + 0.01);
 
+    const rollHits = 10;
     for (let i = 0; i < rollHits; i++) {
-      const start = now + i * 0.075;
+      const progress = i / (rollHits - 1);
+      const start = now + 0.08 + Math.pow(progress, 1.7) * 0.78;
       const osc = this.ctx.createOscillator();
       const gain = this.ctx.createGain();
       osc.type = 'triangle';
-      osc.frequency.setValueAtTime(115 - i * 5, start);
-      osc.frequency.exponentialRampToValueAtTime(48, start + 0.065);
-      gain.gain.setValueAtTime(0.12, start);
-      gain.gain.exponentialRampToValueAtTime(0.001, start + 0.07);
+      osc.frequency.setValueAtTime(92 + i * 22, start);
+      osc.frequency.exponentialRampToValueAtTime(55 + i * 18, start + 0.06);
+      gain.gain.setValueAtTime(0.025 + progress * 0.045, start);
+      gain.gain.exponentialRampToValueAtTime(0.001, start + 0.065);
       osc.connect(gain);
       gain.connect(this.ctx.destination);
       osc.start(start);
       osc.stop(start + 0.07);
     }
 
-    const impact = now + 0.92;
-    [110, 146.83, 196].forEach((frequency, index) => {
-      const osc = this.ctx.createOscillator();
-      const gain = this.ctx.createGain();
-      osc.type = index === 0 ? 'sine' : 'triangle';
-      osc.frequency.setValueAtTime(frequency * 1.04, impact);
-      osc.frequency.exponentialRampToValueAtTime(frequency, impact + 0.12);
-      gain.gain.setValueAtTime(0.001, impact);
-      gain.gain.linearRampToValueAtTime(index === 0 ? 0.16 : 0.065, impact + 0.018);
-      gain.gain.exponentialRampToValueAtTime(0.001, impact + 1.15);
-      osc.connect(gain);
-      gain.connect(this.ctx.destination);
-      osc.start(impact);
-      osc.stop(impact + 1.16);
+    const impactBus = this.ctx.createDynamicsCompressor();
+    impactBus.threshold.setValueAtTime(-8, impact);
+    impactBus.knee.setValueAtTime(8, impact);
+    impactBus.ratio.setValueAtTime(5, impact);
+    impactBus.attack.setValueAtTime(0.003, impact);
+    impactBus.release.setValueAtTime(0.65, impact);
+    impactBus.connect(this.ctx.destination);
+
+    [1046.5, 1318.51, 1567.98, 2093].forEach((frequency, noteIndex) => {
+      const start = impact + noteIndex * 0.018;
+      const partials = [
+        { multiplier: 1, level: 0.3, duration: 1.45 },
+        { multiplier: 2.756, level: 0.12, duration: 1.05 },
+        { multiplier: 4.07, level: 0.055, duration: 0.78 }
+      ];
+
+      partials.forEach(({ multiplier, level, duration }) => {
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(frequency * multiplier * 1.025, start);
+        osc.frequency.exponentialRampToValueAtTime(frequency * multiplier, start + 0.08);
+        gain.gain.setValueAtTime(0.001, start);
+        gain.gain.linearRampToValueAtTime(level, start + 0.012);
+        gain.gain.exponentialRampToValueAtTime(0.001, start + duration);
+        osc.connect(gain);
+        gain.connect(impactBus);
+        osc.start(start);
+        osc.stop(start + duration + 0.01);
+      });
     });
   }
 }
