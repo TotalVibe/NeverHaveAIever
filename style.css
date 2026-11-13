@@ -253,7 +253,7 @@ body {
   background-clip: padding-box;
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
-  border: 2px solid transparent;
+  border: 0 solid transparent;
   border-radius: 18px;
   padding: 8px 12px;
   cursor: pointer;
@@ -302,6 +302,7 @@ body {
 
 /* Top & Bottom Targets */
 .target-btn.target-top {
+  --target-accent: var(--color-spicy);
   --target-dark-gradient: linear-gradient(to bottom, rgba(21, 24, 36, 0), rgba(21, 24, 36, 0.92));
   --target-edge-gradient: linear-gradient(to bottom, rgba(255, 45, 117, 0), rgba(255, 45, 117, 0.95));
   --target-glow: rgba(255, 45, 117, 0.2);
@@ -311,7 +312,7 @@ body {
   flex-direction: row;
   padding: clamp(6px, 1vh, 8px) clamp(14px, 3vw, 20px);
   gap: 8px;
-  border-bottom-color: rgba(255, 45, 117, 0.72);
+  border-bottom: 2px solid rgba(255, 45, 117, 0.72);
 }
 
 .target-btn.target-top::after {
@@ -323,6 +324,7 @@ body {
 }
 
 .target-btn.target-bottom {
+  --target-accent: var(--color-wholesome);
   --target-dark-gradient: linear-gradient(to top, rgba(21, 24, 36, 0), rgba(21, 24, 36, 0.92));
   --target-edge-gradient: linear-gradient(to top, rgba(116, 143, 252, 0), rgba(116, 143, 252, 0.95));
   --target-glow: rgba(116, 143, 252, 0.2);
@@ -332,7 +334,7 @@ body {
   flex-direction: row;
   padding: clamp(6px, 1vh, 8px) clamp(14px, 3vw, 20px);
   gap: 8px;
-  border-top-color: rgba(116, 143, 252, 0.72);
+  border-top: 2px solid rgba(116, 143, 252, 0.72);
 }
 
 .target-btn.target-bottom::after {
@@ -345,6 +347,7 @@ body {
 
 /* Lateral Targets (Cringe & Party): Generously spaced apart on widescreen, snug on mobile */
 .target-btn.target-left {
+  --target-accent: var(--color-cringe);
   --target-dark-gradient: linear-gradient(to right, rgba(21, 24, 36, 0), rgba(21, 24, 36, 0.92));
   --target-edge-gradient: linear-gradient(to right, rgba(255, 146, 43, 0), rgba(255, 146, 43, 0.95));
   --target-glow: rgba(255, 146, 43, 0.2);
@@ -355,7 +358,8 @@ body {
   width: clamp(52px, 8vw, 70px);
   height: clamp(90px, 14vh, 104px);
   padding: 16px 4px;
-  border-right-color: rgba(255, 146, 43, 0.72);
+  border-right: 2px solid rgba(255, 146, 43, 0.72);
+  gap: 8px;
 }
 
 .target-btn.target-left::after {
@@ -367,6 +371,7 @@ body {
 }
 
 .target-btn.target-right {
+  --target-accent: var(--color-party);
   --target-dark-gradient: linear-gradient(to left, rgba(21, 24, 36, 0), rgba(21, 24, 36, 0.92));
   --target-edge-gradient: linear-gradient(to left, rgba(32, 201, 151, 0), rgba(32, 201, 151, 0.95));
   --target-glow: rgba(32, 201, 151, 0.2);
@@ -377,7 +382,8 @@ body {
   width: clamp(52px, 8vw, 70px);
   height: clamp(90px, 14vh, 104px);
   padding: 16px 4px;
-  border-left-color: rgba(32, 201, 151, 0.72);
+  border-left: 2px solid rgba(32, 201, 151, 0.72);
+  gap: 8px;
 }
 
 .target-btn.target-right::after {
@@ -391,6 +397,7 @@ body {
 /* Target Hover / Proximity Highlight States */
 .target-btn:hover,
 .target-btn.highlight {
+  border-width: 2px;
   border-color: transparent;
   background-image: var(--target-dark-gradient), var(--target-edge-gradient);
   background-origin: padding-box, border-box;
@@ -416,6 +423,8 @@ body {
 }
 .target-btn.target-top.highlight .label,
 .target-btn.target-top:hover .label { color: var(--color-spicy); }
+.target-btn.target-top.highlight .arrow-indicator,
+.target-btn.target-top:hover .arrow-indicator { color: var(--target-accent); opacity: 1; }
 
 .target-btn.target-left:hover,
 .target-btn.target-left.highlight {
@@ -423,6 +432,8 @@ body {
 }
 .target-btn.target-left.highlight .label,
 .target-btn.target-left:hover .label { color: var(--color-cringe); }
+.target-btn.target-left.highlight .arrow-indicator,
+.target-btn.target-left:hover .arrow-indicator { color: var(--target-accent); opacity: 1; }
 
 .target-btn.target-right:hover,
 .target-btn.target-right.highlight {
@@ -430,6 +441,8 @@ body {
 }
 .target-btn.target-right.highlight .label,
 .target-btn.target-right:hover .label { color: var(--color-party); }
+.target-btn.target-right.highlight .arrow-indicator,
+.target-btn.target-right:hover .arrow-indicator { color: var(--target-accent); opacity: 1; }
 
 .target-btn.target-bottom:hover,
 .target-btn.target-bottom.highlight {
@@ -437,6 +450,8 @@ body {
 }
 .target-btn.target-bottom.highlight .label,
 .target-btn.target-bottom:hover .label { color: var(--color-wholesome); }
+.target-btn.target-bottom.highlight .arrow-indicator,
+.target-btn.target-bottom:hover .arrow-indicator { color: var(--target-accent); opacity: 1; }
 
 .target-btn:active {
   transform: scale(0.95) !important;
@@ -714,7 +729,7 @@ body {
 /* Direction Stamps on Front Face */
 .swipe-stamp {
   position: absolute;
-  top: 45%;
+  top: 76%;
   left: 50%;
   transform: translate(-50%, -50%) scale(0.85);
   padding: clamp(6px, 1.5vh, 10px) clamp(12px, 3vw, 22px);
@@ -871,9 +886,10 @@ body {
 /* Floating Toast Notification */
 #toast {
   position: fixed;
-  bottom: clamp(70px, 12vh, 90px);
-  left: 50%;
-  transform: translateX(-50%) translateY(20px);
+  top: calc(var(--sat) + clamp(8px, 1.8vh, 14px) + clamp(36px, 9vw, 42px) + 10px);
+  right: max(16px, calc((100vw - 840px) / 2 + 32px));
+  max-width: min(360px, calc(100vw - 32px));
+  transform: translateY(-8px);
   background: rgba(24, 27, 41, 0.95);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -886,13 +902,13 @@ body {
   box-shadow: 0 10px 25px rgba(0,0,0,0.5);
   pointer-events: none;
   opacity: 0;
-  z-index: 200;
+  z-index: 30;
   transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 #toast.visible {
   opacity: 1;
-  transform: translateX(-50%) translateY(0);
+  transform: translateY(0);
 }
 
 /* Modals */
@@ -1114,6 +1130,12 @@ body {
   .header-actions {
     flex-direction: column;
     gap: 8px;
+  }
+  #toast {
+    top: calc(var(--sat) + 10px);
+    left: 150px;
+    right: 12px;
+    max-width: none;
   }
   .game-arena {
     height: 100%;
