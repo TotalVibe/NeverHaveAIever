@@ -43,7 +43,6 @@ class NeverHaveIEverApp {
     this.init();
   }
 
-  // Dynamic responsive threshold adapted to mobile screen dimensions
   getSwipeThreshold() {
     const minDim = Math.min(window.innerWidth, window.innerHeight);
     return Math.max(55, Math.min(80, minDim * 0.18));
@@ -103,28 +102,31 @@ class NeverHaveIEverApp {
   renderInitialDeck() {
     this.stackContainer.innerHTML = '';
 
+    // 1. Create 10 visible deck stack layers (resembling the borders of the top card)
+    const layersWrap = document.createElement('div');
+    layersWrap.className = 'deck-layers-container';
+    for (let i = 10; i >= 1; i--) {
+      const layer = document.createElement('div');
+      layer.className = `deck-card-layer layer-${i}`;
+      layer.style.setProperty('--layer-idx', i);
+      layersWrap.appendChild(layer);
+    }
+    this.stackContainer.appendChild(layersWrap);
+
+    // 2. Initial playable cards
     const initialCategory = 'spicy';
     const cardData1 = {
       category: initialCategory,
-      text: this.getRandomQuestion(initialCategory),
-      number: this.cardCount
+      text: this.getRandomQuestion(initialCategory)
     };
     const cardData2 = {
       category: 'party',
-      text: this.getRandomQuestion('party'),
-      number: this.cardCount + 1
-    };
-    const cardData3 = {
-      category: 'wholesome',
-      text: this.getRandomQuestion('wholesome'),
-      number: this.cardCount + 2
+      text: this.getRandomQuestion('party')
     };
 
-    const card3 = this.createCardElement(cardData3, 'third');
-    const card2 = this.createCardElement(cardData2, 'next');
-    const card1 = this.createCardElement(cardData1, 'current');
+    const card2 = this.createCardElement(cardData2, 'next', true); // Face-down on top of stack
+    const card1 = this.createCardElement(cardData1, 'current', false); // Face-up on top
 
-    this.stackContainer.appendChild(card3);
     this.stackContainer.appendChild(card2);
     this.stackContainer.appendChild(card1);
 
@@ -133,11 +135,11 @@ class NeverHaveIEverApp {
     this.bindCardGesture(this.activeCard);
   }
 
-  createCardElement(data, stackClass = 'next') {
+  createCardElement(data, stackClass = 'next', isFaceDown = true) {
     const cat = Object.values(this.categories).find(c => c.id === data.category) || this.categories.top;
 
     const card = document.createElement('div');
-    card.className = `game-card ${stackClass}`;
+    card.className = `game-card ${stackClass} ${isFaceDown ? 'face-down' : ''}`;
     card.dataset.category = data.category;
     card.dataset.fullText = data.text;
     card.style.setProperty('--active-card-color', cat.color);
@@ -145,46 +147,49 @@ class NeverHaveIEverApp {
     const cleanQuestion = data.text.replace(/^Never have I ever /i, '');
 
     card.innerHTML = `
-      <div class="card-ambient-tint"></div>
-      
-      <!-- Direction Stamp Indicators -->
-      <div class="swipe-stamp stamp-top">😈 SPICY NEXT</div>
-      <div class="swipe-stamp stamp-left">😳 CRINGE NEXT</div>
-      <div class="swipe-stamp stamp-right">🥳 PARTY NEXT</div>
-      <div class="swipe-stamp stamp-bottom">😇 WHOLESOME NEXT</div>
+      <div class="card-inner">
+        <!-- Front Face (Question statement) -->
+        <div class="card-face card-front">
+          <div class="card-ambient-tint"></div>
+          
+          <!-- Direction Stamp Indicators -->
+          <div class="swipe-stamp stamp-top">😈 SPICY NEXT</div>
+          <div class="swipe-stamp stamp-left">😳 CRINGE NEXT</div>
+          <div class="swipe-stamp stamp-right">🥳 PARTY NEXT</div>
+          <div class="swipe-stamp stamp-bottom">😇 WHOLESOME NEXT</div>
 
-      <!-- Card Top Bar -->
-      <div class="card-header">
-        <div class="category-tag" style="border-color: ${cat.color}66; color: ${cat.color};">
-          <span class="cat-tag-emoji">${cat.emoji}</span>
-          <span class="cat-tag-name">${cat.name}</span>
-        </div>
-        <div class="card-top-right">
-          <button class="copy-card-btn" title="Copy question to clipboard" aria-label="Copy question">
-            📋
-          </button>
-          <span class="card-number">#${data.number}</span>
-        </div>
-      </div>
+          <!-- Card Header (Category Tag Only - No copy, No number) -->
+          <div class="card-header">
+            <div class="category-tag" style="border-color: ${cat.color}66; color: ${cat.color};">
+              <span class="cat-tag-emoji">${cat.emoji}</span>
+              <span class="cat-tag-name">${cat.name}</span>
+            </div>
+          </div>
 
-      <!-- Card Body Statement (Centered) -->
-      <div class="card-body">
-        <div class="prompt-prefix">Never Have I Ever...</div>
-        <div class="prompt-text">${cleanQuestion}</div>
+          <!-- Card Body Statement (Centered) -->
+          <div class="card-body">
+            <div class="prompt-prefix">Never Have I Ever...</div>
+            <div class="prompt-text">${cleanQuestion}</div>
+          </div>
+        </div>
+
+        <!-- Back Face (Vector Texture + Fancy Cursive 2-Line Title - NO DEVIL EMOJI) -->
+        <div class="card-face card-back">
+          <div class="vector-pattern"></div>
+          <div class="card-back-frame">
+            <div class="card-back-emblem">
+              <div class="crest-diamond">◈</div>
+              <div class="emblem-title">
+                <span class="cursive-line">Never Have</span>
+                <span class="cursive-line">AI Ever</span>
+              </div>
+              <div class="emblem-line"></div>
+              <div class="emblem-sub">Swipe to Reveal</div>
+            </div>
+          </div>
+        </div>
       </div>
     `;
-
-    const btnCopy = card.querySelector('.copy-card-btn');
-    btnCopy.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const textToCopy = `Never have I ever ${cleanQuestion}`;
-      navigator.clipboard.writeText(textToCopy).then(() => {
-        this.showToast('Question copied to clipboard! 📋');
-        sounds.playClick();
-      }).catch(() => {
-        this.showToast('Copied: ' + textToCopy);
-      });
-    });
 
     return card;
   }
@@ -267,7 +272,18 @@ class NeverHaveIEverApp {
         }
       }
 
+      // Next card lifts slightly as card is dragged
       const threshold = this.getSwipeThreshold();
+      const progress = Math.min(1, dist / threshold);
+
+      const nextCard = this.stackContainer.querySelector('.game-card.next');
+      if (nextCard) {
+        const nextScale = 0.985 + (0.015 * progress);
+        const nextY = -5 * (1 - progress);
+        nextCard.style.transition = 'none';
+        nextCard.style.transform = `scale(${nextScale}) translateY(${nextY}px)`;
+      }
+
       if (dist >= threshold && !this.hasVibratedThreshold) {
         this.hasVibratedThreshold = true;
         if ('vibrate' in navigator) {
@@ -336,6 +352,12 @@ class NeverHaveIEverApp {
     card.style.transition = 'transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
     card.style.transform = 'translate3d(0, 0, 0) rotate(0deg)';
 
+    const nextCard = this.stackContainer.querySelector('.game-card.next');
+    if (nextCard) {
+      nextCard.style.transition = 'transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+      nextCard.style.transform = 'scale(0.985) translateY(-5px)';
+    }
+
     const stamps = card.querySelectorAll('.swipe-stamp');
     stamps.forEach(s => s.style.opacity = '0');
 
@@ -364,8 +386,7 @@ class NeverHaveIEverApp {
 
     this.cardHistory.push({
       category: this.activeCard.dataset.category,
-      text: this.activeCard.dataset.fullText,
-      number: this.cardCount
+      text: this.activeCard.dataset.fullText
     });
     if (this.cardHistory.length > 15) this.cardHistory.shift();
 
@@ -397,6 +418,7 @@ class NeverHaveIEverApp {
         break;
     }
 
+    // Active Card flies away
     this.activeCard.style.transition = 'transform 0.42s cubic-bezier(0.2, 0.9, 0.3, 1), opacity 0.35s ease-out';
     this.activeCard.style.transform = `translate3d(${exitX}px, ${exitY}px, 0) rotate(${exitRotation}deg)`;
     this.activeCard.style.opacity = '0';
@@ -405,14 +427,15 @@ class NeverHaveIEverApp {
 
     const oldCard = this.activeCard;
     const nextCard = this.stackContainer.querySelector('.game-card.next');
-    const thirdCard = this.stackContainer.querySelector('.game-card.third');
 
     if (nextCard) {
-      nextCard.style.transition = 'transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.35s ease';
-      nextCard.className = 'game-card current';
+      // 1. Slide next card into center showing its vector texture reverse side
+      nextCard.style.transition = 'transform 0.36s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+      nextCard.className = 'game-card current face-down';
       nextCard.style.pointerEvents = 'auto';
-      nextCard.style.filter = 'none';
+      nextCard.style.transform = 'scale(1) translateY(0px)';
 
+      // 2. Prepare question content on the front face of this card
       const cat = Object.values(this.categories).find(c => c.id === nextCategory);
       const newQuestion = this.getRandomQuestion(nextCategory);
       nextCard.dataset.category = nextCategory;
@@ -434,23 +457,31 @@ class NeverHaveIEverApp {
         promptText.textContent = newQuestion.replace(/^Never have I ever /i, '');
       }
 
+      // 3. FLIP REVEAL: Rotate card 180° in 3D to reveal front face
+      setTimeout(() => {
+        nextCard.classList.remove('face-down');
+        sounds.playSnapBack();
+      }, 100);
+
       this.updateAmbientGlow(nextCategory);
       this.activeCardCategory = nextCategory;
     }
 
-    if (thirdCard) {
-      thirdCard.className = 'game-card next';
-      thirdCard.style.transition = 'transform 0.4s ease, opacity 0.35s ease';
-    }
-
+    // Spawn a new face-down card waiting right underneath for the next swipe
     this.cardCount++;
     const randomBackgroundCat = ['spicy', 'cringe', 'party', 'wholesome'][Math.floor(Math.random() * 4)];
-    const newThirdCard = this.createCardElement({
+    const newNextCard = this.createCardElement({
       category: randomBackgroundCat,
-      text: this.getRandomQuestion(randomBackgroundCat),
-      number: this.cardCount + 2
-    }, 'third');
-    this.stackContainer.insertBefore(newThirdCard, this.stackContainer.firstChild);
+      text: this.getRandomQuestion(randomBackgroundCat)
+    }, 'next', true);
+
+    // Insert just before the current card (above the deck layers)
+    const currentCard = this.stackContainer.querySelector('.game-card.current');
+    if (currentCard) {
+      this.stackContainer.insertBefore(newNextCard, currentCard);
+    } else {
+      this.stackContainer.appendChild(newNextCard);
+    }
 
     setTimeout(() => {
       if (oldCard && oldCard.parentNode) {
@@ -461,7 +492,7 @@ class NeverHaveIEverApp {
         this.bindCardGesture(this.activeCard);
       }
       this.isAnimating = false;
-    }, 450);
+    }, 480);
   }
 
   undoLastCard() {
@@ -472,7 +503,7 @@ class NeverHaveIEverApp {
     this.isAnimating = true;
 
     const prevCardData = this.cardHistory.pop();
-    const restoredCard = this.createCardElement(prevCardData, 'current');
+    const restoredCard = this.createCardElement(prevCardData, 'current', false);
 
     restoredCard.style.transition = 'none';
     restoredCard.style.transform = 'translate3d(0, -500px, 0) scale(0.9)';
@@ -481,7 +512,8 @@ class NeverHaveIEverApp {
     this.stackContainer.appendChild(restoredCard);
 
     if (this.activeCard) {
-      this.activeCard.className = 'game-card next';
+      this.activeCard.className = 'game-card next face-down';
+      this.activeCard.style.transform = 'scale(0.985) translateY(-5px)';
     }
 
     restoredCard.offsetHeight;
@@ -564,7 +596,6 @@ class NeverHaveIEverApp {
       this.infoModal.classList.remove('active');
     });
 
-    // Close modal on overlay backdrop click
     if (this.infoModal) {
       this.infoModal.addEventListener('click', (e) => {
         if (e.target === this.infoModal) {
