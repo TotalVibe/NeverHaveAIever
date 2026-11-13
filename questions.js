@@ -89,7 +89,7 @@ export const QUESTIONS = {
 "flirted with someone knowing they were in a relationship.",
 "kissed more than one person in 24 hours.",
 "had a one-night stand.",
-"fantasised about someone in this room.",
+"fantasised about someone in my family.",
 "hooked up with a friend's ex.",
 "lied about where I was to meet someone.",
 "had a sneaky link.",
@@ -128,7 +128,7 @@ export const QUESTIONS = {
 "tried something adventurous in the bedroom.",
 "hooked up with someone more than ten years older than me.",
 "had a hookup while travelling.",
-"had a sexual fantasy about someone in this room.",
+"had a sexual proposition from someone in this room.",
 "dressed up way too fancy for what was supposed to be a 'casual hangout'."
   ],
   cringe: [
