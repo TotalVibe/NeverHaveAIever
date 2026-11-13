@@ -292,7 +292,7 @@ body {
 }
 
 .target-btn.target-bottom {
-  bottom: 72px;
+  bottom: 48px;
   left: 50%;
   transform: translateX(-50%);
   flex-direction: row;
@@ -377,7 +377,7 @@ body {
   width: clamp(275px, 42vw, 380px);
   height: clamp(330px, 54dvh, 480px);
   margin: clamp(16px, 2.5vh, 28px) auto 0;
-  transform: translateY(-10px);
+  transform: translateY(-42px);
   touch-action: none;
   perspective: 1200px;
   -webkit-perspective: 1200px;
@@ -480,6 +480,22 @@ body {
   transform: translate3d(0, 0, 0);
 }
 
+.game-card.current.card-entering {
+  animation: card-enter 0.65s cubic-bezier(0.2, 0.85, 0.25, 1) both;
+}
+
+@keyframes card-enter {
+  0% {
+    transform: translate3d(0, 14px, 0) scale(0.96) rotate(3deg);
+  }
+  55% {
+    transform: translate3d(0, -12px, 0) scale(1.015) rotate(-3deg);
+  }
+  100% {
+    transform: translate3d(0, 0, 0) scale(1) rotate(0);
+  }
+}
+
 .game-card.current .card-front,
 .game-card.current .card-back {
   border: 2px solid rgba(255, 255, 255, 0.28);
@@ -523,23 +539,37 @@ body {
 }
 
 .category-tag {
+  display: block;
+  padding: 0;
+  font-size: clamp(0.7rem, 2vw, 0.78rem);
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.category-watermark {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: clamp(5px, 0.9vh, 7px) clamp(10px, 2.5vw, 14px);
-  border-radius: var(--radius-pill);
-  font-size: clamp(0.75rem, 2.2vw, 0.84rem);
-  font-weight: 700;
-  letter-spacing: 0.3px;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  color: var(--text-main);
-  transition: border-color 0.3s ease, color 0.3s ease;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.cat-tag-emoji {
+  display: block;
+  font-size: clamp(14rem, 78vw, 24rem);
+  line-height: 1;
+  opacity: 0.13;
+  transform: translateX(-34%);
 }
 
 .card-body {
   position: relative;
   z-index: 2;
+  transform: translateY(-15px);
   margin: auto 0;
   text-align: center;
   padding: clamp(10px, 2vh, 18px) 4px;
@@ -1020,6 +1050,10 @@ body {
   .card-stack {
     height: clamp(100px, calc(100dvh - 222px), 168px);
     width: clamp(240px, 40vw, 340px);
+    transform: translateY(-8px);
+  }
+  .card-body {
+    transform: translateY(-8px);
   }
   .deck-card-layer {
     transform: translateY(calc(var(--layer-idx) * 1.5px)) scale(calc(1 - (var(--layer-idx) * 0.014)));

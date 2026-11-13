@@ -186,12 +186,14 @@ class NeverHaveIEverApp {
           <div class="swipe-stamp stamp-right">🥳 PARTY NEXT</div>
           <div class="swipe-stamp stamp-bottom">😇 WHOLESOME NEXT</div>
 
-          <!-- Card Header (Category Tag Only - No copy, No number) -->
+          <!-- Card category label and decorative emoji -->
           <div class="card-header">
-            <div class="category-tag" style="border-color: ${cat.color}66; color: ${cat.color};">
-              <span class="cat-tag-emoji">${cat.emoji}</span>
+            <div class="category-tag" style="color: ${cat.color};">
               <span class="cat-tag-name">${cat.name}</span>
             </div>
+          </div>
+          <div class="category-watermark" aria-hidden="true">
+            <span class="cat-tag-emoji">${cat.emoji}</span>
           </div>
 
           <!-- Card Body Statement (Centered) -->
@@ -464,6 +466,12 @@ class NeverHaveIEverApp {
       // 1. Slide next card into center showing its vector texture reverse side
       nextCard.style.transition = 'transform 0.36s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
       nextCard.className = 'game-card current face-down';
+      nextCard.classList.add('card-entering');
+      nextCard.addEventListener('animationend', (event) => {
+        if (event.target === nextCard && event.animationName === 'card-enter') {
+          nextCard.classList.remove('card-entering');
+        }
+      }, { once: true });
       nextCard.style.pointerEvents = 'auto';
       nextCard.style.transform = 'scale(1) translateY(0px)';
 
@@ -478,10 +486,9 @@ class NeverHaveIEverApp {
       const catTagName = nextCard.querySelector('.cat-tag-name');
       const catTag = nextCard.querySelector('.category-tag');
       if (catTag && catTagEmoji && catTagName) {
-        catTag.style.borderColor = `${cat.color}66`;
         catTag.style.color = cat.color;
-        catTagEmoji.textContent = cat.emoji;
         catTagName.textContent = cat.name;
+        catTagEmoji.textContent = cat.emoji;
       }
 
       const promptText = nextCard.querySelector('.prompt-text');
