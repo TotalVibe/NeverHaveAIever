@@ -1,29 +1,74 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
   <defs>
-    <radialGradient id="bg" cx="50%" cy="50%" r="65%">
-      <stop offset="0%" stop-color="#1e1838" />
-      <stop offset="100%" stop-color="#0a0b10" />
+    <!-- Dark Rounded Background -->
+    <radialGradient id="bgGrad" cx="50%" cy="50%" r="70%">
+      <stop offset="0%" stop-color="#1d1326" />
+      <stop offset="100%" stop-color="#0d0e14" />
     </radialGradient>
-    <linearGradient id="flame" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#ff007f" />
-      <stop offset="50%" stop-color="#ff3366" />
-      <stop offset="100%" stop-color="#ff9900" />
+
+    <!-- Inner Plum Glow -->
+    <radialGradient id="centerGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#5c1d3c" stop-opacity="0.75" />
+      <stop offset="70%" stop-color="#3a1329" stop-opacity="0.45" />
+      <stop offset="100%" stop-color="#3a1329" stop-opacity="0" />
+    </radialGradient>
+
+    <!-- Devil Face Gradient -->
+    <linearGradient id="devilGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#c84bff" />
+      <stop offset="55%" stop-color="#8b2be2" />
+      <stop offset="100%" stop-color="#5a149c" />
     </linearGradient>
-    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
-      <feGaussianBlur stdDeviation="16" result="blur" />
-      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+
+    <!-- Angel Halo Glow -->
+    <filter id="haloGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="4" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
     </filter>
   </defs>
-  <rect width="512" height="512" rx="128" fill="url(#bg)" />
-  <circle cx="256" cy="256" r="180" fill="none" stroke="rgba(255, 45, 117, 0.25)" stroke-width="4" />
-  <g filter="url(#glow)">
-    <circle cx="256" cy="256" r="140" fill="rgba(255, 45, 117, 0.12)" />
+
+  <!-- App Icon Rounded Square -->
+  <rect width="512" height="512" rx="120" fill="url(#bgGrad)" />
+
+  <!-- Subtle Inner Glow -->
+  <circle cx="256" cy="256" r="165" fill="url(#centerGlow)" />
+
+  <!-- Orbit Ring -->
+  <circle cx="256" cy="256" r="186" fill="none" stroke="#591c3a" stroke-width="5" />
+
+  <!-- 4 Cardinal Swipe Dots (Pink Top, Emerald Right, Periwinkle Bottom, Orange Left) -->
+  <circle cx="256" cy="70" r="12" fill="#ff2a7a" />
+  <circle cx="442" cy="256" r="12" fill="#1fd196" />
+  <circle cx="256" cy="442" r="12" fill="#6e8efb" />
+  <circle cx="70" cy="256" r="12" fill="#ff9429" />
+
+  <!-- Centered Devil + Angel Halo Group -->
+  <g transform="translate(256, 268)">
+    <!-- Left & Right Devil Horns -->
+    <path d="M -52,-54 C -74,-78 -72,-104 -54,-114 C -56,-94 -44,-80 -28,-72 Z" fill="url(#devilGrad)" />
+    <path d="M 52,-54 C 74,-78 72,-104 54,-114 C 56,-94 44,-80 28,-72 Z" fill="url(#devilGrad)" />
+
+    <!-- Devil Head -->
+    <circle cx="0" cy="-6" r="76" fill="url(#devilGrad)" />
+
+    <!-- Glowing Golden Angel Halo Ring Floating Above Horns -->
+    <ellipse cx="0" cy="-106" rx="46" ry="12" fill="none" stroke="#ffd54f" stroke-width="7" filter="url(#haloGlow)" />
+    <ellipse cx="0" cy="-106" rx="46" ry="12" fill="none" stroke="#fff3b0" stroke-width="2.5" />
+
+    <!-- Mischievous Angled Eyebrows -->
+    <path d="M -42,-30 L -14,-18" stroke="#1b072e" stroke-width="7" stroke-linecap="round" />
+    <path d="M 42,-30 L 14,-18" stroke="#1b072e" stroke-width="7" stroke-linecap="round" />
+
+    <!-- Eyes -->
+    <ellipse cx="-26" cy="-10" rx="8" ry="10" fill="#1b072e" />
+    <ellipse cx="26" cy="-10" rx="8" ry="10" fill="#1b072e" />
+    <circle cx="-23" cy="-13" r="2.5" fill="#ffffff" />
+    <circle cx="29" cy="-13" r="2.5" fill="#ffffff" />
+
+    <!-- Cheeky Smirk -->
+    <path d="M -32,18 Q 0,44 32,18" fill="none" stroke="#1b072e" stroke-width="7" stroke-linecap="round" />
   </g>
-  <!-- Main Emoji Center -->
-  <text x="256" y="305" font-size="190" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif">😈</text>
-  <!-- Directional Accent Dots -->
-  <circle cx="256" cy="70" r="12" fill="#ff2d75" />
-  <circle cx="70" cy="256" r="12" fill="#ff922b" />
-  <circle cx="442" cy="256" r="12" fill="#20c997" />
-  <circle cx="256" cy="442" r="12" fill="#748ffc" />
 </svg>
