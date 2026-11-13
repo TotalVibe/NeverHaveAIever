@@ -15,12 +15,17 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Dancing+Script:wght@700&family=Elsie+Swash+Caps:wght@400;900&family=Great+Vibes&display=swap" rel="stylesheet">
   <meta name="description" content="Never Have AI ever party webapp with Tinder-like sliding features to choose the next question topic by dragging towards an emoji.">
-  <link rel="stylesheet" href="style.css?v=16">
+  <link rel="stylesheet" href="style.css?v=20">
 </head>
 <body>
 
   <!-- Dynamic Ambient Glow Background -->
   <div class="ambient-glow" id="ambient-glow"></div>
+
+  <div class="cheers-overlay" id="cheers-overlay" aria-hidden="true">
+    <img class="cheers-image cheers-angel" src="images/angel.png" alt="">
+    <img class="cheers-image cheers-devil" src="images/devil.png" alt="">
+  </div>
 
   <!-- Particle Confetti Canvas -->
   <canvas id="confetti-canvas"></canvas>
@@ -31,15 +36,12 @@
   <!-- Top Navigation Bar -->
  <!-- Top Navigation Bar -->
   <header class="app-header">
-    <h1 class="brand-heading">
-      <button class="brand" id="brand-home-btn" type="button" title="Restart game">
-        <span class="brand-icon">
-          <img src="images/devil.png" alt="" class="brand-logo-img devil-img">
-          <img src="images/angel.png" alt="" class="brand-logo-img angel-img">
-        </span>
-        <span class="brand-title">Never Have AI ever</span>
-      </button>
-    </h1>
+    <button class="icon-btn reshuffle-btn" id="reshuffle-btn" type="button" title="Reshuffle deck">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M17 3h4v4M3 7h3.5a4 4 0 0 1 3.2 1.6l4.6 6.2a4 4 0 0 0 3.2 1.6H21M17 17h4v4M3 17h3.5a4 4 0 0 0 3.2-1.6l1-1.3M14.3 7.6A4 4 0 0 1 17.5 6H21" />
+      </svg>
+      <span>Reshuffle</span>
+    </button>
 
     <div class="header-actions">
       <button class="icon-btn" id="undo-btn" title="Undo previous card (Z)" aria-label="Undo previous card">
@@ -158,6 +160,6 @@
     </div>
   </div>
 
-  <script type="module" src="app.js?v=7"></script>
+  <script type="module" src="app.js?v=8"></script>
 </body>
 </html>

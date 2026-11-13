@@ -13,10 +13,8 @@ A modern, tactile **Never Have AI ever** party web application featuring Tinder-
 - **Tap-to-Select**: Tap any of the 4 directional emoji icons to instantly choose that category.
 - **Dynamic Stamps & Target Proximity**: Real-time visual stamps appear on the card as you drag towards each emoji, while the target emoji illuminates with its signature neon glow.
 - **Built-in Web Audio API Effects**: Completely offline synthesized sound effects for swipe whooshes, spicy sizzles, party fanfares, wholesome chimes, cringe boings, and taps.
-- **Confetti Particle Engine**: Celebratory bursts when players click "I Have!" or finish rounds.
-- **Interactive Reactions**: "I Have! 🙋" vs "Never! 🙅" reaction counters on every card.
-- **🖐️ 10 Fingers Down Game Mode**: Integrated finger/drink counter in the header with milestone celebration when reaching 0.
-- **👥 Pass-The-Phone Mode**: Add player names to rotate turns automatically with each swipe.
+
+- **Reshuffle**: Reset the deck to its face-down opening card with a short shuffle animation.
 - **➕ Custom Card Creator**: Add your own inside jokes or party questions to any category (persisted in `localStorage`).
 - **↺ Undo**: Revisit accidentally swiped cards from the header or with the `Z` shortcut.
 - **⌨️ Keyboard Shortcuts**:

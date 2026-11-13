@@ -276,6 +276,46 @@ class SoundEffects {
     osc.start(now);
     osc.stop(now + 0.07);
   }
+
+  playCheers() {
+    if (!this.enabled) return;
+    this.init();
+    if (!this.ctx) return;
+
+    const now = this.ctx.currentTime;
+    const rollHits = 8;
+
+    for (let i = 0; i < rollHits; i++) {
+      const start = now + i * 0.075;
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(115 - i * 5, start);
+      osc.frequency.exponentialRampToValueAtTime(48, start + 0.065);
+      gain.gain.setValueAtTime(0.12, start);
+      gain.gain.exponentialRampToValueAtTime(0.001, start + 0.07);
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.start(start);
+      osc.stop(start + 0.07);
+    }
+
+    const impact = now + 0.92;
+    [110, 146.83, 196].forEach((frequency, index) => {
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.type = index === 0 ? 'sine' : 'triangle';
+      osc.frequency.setValueAtTime(frequency * 1.04, impact);
+      osc.frequency.exponentialRampToValueAtTime(frequency, impact + 0.12);
+      gain.gain.setValueAtTime(0.001, impact);
+      gain.gain.linearRampToValueAtTime(index === 0 ? 0.16 : 0.065, impact + 0.018);
+      gain.gain.exponentialRampToValueAtTime(0.001, impact + 1.15);
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.start(impact);
+      osc.stop(impact + 1.16);
+    });
+  }
 }
 
 export const sounds = new SoundEffects();

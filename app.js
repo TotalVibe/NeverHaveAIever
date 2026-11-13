@@ -25,6 +25,7 @@ class NeverHaveIEverApp {
     this.hasVibratedThreshold = false;
     this.cardHistory = []; // Store past cards for undo feature
     this.idleHintTimer = null;
+    this.isCelebrating = false;
     this.restartRequested = false;
 
     // DOM Elements
@@ -37,6 +38,7 @@ class NeverHaveIEverApp {
     };
     this.soundToggleBtn = document.getElementById('sound-toggle-btn');
     this.ambientGlow = document.getElementById('ambient-glow');
+    this.cheersOverlay = document.getElementById('cheers-overlay');
 
     // Modals
     this.infoModal = document.getElementById('info-modal');
@@ -87,8 +89,12 @@ class NeverHaveIEverApp {
   }
 
   bindIdleHintEvents() {
-    document.addEventListener('pointerdown', () => this.resetIdleHint());
-    document.addEventListener('pointermove', () => this.resetIdleHint());
+    const resetUnlessOnHint = (e) => {
+      if (e.target instanceof Element && e.target.closest('.card-hint')) return;
+      this.resetIdleHint();
+    };
+    document.addEventListener('pointerdown', resetUnlessOnHint);
+    document.addEventListener('pointermove', resetUnlessOnHint);
     document.addEventListener('keydown', () => this.resetIdleHint());
   }
 
@@ -102,6 +108,7 @@ class NeverHaveIEverApp {
       if (
         !this.isDragging &&
         !this.isAnimating &&
+        !this.isCelebrating &&
         this.activeCard &&
         !this.infoModal.classList.contains('active')
       ) {
@@ -118,6 +125,30 @@ class NeverHaveIEverApp {
     this.toastTimer = setTimeout(() => {
       this.toastEl.classList.remove('visible');
     }, 2200);
+  }
+
+  celebrateDoneIt() {
+    if (this.isCelebrating || !this.activeCard || !this.cheersOverlay) return;
+
+    this.isCelebrating = true;
+    clearTimeout(this.idleHintTimer);
+    this.activeCard.classList.remove('hint-visible');
+    this.cheersOverlay.classList.add('active');
+    this.cheersOverlay.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('celebration-shake');
+
+    sounds.playCheers();
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches && 'vibrate' in navigator) {
+      try { navigator.vibrate([35, 20, 45]); } catch (err) {}
+    }
+
+    setTimeout(() => {
+      this.cheersOverlay.classList.remove('active');
+      this.cheersOverlay.setAttribute('aria-hidden', 'true');
+      document.body.classList.remove('celebration-shake');
+      this.isCelebrating = false;
+      this.resetIdleHint();
+    }, 2500);
   }
 
   updateAmbientGlow(category) {
@@ -171,6 +202,7 @@ class NeverHaveIEverApp {
     card.dataset.category = data.category;
     card.dataset.fullText = data.text;
     card.style.setProperty('--active-card-color', cat.color);
+    card.style.setProperty('--active-card-glow', cat.glow);
 
     const cleanQuestion = data.text.replace(/^Never have I ever /i, '');
 
@@ -201,7 +233,10 @@ class NeverHaveIEverApp {
             <div class="prompt-prefix">Never Have I Ever...</div>
             <div class="prompt-text">${cleanQuestion}</div>
           </div>
-          <div class="card-hint">Drag card or tap emoji</div>
+          <div class="card-hint">
+            <span class="card-hint-text">Drag card or tap emoji</span>
+            <button class="done-it-btn" type="button" aria-label="Celebrate that you have done it">DONE IT!</button>
+          </div>
         </div>
 
         <!-- Back Face (Vector Texture + Fancy Cursive 2-Line Title - NO DEVIL EMOJI) -->
@@ -481,6 +516,7 @@ class NeverHaveIEverApp {
       nextCard.dataset.category = nextCategory;
       nextCard.dataset.fullText = newQuestion;
       nextCard.style.setProperty('--active-card-color', cat.color);
+      nextCard.style.setProperty('--active-card-glow', cat.glow);
 
       const catTagEmoji = nextCard.querySelector('.cat-tag-emoji');
       const catTagName = nextCard.querySelector('.cat-tag-name');
@@ -536,6 +572,7 @@ class NeverHaveIEverApp {
   }
 
   restartGame() {
+    if (this.isCelebrating) return;
     if (this.isAnimating) {
       this.restartRequested = true;
       return;
@@ -551,7 +588,41 @@ class NeverHaveIEverApp {
     this.resetIdleHint();
   }
 
+  reshuffleGame() {
+    if (this.isCelebrating) return;
+    if (this.isAnimating) {
+      this.restartRequested = true;
+      return;
+    }
+
+    this.isAnimating = true;
+    clearTimeout(this.idleHintTimer);
+    this.activeCard?.classList.remove('hint-visible');
+    this.stackContainer.classList.remove('reshuffle-arriving');
+    this.stackContainer.classList.add('shuffling');
+    sounds.playSwoosh('neutral');
+
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const shuffleDuration = reducedMotion ? 0 : 650;
+    const landingDuration = reducedMotion ? 0 : 500;
+
+    setTimeout(() => {
+      this.stackContainer.classList.remove('shuffling');
+      this.isAnimating = false;
+      this.restartGame();
+      this.isAnimating = true;
+      this.stackContainer.classList.add('reshuffle-arriving');
+
+      setTimeout(() => {
+        this.stackContainer.classList.remove('reshuffle-arriving');
+        this.isAnimating = false;
+        this.resetIdleHint();
+      }, landingDuration);
+    }, shuffleDuration);
+  }
+
   undoLastCard() {
+    if (this.isCelebrating) return;
     if (this.isAnimating || this.cardHistory.length === 0) {
       this.showToast('No previous card to undo!');
       return;
@@ -608,6 +679,15 @@ class NeverHaveIEverApp {
   }
 
   bindEvents() {
+    this.stackContainer.addEventListener('click', (e) => {
+      if (!(e.target instanceof Element)) return;
+      const doneItButton = e.target.closest('.done-it-btn');
+      if (!doneItButton) return;
+      e.preventDefault();
+      e.stopPropagation();
+      this.celebrateDoneIt();
+    });
+
     // 4 Directional Emoji Buttons
     ['top', 'left', 'right', 'bottom'].forEach(direction => {
       const btn = this.targetButtons[direction];
@@ -628,7 +708,7 @@ class NeverHaveIEverApp {
     });
 
     document.getElementById('undo-btn').addEventListener('click', () => this.undoLastCard());
-    document.getElementById('brand-home-btn').addEventListener('click', () => this.restartGame());
+    document.getElementById('reshuffle-btn').addEventListener('click', () => this.reshuffleGame());
 
     // Info Modal
     const infoBtn = document.getElementById('info-btn');
@@ -653,6 +733,7 @@ class NeverHaveIEverApp {
 
   bindKeyboard() {
     window.addEventListener('keydown', (e) => {
+      if (this.isCelebrating) return;
       if (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA') return;
 
       switch (e.key) {
