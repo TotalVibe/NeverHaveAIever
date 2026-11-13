@@ -107,16 +107,43 @@ body {
 }
 
 .brand-icon {
-  font-size: clamp(1.3rem, 4.5vw, 1.65rem);
-  line-height: 1;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: clamp(26px, 6vw, 34px);
+  height: clamp(26px, 6vw, 34px);
   flex-shrink: 0;
   animation: pulse-flame 2.2s infinite ease-in-out;
 }
 
-@keyframes pulse-flame {
-  0%, 100% { transform: scale(1); filter: drop-shadow(0 0 4px rgba(255, 80, 80, 0.5)); }
-  50% { transform: scale(1.15) rotate(4deg); filter: drop-shadow(0 0 14px rgba(255, 50, 100, 0.9)); }
+.brand-logo-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+  animation: swapIcons 6s infinite ease-in-out;
 }
+
+.angel-img {
+  animation-delay: -3s;
+}
+
+@keyframes swapIcons {
+  0%, 42% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50%, 92% {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
 
 .brand-title {
   font-size: clamp(0.98rem, 3.8vw, 1.25rem);
