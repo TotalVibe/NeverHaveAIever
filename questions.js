@@ -45,8 +45,8 @@ export const CATEGORIES = {
 
 export const QUESTIONS = {
   spicy: [
-    "Never have AI ever flirted with someone just to get free food or drinks.",
-    "Never have AI ever kissed an ex after swearing I was completely over them.",
+    "flirted with someone just to get free food or drinks.",
+    "kissed an ex after swearing I was completely over them.",
     "Never have AI ever sent a risky text and immediately thrown my phone across the room in panic.",
     "Never have AI ever had a crush on a friend's sibling or parent.",
     "Never have AI ever lied about my 'number' to seem either more innocent or more experienced.",
