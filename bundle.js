@@ -725,7 +725,7 @@ class NeverHaveIEverApp {
               <div class="crest-diamond">◈</div>
               <div class="emblem-title">
                 <span class="cursive-line">Never Have</span>
-                <span class="cursive-line">AI Ever</span>
+                <span class="cursive-line">Ai Ever</span>
               </div>
               <div class="emblem-line"></div>
               <div class="emblem-sub">Swipe to Reveal</div>
