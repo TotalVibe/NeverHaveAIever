@@ -17,7 +17,6 @@ class NeverHaveIEverApp {
     // State
     this.activeCardCategory = 'spicy';
     this.cardCount = 1;
-    this.fingersRemaining = 10;
     this.isDragging = false;
     this.dragStart = { x: 0, y: 0 };
     this.currentTranslate = { x: 0, y: 0 };
@@ -25,10 +24,6 @@ class NeverHaveIEverApp {
     this.currentDominantDirection = null;
     this.hasVibratedThreshold = false;
     this.cardHistory = []; // Store past cards for undo feature
-
-    // Players feature (Pass the phone)
-    this.players = [];
-    this.currentPlayerIdx = 0;
 
     // DOM Elements
     this.stackContainer = document.getElementById('card-stack');
@@ -39,16 +34,10 @@ class NeverHaveIEverApp {
       bottom: document.getElementById('target-bottom')
     };
     this.soundToggleBtn = document.getElementById('sound-toggle-btn');
-    this.fingerTrackerBtn = document.getElementById('finger-tracker-btn');
-    this.fingerCountEl = document.getElementById('finger-count');
     this.ambientGlow = document.getElementById('ambient-glow');
-    this.playerTurnPill = document.getElementById('player-turn-pill');
 
     // Modals
     this.infoModal = document.getElementById('info-modal');
-    this.customModal = document.getElementById('custom-modal');
-    this.gameOverModal = document.getElementById('gameover-modal');
-    this.playersModal = document.getElementById('players-modal');
     this.toastEl = document.getElementById('toast');
 
     this.init();
@@ -61,25 +50,12 @@ class NeverHaveIEverApp {
   }
 
   loadQuestions() {
-    const savedCustom = localStorage.getItem('nhie_custom_questions');
-    const custom = savedCustom ? JSON.parse(savedCustom) : { spicy: [], cringe: [], party: [], wholesome: [] };
-
     return {
-      spicy: [...QUESTIONS.spicy, ...(custom.spicy || [])],
-      cringe: [...QUESTIONS.cringe, ...(custom.cringe || [])],
-      party: [...QUESTIONS.party, ...(custom.party || [])],
-      wholesome: [...QUESTIONS.wholesome, ...(custom.wholesome || [])]
+      spicy: [...QUESTIONS.spicy],
+      cringe: [...QUESTIONS.cringe],
+      party: [...QUESTIONS.party],
+      wholesome: [...QUESTIONS.wholesome]
     };
-  }
-
-  saveCustomQuestion(category, text) {
-    if (!text.trim()) return;
-    const savedCustom = localStorage.getItem('nhie_custom_questions');
-    const custom = savedCustom ? JSON.parse(savedCustom) : { spicy: [], cringe: [], party: [], wholesome: [] };
-    if (!custom[category]) custom[category] = [];
-    custom[category].push(text.trim());
-    localStorage.setItem('nhie_custom_questions', JSON.stringify(custom));
-    this.questions[category].push(text.trim());
   }
 
   getRandomQuestion(category) {
@@ -101,7 +77,6 @@ class NeverHaveIEverApp {
   }
 
   init() {
-    this.loadSavedPlayers();
     this.renderInitialDeck();
     this.bindEvents();
     this.bindKeyboard();
@@ -156,7 +131,6 @@ class NeverHaveIEverApp {
     this.activeCard = card1;
     this.activeCardCategory = initialCategory;
     this.bindCardGesture(this.activeCard);
-    this.updatePlayerTurnDisplay();
   }
 
   createCardElement(data, stackClass = 'next') {
@@ -193,67 +167,14 @@ class NeverHaveIEverApp {
         </div>
       </div>
 
-      <!-- Card Body Statement -->
+      <!-- Card Body Statement (Centered) -->
       <div class="card-body">
         <div class="prompt-prefix">Never Have I Ever...</div>
         <div class="prompt-text">${cleanQuestion}</div>
       </div>
-
-      <!-- Card Interactive Reactions -->
-      <div class="card-footer">
-        <button class="reaction-btn btn-have" title="I Have Done This!">
-          <span class="react-emoji">🙋</span>
-          <span>I Have!</span>
-          <span class="react-count have-count">0</span>
-        </button>
-        <button class="reaction-btn btn-never" title="Never Done This!">
-          <span class="react-emoji">🙅</span>
-          <span>Never!</span>
-          <span class="react-count never-count">0</span>
-        </button>
-      </div>
     `;
 
-    // Bind Reaction button events
-    const btnHave = card.querySelector('.btn-have');
-    const btnNever = card.querySelector('.btn-never');
-    const countHave = card.querySelector('.have-count');
-    const countNever = card.querySelector('.never-count');
     const btnCopy = card.querySelector('.copy-card-btn');
-
-    let haveCount = 0;
-    let neverCount = 0;
-
-    btnHave.addEventListener('click', (e) => {
-      e.stopPropagation();
-      haveCount++;
-      countHave.textContent = haveCount;
-      sounds.playIHave();
-      
-      if ('vibrate' in navigator) {
-        try { navigator.vibrate(18); } catch (err) {}
-      }
-
-      const rect = btnHave.getBoundingClientRect();
-      this.confetti.burst(rect.left + rect.width / 2, rect.top + rect.height / 2, 28, [cat.color, '#ff3366', '#ffd43b', '#20c997']);
-      
-      this.decrementFinger();
-    });
-
-    btnNever.addEventListener('click', (e) => {
-      e.stopPropagation();
-      neverCount++;
-      countNever.textContent = neverCount;
-      sounds.playNever();
-
-      if ('vibrate' in navigator) {
-        try { navigator.vibrate(12); } catch (err) {}
-      }
-
-      btnNever.style.transform = 'scale(1.12)';
-      setTimeout(() => btnNever.style.transform = '', 150);
-    });
-
     btnCopy.addEventListener('click', (e) => {
       e.stopPropagation();
       const textToCopy = `Never have I ever ${cleanQuestion}`;
@@ -275,7 +196,7 @@ class NeverHaveIEverApp {
 
     const onPointerDown = (e) => {
       if (this.isAnimating) return;
-      if (e.target.closest('.card-footer') || e.target.closest('button')) return;
+      if (e.target.closest('button')) return;
 
       this.isDragging = true;
       this.hasVibratedThreshold = false;
@@ -300,7 +221,6 @@ class NeverHaveIEverApp {
     const onPointerMove = (e) => {
       if (!this.isDragging) return;
 
-      // Prevent mobile page rubber-banding / browser scroll
       if (e.cancelable) {
         e.preventDefault();
       }
@@ -317,7 +237,7 @@ class NeverHaveIEverApp {
       // Direction calculation (4 quadrants centered on each axis)
       let direction = null;
       if (dist > 25) {
-        const angle = Math.atan2(dy, dx) * (180 / Math.PI); // -180 to +180 deg
+        const angle = Math.atan2(dy, dx) * (180 / Math.PI);
         if (angle >= -135 && angle < -45) {
           direction = 'top'; // 😈 Spicy
         } else if (angle >= -45 && angle < 45) {
@@ -453,8 +373,6 @@ class NeverHaveIEverApp {
     if ('vibrate' in navigator) {
       try { navigator.vibrate([20, 30, 20]); } catch (e) {}
     }
-
-    this.advancePlayerTurn();
 
     let exitX = 0;
     let exitY = 0;
@@ -598,66 +516,6 @@ class NeverHaveIEverApp {
     this.executeSwipe(direction);
   }
 
-  loadSavedPlayers() {
-    const saved = localStorage.getItem('nhie_players');
-    if (saved) {
-      try {
-        this.players = JSON.parse(saved);
-      } catch (e) {
-        this.players = [];
-      }
-    }
-  }
-
-  savePlayers() {
-    localStorage.setItem('nhie_players', JSON.stringify(this.players));
-    this.updatePlayerTurnDisplay();
-  }
-
-  advancePlayerTurn() {
-    if (this.players.length > 0) {
-      this.currentPlayerIdx = (this.currentPlayerIdx + 1) % this.players.length;
-      this.updatePlayerTurnDisplay();
-    }
-  }
-
-  updatePlayerTurnDisplay() {
-    if (!this.playerTurnPill) return;
-    if (this.players.length > 0) {
-      const p = this.players[this.currentPlayerIdx];
-      this.playerTurnPill.innerHTML = `👤 Turn: <strong>${p}</strong>`;
-      this.playerTurnPill.style.display = 'inline-flex';
-    } else {
-      this.playerTurnPill.style.display = 'none';
-    }
-  }
-
-  decrementFinger() {
-    if (this.fingersRemaining > 0) {
-      this.fingersRemaining--;
-      this.fingerCountEl.textContent = this.fingersRemaining;
-      
-      this.fingerTrackerBtn.style.transform = 'scale(1.22)';
-      setTimeout(() => this.fingerTrackerBtn.style.transform = '', 200);
-
-      if (this.fingersRemaining === 0) {
-        this.triggerGameOver();
-      }
-    }
-  }
-
-  resetFingers() {
-    this.fingersRemaining = 10;
-    this.fingerCountEl.textContent = '10';
-  }
-
-  triggerGameOver() {
-    this.confetti.burst(window.innerWidth / 2, window.innerHeight / 2, 75, ['#ff2d75', '#ff922b', '#20c997', '#ffd43b']);
-    setTimeout(() => {
-      this.gameOverModal.classList.add('active');
-    }, 400);
-  }
-
   bindEvents() {
     // 4 Directional Emoji Buttons
     ['top', 'left', 'right', 'bottom'].forEach(direction => {
@@ -678,18 +536,6 @@ class NeverHaveIEverApp {
       this.showToast(isEnabled ? 'Sound ON 🔊' : 'Sound MUTED 🔇');
     });
 
-    // Finger Tracker Button
-    this.fingerTrackerBtn.addEventListener('click', () => {
-      if (this.fingersRemaining > 0) {
-        this.decrementFinger();
-        sounds.playIHave();
-      } else {
-        this.resetFingers();
-        sounds.playClick();
-        this.showToast('Reset to 10 Fingers 🖐️');
-      }
-    });
-
     // Undo Button
     const undoBtn = document.getElementById('undo-btn');
     if (undoBtn) {
@@ -706,69 +552,6 @@ class NeverHaveIEverApp {
       });
     }
 
-    // Players Modal
-    const playersBtn = document.getElementById('players-btn');
-    const closePlayersBtn = document.getElementById('close-players-btn');
-    const addPlayerForm = document.getElementById('add-player-form');
-    const playerListEl = document.getElementById('player-list');
-
-    const renderPlayersList = () => {
-      if (!playerListEl) return;
-      playerListEl.innerHTML = '';
-      if (this.players.length === 0) {
-        playerListEl.innerHTML = '<p style="color: #64748b; font-size: 0.85rem; text-align: center; padding: 10px;">No players added yet. Add names below to enable pass-the-phone mode!</p>';
-        return;
-      }
-      this.players.forEach((p, idx) => {
-        const div = document.createElement('div');
-        div.className = 'player-chip';
-        div.innerHTML = `
-          <span>👤 ${p}</span>
-          <button type="button" class="del-player-btn" data-index="${idx}">✕</button>
-        `;
-        playerListEl.appendChild(div);
-      });
-
-      playerListEl.querySelectorAll('.del-player-btn').forEach(b => {
-        b.addEventListener('click', (e) => {
-          const idx = parseInt(e.currentTarget.dataset.index, 10);
-          this.players.splice(idx, 1);
-          this.savePlayers();
-          renderPlayersList();
-        });
-      });
-    };
-
-    if (playersBtn && this.playersModal) {
-      playersBtn.addEventListener('click', () => {
-        sounds.playClick();
-        renderPlayersList();
-        this.playersModal.classList.add('active');
-      });
-    }
-
-    if (closePlayersBtn && this.playersModal) {
-      closePlayersBtn.addEventListener('click', () => {
-        sounds.playClick();
-        this.playersModal.classList.remove('active');
-      });
-    }
-
-    if (addPlayerForm) {
-      addPlayerForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const input = document.getElementById('player-name-input');
-        const name = input.value.trim();
-        if (name && !this.players.includes(name)) {
-          this.players.push(name);
-          input.value = '';
-          this.savePlayers();
-          renderPlayersList();
-          sounds.playClick();
-        }
-      });
-    }
-
     // Info Modal
     const infoBtn = document.getElementById('info-btn');
     const closeInfoBtn = document.getElementById('close-info-btn');
@@ -781,56 +564,14 @@ class NeverHaveIEverApp {
       this.infoModal.classList.remove('active');
     });
 
-    // Custom Question Modal
-    const customBtn = document.getElementById('custom-btn');
-    const closeCustomBtn = document.getElementById('close-custom-btn');
-    const customForm = document.getElementById('custom-card-form');
-
-    customBtn.addEventListener('click', () => {
-      sounds.playClick();
-      this.customModal.classList.add('active');
-    });
-    closeCustomBtn.addEventListener('click', () => {
-      sounds.playClick();
-      this.customModal.classList.remove('active');
-    });
-
-    customForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const catSelect = document.getElementById('custom-cat-select');
-      const textInput = document.getElementById('custom-text-input');
-
-      const cat = catSelect.value;
-      const text = textInput.value;
-
-      if (text.trim()) {
-        this.saveCustomQuestion(cat, text);
-        textInput.value = '';
-        this.customModal.classList.remove('active');
-        sounds.playPartySound(sounds.ctx ? sounds.ctx.currentTime : 0);
-        this.confetti.burst();
-        this.showToast('Custom card added to deck! 🎉');
-      }
-    });
-
-    // Game Over Reset
-    const resetGameBtn = document.getElementById('reset-game-btn');
-    resetGameBtn.addEventListener('click', () => {
-      this.resetFingers();
-      this.gameOverModal.classList.remove('active');
-      sounds.playClick();
-    });
-
-    // Close modals on overlay backdrop click
-    [this.infoModal, this.customModal, this.gameOverModal, this.playersModal].forEach(modal => {
-      if (modal) {
-        modal.addEventListener('click', (e) => {
-          if (e.target === modal) {
-            modal.classList.remove('active');
-          }
-        });
-      }
-    });
+    // Close modal on overlay backdrop click
+    if (this.infoModal) {
+      this.infoModal.addEventListener('click', (e) => {
+        if (e.target === this.infoModal) {
+          this.infoModal.classList.remove('active');
+        }
+      });
+    }
   }
 
   bindKeyboard() {
@@ -863,20 +604,6 @@ class NeverHaveIEverApp {
         case 'Z':
           if (e.ctrlKey || e.metaKey || e.key === 'z') {
             this.undoLastCard();
-          }
-          break;
-        case 'h':
-        case 'H':
-          if (this.activeCard) {
-            const btnHave = this.activeCard.querySelector('.btn-have');
-            if (btnHave) btnHave.click();
-          }
-          break;
-        case 'n':
-        case 'N':
-          if (this.activeCard) {
-            const btnNever = this.activeCard.querySelector('.btn-never');
-            if (btnNever) btnNever.click();
           }
           break;
         case 'm':

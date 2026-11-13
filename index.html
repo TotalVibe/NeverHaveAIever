@@ -25,9 +25,6 @@
   <!-- Toast Notification -->
   <div id="toast"></div>
 
-  <!-- Optional Player Turn Pill -->
-  <div class="player-turn-pill" id="player-turn-pill"></div>
-
   <!-- Top Navigation Bar -->
   <header class="app-header">
     <div class="brand">
@@ -36,22 +33,6 @@
     </div>
 
     <div class="header-actions">
-      <!-- 10 Fingers / Drinks Tracker -->
-      <button class="finger-tracker" id="finger-tracker-btn" title="10 Fingers Down: Tap to put a finger down or reset">
-        <span>🖐️</span>
-        <span class="count" id="finger-count">10</span>
-      </button>
-
-      <!-- Pass The Phone Players -->
-      <button class="icon-btn" id="players-btn" title="Party Players / Pass The Phone" aria-label="Players">
-        👥
-      </button>
-
-      <!-- Add Custom Question -->
-      <button class="icon-btn" id="custom-btn" title="Add Custom Card" aria-label="Add Custom Card">
-        ➕
-      </button>
-
       <!-- Sound Effects Toggle -->
       <button class="icon-btn" id="sound-toggle-btn" title="Toggle Sound (M)" aria-label="Toggle Sound">
         🔊
@@ -163,83 +144,16 @@
       </div>
 
       <div style="font-size: 0.88rem; line-height: 1.6; color: #cbd5e1; margin-bottom: 16px;">
-        <h3 style="color: #fff; font-size: 1rem; margin-bottom: 6px;">🎮 Game Controls:</h3>
+        <h3 style="color: #fff; font-size: 1rem; margin-bottom: 6px;">🎮 Controls:</h3>
         <ul style="padding-left: 20px; margin-bottom: 12px;">
           <li><strong>Swipe / Drag Card</strong>: Drag the active card towards or on top of any of the 4 emojis to choose that topic for the next card.</li>
           <li><strong>Tap Emoji</strong>: Directly tap any of the 4 emoji buttons to immediately choose that topic!</li>
           <li><strong>Keyboard</strong>: Arrow Keys (↑ Spicy, ← Cringe, → Party, ↓ Wholesome), Spacebar to shuffle, Z to undo.</li>
-          <li><strong>Reactions</strong>: Tap 🙋 <em>I Have!</em> or 🙅 <em>Never!</em> to count reactions with confetti!</li>
-          <li><strong>🖐️ 10 Fingers Down</strong>: Everyone holds up 10 fingers. Whenever you've done something, tap "I Have!" or tap the tracker to put a finger down!</li>
         </ul>
       </div>
 
       <button class="btn-primary" onclick="document.getElementById('info-modal').classList.remove('active')">
         Got It! Let's Play 🔥
-      </button>
-    </div>
-  </div>
-
-  <!-- Players Modal (Pass The Phone) -->
-  <div class="modal-overlay" id="players-modal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2 class="modal-title">Party Players 👥</h2>
-        <button class="modal-close" id="close-players-btn">✕</button>
-      </div>
-
-      <div class="player-list" id="player-list"></div>
-
-      <form id="add-player-form" style="margin-top: 10px;">
-        <div class="form-group">
-          <label class="form-label" for="player-name-input">Add Player Name</label>
-          <div style="display: flex; gap: 8px;">
-            <input type="text" class="form-input" id="player-name-input" placeholder="e.g. Alex, Sam..." required autocomplete="off">
-            <button type="submit" class="btn-primary" style="width: auto; padding: 10px 18px; white-space: nowrap;">Add +</button>
-          </div>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- Add Custom Card Modal -->
-  <div class="modal-overlay" id="custom-modal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2 class="modal-title">Add Custom Card ✍️</h2>
-        <button class="modal-close" id="close-custom-btn">✕</button>
-      </div>
-
-      <form id="custom-card-form">
-        <div class="form-group">
-          <label class="form-label" for="custom-cat-select">Choose Topic</label>
-          <select class="form-select" id="custom-cat-select">
-            <option value="spicy">😈 Spicy & Wild (Top)</option>
-            <option value="cringe">😳 Awkward & Cringe (Left)</option>
-            <option value="party">🥳 Party & Chaos (Right)</option>
-            <option value="wholesome">😇 Wholesome & Quirky (Down)</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label" for="custom-text-input">The Prompt</label>
-          <textarea class="form-textarea" id="custom-text-input" rows="3" placeholder="e.g. checked someone's horoscope before going on a first date..." required></textarea>
-        </div>
-
-        <button type="submit" class="btn-primary">Add To Game Deck 🚀</button>
-      </form>
-    </div>
-  </div>
-
-  <!-- Game Over / All Fingers Down Modal -->
-  <div class="modal-overlay" id="gameover-modal">
-    <div class="modal-content" style="text-align: center;">
-      <div style="font-size: 3.5rem; margin-bottom: 10px;">🏆🖐️💀</div>
-      <h2 class="modal-title" style="margin-bottom: 8px;">All 10 Fingers Down!</h2>
-      <p style="color: #cbd5e1; font-size: 0.95rem; line-height: 1.5; margin-bottom: 20px;">
-        You have officially lived the wildest life in the room! Take a drink or complete a dare, then reset your fingers for round 2!
-      </p>
-      <button class="btn-primary" id="reset-game-btn">
-        Reset 10 Fingers & Keep Playing 🎉
       </button>
     </div>
   </div>
