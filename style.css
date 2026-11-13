@@ -111,8 +111,8 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 32px;  /* Tamaño fijo controlado para el icono */
-  height: 32px;
+  width: 44px;  /* Tamaño fijo controlado para el icono */
+  height: 44px;
   flex-shrink: 0;
   animation: pulse-flame 2.2s infinite ease-in-out;
 }
