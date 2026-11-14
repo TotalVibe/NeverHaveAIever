@@ -15,7 +15,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Dancing+Script:wght@700&family=Elsie+Swash+Caps:wght@400;900&family=Great+Vibes&display=swap" rel="stylesheet">
   <meta name="description" content="Never Have AI ever party webapp with Tinder-like sliding features to choose the next question topic by dragging towards an emoji.">
-  <link rel="stylesheet" href="style.css?v=38">
+  <link rel="stylesheet" href="style.css?v=51">
 </head>
 <body>
 
@@ -30,9 +30,6 @@
   <!-- Particle Confetti Canvas -->
   <canvas id="confetti-canvas"></canvas>
 
-  <!-- Toast Notification -->
-  <div id="toast"></div>
-
   <!-- Top Navigation Bar -->
  <!-- Top Navigation Bar -->
   <header class="app-header">
@@ -44,6 +41,7 @@
     </button>
 
     <div class="header-actions">
+      <div id="toast" role="status" aria-live="polite"></div>
       <button class="icon-btn" id="undo-btn" title="Undo previous card (Z)" aria-label="Undo previous card">
         <svg viewBox="0 0 24 24" aria-hidden="true">
           <path d="M9 14 4 9l5-5M4 9h10a6 6 0 0 1 0 12h-2" />
@@ -114,32 +112,32 @@
       <div class="guide-category-grid">
         <div class="guide-cat-item" style="border-color: rgba(255, 45, 117, 0.35);">
           <div class="cat-header" style="color: #ff2d75;">
-            <span>😈</span>
-            <span>Spicy (UP)</span>
+            <span id="guide-spicy-emoji">😈</span>
+            <span id="guide-spicy-label">Spicy &amp; Wild (UP)</span>
           </div>
           <p>Dating secrets, romantic fails, guilty pleasures & intimate truths.</p>
-        </div>
-
-        <div class="guide-cat-item" style="border-color: rgba(255, 146, 43, 0.35);">
-          <div class="cat-header" style="color: #ff922b;">
-            <span>😳</span>
-            <span>Cringe (LEFT)</span>
-          </div>
-          <p>Hilarious fails, caught red-handed moments & public embarrassment.</p>
         </div>
 
         <div class="guide-cat-item" style="border-color: rgba(32, 201, 151, 0.35);">
           <div class="cat-header" style="color: #20c997;">
             <span>🥳</span>
-            <span>Party (RIGHT)</span>
+            <span>Party (→)</span>
           </div>
           <p>Nightlife chaos, drinking dares, wild nights out & club adventures.</p>
+        </div>
+
+        <div class="guide-cat-item" style="border-color: rgba(255, 146, 43, 0.35);">
+          <div class="cat-header" style="color: #ff922b;">
+            <span>😳</span>
+            <span>Cringe (←)</span>
+          </div>
+          <p>Hilarious fails, caught red-handed moments & public embarrassment.</p>
         </div>
 
         <div class="guide-cat-item" style="border-color: rgba(116, 143, 252, 0.35);">
           <div class="cat-header" style="color: #748ffc;">
             <span>😇</span>
-            <span>Wholesome (DOWN)</span>
+            <span>Wholesome (↓)</span>
           </div>
           <p>Childhood memories, weird daily habits, food quirks & relatable life.</p>
         </div>
@@ -147,7 +145,7 @@
 
       <div style="font-size: 0.88rem; line-height: 1.6; color: #cbd5e1; margin-bottom: 16px;">
         <h3 style="color: #fff; font-size: 1rem; margin-bottom: 6px;">Controls</h3>
-        <ul style="padding-left: 20px; margin-bottom: 12px;">
+        <ul class="info-controls-list" style="padding-left: 20px; margin-bottom: 12px;">
           <li><strong>Swipe / Drag Card</strong>: Drag the active card towards or on top of any of the 4 emojis to choose that topic for the next card.</li>
           <li><strong>Tap Emoji</strong>: Directly tap any of the 4 emoji buttons to immediately choose that topic!</li>
           <li><strong>Keyboard</strong>: Arrow Keys (↑ Spicy, ← Cringe, → Party, ↓ Wholesome), Spacebar to shuffle, Z to undo.</li>
@@ -157,43 +155,63 @@
       <p class="info-attribution">© 2026 Mollevi · <a href="https://www.mollevi.com" target="_blank" rel="noopener noreferrer">mollevi.com</a></p>
 
       <button class="btn-primary" onclick="document.getElementById('info-modal').classList.remove('active')">
-        Let's play
+        Let's play!
       </button>
     </div>
   </div>
 
   <div class="modal-overlay" id="customise-modal" role="dialog" aria-modal="true" aria-labelledby="customise-modal-title">
     <div class="modal-content customise-modal-content">
-      <div class="customise-modal-icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24">
-          <path d="M12 2.8 13.9 9l6.3 2-6.3 2-1.9 6.2L10.1 13 3.8 11l6.3-2L12 2.8Z" />
-          <path d="m19 14 .9 2.4 2.3.8-2.3.8L19 20.5l-.8-2.5-2.4-.8 2.4-.8.8-2.4Z" />
-        </svg>
+      <button class="modal-close customise-modal-close" type="button" aria-label="Close">✕</button>
+      <div class="modal-header customise-modal-header">
+        <h2 class="modal-title" id="customise-modal-title">Who is playing?</h2>
       </div>
-      <div class="modal-header">
-        <h2 class="modal-title" id="customise-modal-title">Customise your cards</h2>
-        <button class="modal-close customise-modal-close" type="button" aria-label="Close">✕</button>
-      </div>
-      <span class="customise-preview-badge">BETA PREVIEW</span>
-      <p class="customise-modal-message">Choose your crowd, then tell us who's playing and what kind of chaos we're dealing with.</p>
       <div class="customise-audience-grid" role="group" aria-label="Preview audience options">
-        <button class="customise-audience-option" type="button" aria-pressed="false">Mostly women</button>
         <button class="customise-audience-option" type="button" aria-pressed="false">Mostly men</button>
-        <button class="customise-audience-option" type="button" aria-pressed="false">Gay guys' night</button>
-        <button class="customise-audience-option" type="button" aria-pressed="false">Mixed crew</button>
-        <button class="customise-audience-option" type="button" aria-pressed="false">Best friends</button>
-        <button class="customise-audience-option" type="button" aria-pressed="false">Coworkers</button>
+        <button class="customise-audience-option" type="button" aria-pressed="false">Mostly women</button>
+        <button class="customise-audience-option" type="button" aria-pressed="false">LGBTQ+</button>
         <button class="customise-audience-option" type="button" aria-pressed="false">Couples</button>
-        <button class="customise-audience-option" type="button" aria-pressed="false">Bachelor party</button>
-        <button class="customise-audience-option" type="button" aria-pressed="false">Bachelorette party</button>
+        <button class="customise-audience-option" type="button" aria-pressed="false">Coworkers</button>
+        <button class="customise-audience-option" type="button" aria-pressed="false">Family</button>
+      </div>
+      <div class="customise-level-control">
+        <div class="customise-level-heading">
+          <label for="customise-level-slider">Card intensity</label>
+        </div>
+        <div class="customise-level-slider-wrap">
+          <div class="customise-level-track" aria-hidden="true"></div>
+          <input class="customise-level-slider" id="customise-level-slider" type="range" min="0" max="2" step="1" value="1" aria-valuetext="Spicy">
+          <span class="customise-level-thumb" aria-hidden="true">😈</span>
+        </div>
+        <div class="customise-level-options" aria-hidden="true">
+          <div class="customise-level-option" data-level="cheeky">
+            <span>Cheeky</span>
+          </div>
+          <div class="customise-level-option is-current" data-level="spicy">
+            <span>Spicy</span>
+          </div>
+          <div class="customise-level-option" data-level="unhinged">
+            <span>Unhinged</span>
+          </div>
+        </div>
       </div>
       <label class="customise-description-label" for="customise-group-description">Describe your group</label>
       <textarea class="customise-group-description" id="customise-group-description" rows="3" placeholder=""></textarea>
-      <p class="customise-preview-note">Preview only: your description isn’t saved or used to generate cards yet.</p>
-      <button class="btn-primary customise-modal-done" type="button">SAVE AND PLAY</button>
+      <p class="customise-preview-note">Your group details are preview-only. Card intensity is saved and changes the questions you get.</p>
+      <button class="btn-primary customise-modal-done" type="button">
+        <svg class="customise-save-sparkle" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 2.8 13.9 9l6.3 2-6.3 2-1.9 6.2L10.1 13 3.8 11l6.3-2L12 2.8Z" />
+          <path d="m19 14 .9 2.4 2.3.8-2.3.8L19 20.5l-.8-2.5-2.4-.8 2.4-.8.8-2.4Z" />
+        </svg>
+        <span>SAVE AND PLAY</span>
+        <span class="customise-ad-badge">
+          <svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 1.75a.75.75 0 0 1 1.12-.65l6.1 3.52a1.6 1.6 0 0 1 0 2.76l-6.1 3.52A.75.75 0 0 1 3 10.25z" /></svg>
+          <span>AD</span>
+        </span>
+      </button>
     </div>
   </div>
 
-  <script type="module" src="app.js?v=16"></script>
+  <script type="module" src="app.js?v=28"></script>
 </body>
 </html>

@@ -1,11 +1,29 @@
-import { CATEGORIES, QUESTIONS } from './questions.js';
+import { CATEGORIES, QUESTIONS, SPICY_QUESTION_LEVELS } from './questions.js?v=2';
 import { sounds } from './sound.js?v=3';
 import { ConfettiEngine } from './confetti.js';
+
+const SPICY_LEVELS = ['cheeky', 'spicy', 'unhinged'];
+const SPICY_LEVEL_LABELS = {
+  cheeky: 'Cheeky',
+  spicy: 'Spicy',
+  unhinged: 'Unhinged'
+};
+const SPICY_LEVEL_CATEGORY_NAMES = {
+  cheeky: 'Cheeky & Playful',
+  spicy: 'Spicy & Wild',
+  unhinged: 'Unhinged & No Limits'
+};
+const SPICY_LEVEL_EMOJIS = {
+  cheeky: '🤪',
+  spicy: '😈',
+  unhinged: '💣'
+};
 
 class NeverHaveIEverApp {
   constructor() {
     this.confetti = new ConfettiEngine('confetti-canvas');
     this.categories = CATEGORIES;
+    this.spicyLevel = this.loadSavedSpicyLevel();
     this.questions = this.loadQuestions();
     this.usedQuestions = {
       spicy: new Set(),
@@ -56,13 +74,66 @@ class NeverHaveIEverApp {
     return Math.max(55, Math.min(80, minDim * 0.18));
   }
 
+  loadSavedSpicyLevel() {
+    try {
+      const savedLevel = localStorage.getItem('never-have-ai-ever-spicy-level');
+      return SPICY_LEVELS.includes(savedLevel) ? savedLevel : 'spicy';
+    } catch (error) {
+      console.error('Unable to load the saved card intensity level.', error);
+      return 'spicy';
+    }
+  }
+
   loadQuestions() {
     return {
-      spicy: [...QUESTIONS.spicy],
+      spicy: [...SPICY_QUESTION_LEVELS[this.spicyLevel]],
       cringe: [...QUESTIONS.cringe],
       party: [...QUESTIONS.party],
       wholesome: [...QUESTIONS.wholesome]
     };
+  }
+
+  getCategoryName(category) {
+    return category === 'spicy'
+      ? SPICY_LEVEL_LABELS[this.spicyLevel]
+      : Object.values(this.categories).find(c => c.id === category)?.name ?? this.categories.top.name;
+  }
+
+  getCardCategoryName(category) {
+    return category === 'spicy'
+      ? SPICY_LEVEL_CATEGORY_NAMES[this.spicyLevel]
+      : this.getCategoryName(category);
+  }
+
+  getCategoryEmoji(category) {
+    return category === 'spicy'
+      ? SPICY_LEVEL_EMOJIS[this.spicyLevel]
+      : Object.values(this.categories).find(c => c.id === category)?.emoji ?? this.categories.top.emoji;
+  }
+
+  updateSpicyLevelPresentation() {
+    const topTarget = this.targetButtons.top;
+    topTarget.querySelector('.emoji').textContent = this.getCategoryEmoji('spicy');
+    topTarget.querySelector('.label').textContent = this.getCategoryName('spicy');
+    topTarget.title = `Drag UP or Tap for ${this.getCategoryName('spicy')}`;
+    document.getElementById('guide-spicy-emoji').textContent = this.getCategoryEmoji('spicy');
+    document.getElementById('guide-spicy-label').textContent = `${this.getCategoryName('spicy')} (↑)`;
+  }
+
+  updateSpicyLevelPreview(level) {
+    const slider = this.customiseModal.querySelector('.customise-level-slider');
+    const thumb = this.customiseModal.querySelector('.customise-level-thumb');
+    const selectedIndex = SPICY_LEVELS.indexOf(level);
+    slider.value = String(selectedIndex);
+    slider.setAttribute('aria-valuetext', SPICY_LEVEL_LABELS[level]);
+    thumb.textContent = SPICY_LEVEL_EMOJIS[level];
+    const thumbSize = 22;
+    const thumbCenter = slider.offsetLeft + thumbSize / 2
+      + selectedIndex * (slider.offsetWidth - thumbSize) / (SPICY_LEVELS.length - 1);
+    thumb.style.left = `${thumbCenter}px`;
+    this.customiseModal.querySelectorAll('.customise-level-option').forEach((option, index) => {
+      option.classList.toggle('is-current', index === selectedIndex);
+    });
   }
 
   getRandomQuestion(category) {
@@ -84,6 +155,7 @@ class NeverHaveIEverApp {
   }
 
   init() {
+    this.updateSpicyLevelPresentation();
     this.renderInitialDeck();
     this.bindEvents();
     this.bindKeyboard();
@@ -250,7 +322,7 @@ class NeverHaveIEverApp {
           <div class="card-ambient-tint"></div>
           
           <!-- Direction Stamp Indicators -->
-          <div class="swipe-stamp stamp-top">😈 SPICY NEXT</div>
+          <div class="swipe-stamp stamp-top">${this.getCategoryEmoji('spicy')} ${this.getCategoryName('spicy').toUpperCase()} NEXT</div>
           <div class="swipe-stamp stamp-left">😳 CRINGE NEXT</div>
           <div class="swipe-stamp stamp-right">🥳 PARTY NEXT</div>
           <div class="swipe-stamp stamp-bottom">😇 WHOLESOME NEXT</div>
@@ -258,11 +330,11 @@ class NeverHaveIEverApp {
           <!-- Card category label and decorative emoji -->
           <div class="card-header">
             <div class="category-tag" style="color: ${cat.color};">
-              <span class="cat-tag-name">${cat.name}</span>
+              <span class="cat-tag-name">${this.getCardCategoryName(data.category)}</span>
             </div>
           </div>
           <div class="category-watermark" aria-hidden="true">
-            <span class="cat-tag-emoji">${cat.emoji}</span>
+            <span class="cat-tag-emoji">${this.getCategoryEmoji(data.category)}</span>
           </div>
 
           <!-- Card Body Statement (Centered) -->
@@ -572,8 +644,8 @@ class NeverHaveIEverApp {
       const catTag = nextCard.querySelector('.category-tag');
       if (catTag && catTagEmoji && catTagName) {
         catTag.style.color = cat.color;
-        catTagName.textContent = cat.name;
-        catTagEmoji.textContent = cat.emoji;
+        catTagName.textContent = this.getCardCategoryName(nextCategory);
+        catTagEmoji.textContent = this.getCategoryEmoji(nextCategory);
       }
 
       const promptText = nextCard.querySelector('.prompt-text');
@@ -675,7 +747,7 @@ class NeverHaveIEverApp {
   undoLastCard() {
     if (this.isCelebrating) return;
     if (this.isAnimating || this.cardHistory.length === 0) {
-      this.showToast('No previous card to undo!');
+      this.showToast("Can't undo");
       return;
     }
     this.isAnimating = true;
@@ -707,7 +779,7 @@ class NeverHaveIEverApp {
     this.resetIdleHint();
 
     sounds.playSwoosh('bottom');
-    this.showToast('Restored previous card ↺');
+    this.showToast('Undo');
 
     setTimeout(() => {
       this.isAnimating = false;
@@ -752,6 +824,7 @@ class NeverHaveIEverApp {
         e.preventDefault();
         e.stopPropagation();
         sounds.playClick();
+        this.updateSpicyLevelPreview(this.spicyLevel);
         const descriptionField = this.customiseModal.querySelector('.customise-group-description');
         descriptionField.placeholder = groupDescriptionExamples[nextGroupDescriptionExample];
         nextGroupDescriptionExample = (nextGroupDescriptionExample + 1) % groupDescriptionExamples.length;
@@ -777,7 +850,39 @@ class NeverHaveIEverApp {
     });
     this.customiseModal.querySelector('.customise-modal-done').addEventListener('click', () => {
       sounds.playClick();
+      const selectedLevelIndex = Number(this.customiseModal.querySelector('.customise-level-slider').value);
+      const selectedLevel = SPICY_LEVELS[selectedLevelIndex];
+      if (!selectedLevel) {
+        this.showToast('Choose a card intensity level before saving.');
+        return;
+      }
+
+      try {
+        localStorage.setItem('never-have-ai-ever-spicy-level', selectedLevel);
+      } catch (error) {
+        console.error('Unable to save the card intensity level.', error);
+        this.showToast('Could not save your card intensity level.');
+        return;
+      }
+
+      const levelChanged = selectedLevel !== this.spicyLevel;
+      this.spicyLevel = selectedLevel;
+      this.updateSpicyLevelPresentation();
+      if (levelChanged) {
+        this.questions.spicy = [...SPICY_QUESTION_LEVELS[selectedLevel]];
+        this.restartGame();
+      }
+      this.showToast(`${SPICY_LEVEL_LABELS[selectedLevel]} level saved.`);
       closeCustomiseModal();
+    });
+    const levelSlider = this.customiseModal.querySelector('.customise-level-slider');
+    levelSlider.addEventListener('input', () => {
+      const level = SPICY_LEVELS[Number(levelSlider.value)];
+      if (level) this.updateSpicyLevelPreview(level);
+    });
+    window.addEventListener('resize', () => {
+      const level = SPICY_LEVELS[Number(levelSlider.value)];
+      if (level) this.updateSpicyLevelPreview(level);
     });
     this.customiseModal.querySelectorAll('.customise-audience-option').forEach((option) => {
       option.addEventListener('click', () => {
@@ -806,7 +911,7 @@ class NeverHaveIEverApp {
       const isEnabled = sounds.toggle();
       this.soundToggleBtn.textContent = isEnabled ? '🔊' : '🔇';
       sounds.playClick();
-      this.showToast(isEnabled ? 'Sound ON 🔊' : 'Sound MUTED 🔇');
+      this.showToast(isEnabled ? 'Sound ON' : 'Muted');
     });
 
     document.getElementById('undo-btn').addEventListener('click', () => this.undoLastCard());
