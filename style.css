@@ -158,6 +158,11 @@ body {
   stroke-linejoin: round;
 }
 
+#info-btn svg {
+  width: 23px;
+  height: 23px;
+}
+
 .icon-btn:hover {
   background: rgba(30, 34, 48, 0.84);
   border-color: rgba(255, 255, 255, 0.24);
@@ -1587,6 +1592,16 @@ body {
 .btn-primary:hover {
   opacity: 0.95;
   transform: translateY(-1px);
+}
+
+#info-modal .btn-primary {
+  transition: background 0.35s ease, box-shadow 0.35s ease, transform 0.25s ease, opacity 0.25s ease;
+}
+
+#info-modal .btn-primary:hover,
+#info-modal .btn-primary:focus-visible {
+  background: linear-gradient(135deg, #8261c7, #6748a7 55%, #513986);
+  box-shadow: 0 10px 28px rgba(128, 83, 207, 0.58), 0 0 18px rgba(164, 125, 255, 0.34), inset 0 1px 0 rgba(255, 255, 255, 0.22);
 }
 
 /* Floating Confetti Canvas */

@@ -15,7 +15,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Dancing+Script:wght@700&family=Elsie+Swash+Caps:wght@400;900&family=Great+Vibes&display=swap" rel="stylesheet">
   <meta name="description" content="Never Have AI ever party webapp with Tinder-like sliding features to choose the next question topic by dragging towards an emoji.">
-  <link rel="stylesheet" href="style.css?v=51">
+  <link rel="stylesheet" href="style.css?v=54">
 </head>
 <body>
 
@@ -35,7 +35,7 @@
   <header class="app-header">
     <button class="icon-btn reshuffle-btn" id="reshuffle-btn" type="button" title="Reshuffle deck">
       <svg viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M17 3h4v4M3 7h3.5a4 4 0 0 1 3.2 1.6l4.6 6.2a4 4 0 0 0 3.2 1.6H21M17 17h4v4M3 17h3.5a4 4 0 0 0 3.2-1.6l1-1.3M14.3 7.6A4 4 0 0 1 17.5 6H21" />
+        <path d="M3 6h3.5a4 4 0 0 1 3.3 1.8l6.4 8.4a4 4 0 0 0 3.3 1.8H21m-3-3 3 3-3 3M3 18h3.5a4 4 0 0 0 3.3-1.8l1.2-1.6m3.3-4.4 1.9-2.6A4 4 0 0 1 19.5 6H21m-3-3 3 3-3 3" />
       </svg>
       <span>Reshuffle</span>
     </button>
@@ -50,14 +50,16 @@
 
       <!-- Sound Effects Toggle -->
       <button class="icon-btn" id="sound-toggle-btn" title="Toggle Sound (M)" aria-label="Toggle Sound">
-        🔊
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M4 10v4h3l5 4V6l-5 4H4Z" />
+          <path d="M16 9a5 5 0 0 1 0 6M18.5 6.5a9 9 0 0 1 0 11" />
+        </svg>
       </button>
 
       <!-- How to play / info -->
       <button class="icon-btn" id="info-btn" title="How to play" aria-label="How to play">
         <svg viewBox="0 0 24 24" aria-hidden="true">
-          <circle cx="12" cy="12" r="9" />
-          <path d="M9.6 9a2.45 2.45 0 1 1 4.1 1.8c-.9.8-1.7 1.2-1.7 2.7M12 17h.01" />
+          <path d="M9.3 8.5a2.8 2.8 0 1 1 4.5 2.2c-1.2.9-1.8 1.4-1.8 3M12 17.5v.1" />
         </svg>
       </button>
     </div>
@@ -155,7 +157,7 @@
       <p class="info-attribution">© 2026 Mollevi · <a href="https://www.mollevi.com" target="_blank" rel="noopener noreferrer">mollevi.com</a></p>
 
       <button class="btn-primary" onclick="document.getElementById('info-modal').classList.remove('active')">
-        Let's play!
+        LET'S PLAY!
       </button>
     </div>
   </div>
@@ -212,6 +214,6 @@
     </div>
   </div>
 
-  <script type="module" src="app.js?v=28"></script>
+  <script type="module" src="app.js?v=29"></script>
 </body>
 </html>

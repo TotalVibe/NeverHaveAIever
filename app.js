@@ -156,6 +156,7 @@ class NeverHaveIEverApp {
 
   init() {
     this.updateSpicyLevelPresentation();
+    this.updateSoundTogglePresentation(sounds.enabled);
     this.renderInitialDeck();
     this.bindEvents();
     this.bindKeyboard();
@@ -227,6 +228,15 @@ class NeverHaveIEverApp {
     this.toastTimer = setTimeout(() => {
       this.toastEl.classList.remove('visible');
     }, 2200);
+  }
+
+  updateSoundTogglePresentation(isEnabled) {
+    this.soundToggleBtn.innerHTML = isEnabled
+      ? '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10v4h3l5 4V6l-5 4H4Z"/><path d="M16 9a5 5 0 0 1 0 6M18.5 6.5a9 9 0 0 1 0 11"/></svg>'
+      : '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10v4h3l5 4V6l-5 4H4Z"/><path d="m16 9 5 6m0-6-5 6"/></svg>';
+    this.soundToggleBtn.setAttribute('aria-label', isEnabled ? 'Mute sound' : 'Enable sound');
+    this.soundToggleBtn.setAttribute('aria-pressed', String(isEnabled));
+    this.soundToggleBtn.title = isEnabled ? 'Mute Sound (M)' : 'Enable Sound (M)';
   }
 
   celebrateDoneIt() {
@@ -870,10 +880,10 @@ class NeverHaveIEverApp {
       this.updateSpicyLevelPresentation();
       if (levelChanged) {
         this.questions.spicy = [...SPICY_QUESTION_LEVELS[selectedLevel]];
-        this.restartGame();
       }
       this.showToast(`${SPICY_LEVEL_LABELS[selectedLevel]} level saved.`);
       closeCustomiseModal();
+      this.reshuffleGame();
     });
     const levelSlider = this.customiseModal.querySelector('.customise-level-slider');
     levelSlider.addEventListener('input', () => {
@@ -909,7 +919,7 @@ class NeverHaveIEverApp {
     // Sound Toggle
     this.soundToggleBtn.addEventListener('click', () => {
       const isEnabled = sounds.toggle();
-      this.soundToggleBtn.textContent = isEnabled ? '🔊' : '🔇';
+      this.updateSoundTogglePresentation(isEnabled);
       sounds.playClick();
       this.showToast(isEnabled ? 'Sound ON' : 'Muted');
     });
