@@ -15,7 +15,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Dancing+Script:wght@700&family=Elsie+Swash+Caps:wght@400;900&family=Great+Vibes&display=swap" rel="stylesheet">
   <meta name="description" content="Never Have AI ever party webapp with Tinder-like sliding features to choose the next question topic by dragging towards an emoji.">
-  <link rel="stylesheet" href="style.css?v=54">
+  <link rel="stylesheet" href="style.css?v=73">
 </head>
 <body>
 
@@ -33,11 +33,11 @@
   <!-- Top Navigation Bar -->
  <!-- Top Navigation Bar -->
   <header class="app-header">
-    <button class="icon-btn reshuffle-btn" id="reshuffle-btn" type="button" title="Reshuffle deck">
+    <button class="icon-btn reshuffle-btn" id="reshuffle-btn" type="button" title="Restart deck">
       <svg viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M3 6h3.5a4 4 0 0 1 3.3 1.8l6.4 8.4a4 4 0 0 0 3.3 1.8H21m-3-3 3 3-3 3M3 18h3.5a4 4 0 0 0 3.3-1.8l1.2-1.6m3.3-4.4 1.9-2.6A4 4 0 0 1 19.5 6H21m-3-3 3 3-3 3" />
+        <path d="M20 11a8 8 0 0 0-14.9-4M5 3v4h4M4 13a8 8 0 0 0 14.9 4M19 21v-4h-4" />
       </svg>
-      <span>Reshuffle</span>
+      <span>Restart</span>
     </button>
 
     <div class="header-actions">
@@ -112,40 +112,52 @@
       </div>
 
       <div class="guide-category-grid">
-        <div class="guide-cat-item" style="border-color: rgba(255, 45, 117, 0.35);">
+        <div class="guide-cat-item" style="--guide-color: #ff2d75; border-color: rgba(255, 45, 117, 0.35);">
           <div class="cat-header" style="color: #ff2d75;">
             <span id="guide-spicy-emoji">😈</span>
-            <span id="guide-spicy-label">Spicy &amp; Wild (UP)</span>
+            <span id="guide-spicy-label">Spicy &amp; Wild</span>
           </div>
+          <span class="guide-key-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M12 17V7m-5 5 5-5 5 5" /></svg>
+          </span>
           <p>Dating secrets, romantic fails, guilty pleasures & intimate truths.</p>
         </div>
 
-        <div class="guide-cat-item" style="border-color: rgba(32, 201, 151, 0.35);">
+        <div class="guide-cat-item" style="--guide-color: #20c997; border-color: rgba(32, 201, 151, 0.35);">
           <div class="cat-header" style="color: #20c997;">
             <span>🥳</span>
-            <span>Party (→)</span>
+            <span>Party</span>
           </div>
+          <span class="guide-key-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M7 12h10m-5-5 5 5-5 5" /></svg>
+          </span>
           <p>Nightlife chaos, drinking dares, wild nights out & club adventures.</p>
         </div>
 
-        <div class="guide-cat-item" style="border-color: rgba(255, 146, 43, 0.35);">
+        <div class="guide-cat-item" style="--guide-color: #ff922b; border-color: rgba(255, 146, 43, 0.35);">
           <div class="cat-header" style="color: #ff922b;">
             <span>😳</span>
-            <span>Cringe (←)</span>
+            <span>Cringe</span>
           </div>
+          <span class="guide-key-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M17 12H7m5 5-5-5 5-5" /></svg>
+          </span>
           <p>Hilarious fails, caught red-handed moments & public embarrassment.</p>
         </div>
 
-        <div class="guide-cat-item" style="border-color: rgba(116, 143, 252, 0.35);">
+        <div class="guide-cat-item" style="--guide-color: #748ffc; border-color: rgba(116, 143, 252, 0.35);">
           <div class="cat-header" style="color: #748ffc;">
             <span>😇</span>
-            <span>Wholesome (↓)</span>
+            <span>Wholesome</span>
           </div>
+          <span class="guide-key-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M12 7v10m5-5-5 5-5-5" /></svg>
+          </span>
           <p>Childhood memories, weird daily habits, food quirks & relatable life.</p>
         </div>
       </div>
 
-      <div style="font-size: 0.88rem; line-height: 1.6; color: #cbd5e1; margin-bottom: 16px;">
+      <div style="font-size: 0.88rem; line-height: 1.6; color: #cbd5e1; margin: 24px 0 16px;">
         <h3 style="color: #fff; font-size: 1rem; margin-bottom: 6px;">Controls</h3>
         <ul class="info-controls-list" style="padding-left: 20px; margin-bottom: 12px;">
           <li><strong>Swipe / Drag Card</strong>: Drag the active card towards or on top of any of the 4 emojis to choose that topic for the next card.</li>
@@ -154,11 +166,20 @@
         </ul>
       </div>
 
-      <p class="info-attribution">© 2026 Mollevi · <a href="https://www.mollevi.com" target="_blank" rel="noopener noreferrer">mollevi.com</a></p>
+      <p class="info-attribution">© 2026 Molleví · <a href="https://www.mollevi.com" target="_blank" rel="noopener noreferrer">mollevi.com</a></p>
 
-      <button class="btn-primary" onclick="document.getElementById('info-modal').classList.remove('active')">
-        LET'S PLAY!
-      </button>
+      <div class="info-modal-actions">
+        <button class="btn-primary info-customise-btn" id="info-customise-btn" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 2.8 13.9 9l6.3 2-6.3 2-1.9 6.2L10.1 13 3.8 11l6.3-2L12 2.8Z" />
+            <path d="m19 14 .9 2.4 2.3.8-2.3.8L19 20.5l-.8-2.5-2.4-.8 2.4-.8.8-2.4Z" />
+          </svg>
+          <span>CUSTOMIZE</span>
+        </button>
+        <button class="btn-primary" id="info-lets-play-btn" type="button">
+          LET'S PLAY!
+        </button>
+      </div>
     </div>
   </div>
 
@@ -198,7 +219,7 @@
         </div>
       </div>
       <label class="customise-description-label" for="customise-group-description">Describe your group</label>
-      <textarea class="customise-group-description" id="customise-group-description" rows="3" placeholder=""></textarea>
+      <textarea class="customise-group-description" id="customise-group-description" rows="3" maxlength="160" placeholder=""></textarea>
       <p class="customise-preview-note">Your group details are preview-only. Card intensity is saved and changes the questions you get.</p>
       <button class="btn-primary customise-modal-done" type="button">
         <svg class="customise-save-sparkle" viewBox="0 0 24 24" aria-hidden="true">
@@ -214,6 +235,6 @@
     </div>
   </div>
 
-  <script type="module" src="app.js?v=29"></script>
+  <script type="module" src="app.js?v=42"></script>
 </body>
 </html>

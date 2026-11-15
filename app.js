@@ -16,7 +16,7 @@ const SPICY_LEVEL_CATEGORY_NAMES = {
 const SPICY_LEVEL_EMOJIS = {
   cheeky: '🤪',
   spicy: '😈',
-  unhinged: '💣'
+  unhinged: '🤯'
 };
 
 class NeverHaveIEverApp {
@@ -48,6 +48,7 @@ class NeverHaveIEverApp {
     this.restartRequested = false;
     this.targetIntroTimer = null;
     this.targetHideTimer = null;
+    this.screenShakeTimer = null;
 
     // DOM Elements
     this.stackContainer = document.getElementById('card-stack');
@@ -117,7 +118,7 @@ class NeverHaveIEverApp {
     topTarget.querySelector('.label').textContent = this.getCategoryName('spicy');
     topTarget.title = `Drag UP or Tap for ${this.getCategoryName('spicy')}`;
     document.getElementById('guide-spicy-emoji').textContent = this.getCategoryEmoji('spicy');
-    document.getElementById('guide-spicy-label').textContent = `${this.getCategoryName('spicy')} (↑)`;
+    document.getElementById('guide-spicy-label').textContent = this.getCategoryName('spicy');
   }
 
   updateSpicyLevelPreview(level) {
@@ -127,6 +128,15 @@ class NeverHaveIEverApp {
     slider.value = String(selectedIndex);
     slider.setAttribute('aria-valuetext', SPICY_LEVEL_LABELS[level]);
     thumb.textContent = SPICY_LEVEL_EMOJIS[level];
+    const markerTints = {
+      cheeky: ['rgba(56, 217, 169, 0.42)', 'rgba(56, 217, 169, 0.2)', 'rgba(56, 217, 169, 0.14)'],
+      spicy: ['rgba(155, 93, 229, 0.42)', 'rgba(155, 93, 229, 0.2)', 'rgba(155, 93, 229, 0.14)'],
+      unhinged: ['rgba(255, 77, 79, 0.42)', 'rgba(255, 77, 79, 0.2)', 'rgba(255, 77, 79, 0.14)']
+    };
+    const [glow, glowSoft, glassTint] = markerTints[level];
+    thumb.style.setProperty('--marker-glow', glow);
+    thumb.style.setProperty('--marker-glow-soft', glowSoft);
+    thumb.style.setProperty('--marker-glass-tint', glassTint);
     const thumbSize = 22;
     const thumbCenter = slider.offsetLeft + thumbSize / 2
       + selectedIndex * (slider.offsetWidth - thumbSize) / (SPICY_LEVELS.length - 1);
@@ -567,6 +577,16 @@ class NeverHaveIEverApp {
     if (this.isAnimating || !this.activeCard) return;
     this.isAnimating = true;
     this.resetIdleHint();
+    if (direction === 'top' && this.spicyLevel === 'unhinged') {
+      clearTimeout(this.screenShakeTimer);
+      document.body.classList.remove('unhinged-screen-shake');
+      void document.body.offsetWidth;
+      document.body.classList.add('unhinged-screen-shake');
+      this.screenShakeTimer = setTimeout(() => {
+        document.body.classList.remove('unhinged-screen-shake');
+        this.screenShakeTimer = null;
+      }, 450);
+    }
 
     const categoryMapping = {
       top: 'spicy',       // 😈 Spicy (Top)
@@ -754,6 +774,27 @@ class NeverHaveIEverApp {
     }, shuffleDuration);
   }
 
+  restartAtDefaultLevel() {
+    if (this.isCelebrating) return;
+
+    try {
+      localStorage.setItem('never-have-ai-ever-spicy-level', 'spicy');
+    } catch (error) {
+      console.error('Unable to reset the card intensity level.', error);
+      this.showToast('Could not reset card intensity.');
+      return;
+    }
+
+    this.spicyLevel = 'spicy';
+    this.questions.spicy = [...SPICY_QUESTION_LEVELS.spicy];
+    this.customiseModal.querySelectorAll('.customise-audience-option').forEach((option) => {
+      option.setAttribute('aria-pressed', 'false');
+    });
+    this.customiseModal.querySelector('.customise-group-description').value = '';
+    this.updateSpicyLevelPresentation();
+    this.reshuffleGame();
+  }
+
   undoLastCard() {
     if (this.isCelebrating) return;
     if (this.isAnimating || this.cardHistory.length === 0) {
@@ -811,6 +852,15 @@ class NeverHaveIEverApp {
     this.executeSwipe(direction);
   }
 
+  popKeyboardTargetArrow(direction) {
+    const arrow = this.targetButtons[direction]?.querySelector('.arrow-indicator');
+    if (!arrow) return;
+
+    arrow.classList.remove('keyboard-pop');
+    void arrow.offsetWidth;
+    arrow.classList.add('keyboard-pop');
+  }
+
   bindEvents() {
     const groupDescriptionExamples = [
       'A bride-to-be, her ex, his new boyfriend, and eight friends with Ibiza screenshots.',
@@ -820,6 +870,14 @@ class NeverHaveIEverApp {
       'A birthday girl, her chaotic roommates, and the friend who keeps saying “one more bar.”'
     ];
     let nextGroupDescriptionExample = 0;
+    const openCustomiseModal = () => {
+      this.updateSpicyLevelPreview(this.spicyLevel);
+      const descriptionField = this.customiseModal.querySelector('.customise-group-description');
+      descriptionField.placeholder = groupDescriptionExamples[nextGroupDescriptionExample];
+      nextGroupDescriptionExample = (nextGroupDescriptionExample + 1) % groupDescriptionExamples.length;
+      this.customiseModal.classList.add('active');
+      this.customiseModal.querySelector('.customise-modal-close').focus();
+    };
 
     this.cheersOverlay.addEventListener('animationend', (event) => {
       if (event.target === this.cheersOverlay && event.animationName === 'cheers-overlay-lifecycle') {
@@ -834,12 +892,7 @@ class NeverHaveIEverApp {
         e.preventDefault();
         e.stopPropagation();
         sounds.playClick();
-        this.updateSpicyLevelPreview(this.spicyLevel);
-        const descriptionField = this.customiseModal.querySelector('.customise-group-description');
-        descriptionField.placeholder = groupDescriptionExamples[nextGroupDescriptionExample];
-        nextGroupDescriptionExample = (nextGroupDescriptionExample + 1) % groupDescriptionExamples.length;
-        this.customiseModal.classList.add('active');
-        this.customiseModal.querySelector('.customise-modal-close').focus();
+        openCustomiseModal();
         return;
       }
 
@@ -881,7 +934,7 @@ class NeverHaveIEverApp {
       if (levelChanged) {
         this.questions.spicy = [...SPICY_QUESTION_LEVELS[selectedLevel]];
       }
-      this.showToast(`${SPICY_LEVEL_LABELS[selectedLevel]} level saved.`);
+      this.showToast('New level');
       closeCustomiseModal();
       this.reshuffleGame();
     });
@@ -925,14 +978,24 @@ class NeverHaveIEverApp {
     });
 
     document.getElementById('undo-btn').addEventListener('click', () => this.undoLastCard());
-    document.getElementById('reshuffle-btn').addEventListener('click', () => this.reshuffleGame());
+    document.getElementById('reshuffle-btn').addEventListener('click', () => this.restartAtDefaultLevel());
 
     // Info Modal
     const infoBtn = document.getElementById('info-btn');
     const closeInfoBtn = document.getElementById('close-info-btn');
+    const infoCustomiseBtn = document.getElementById('info-customise-btn');
+    const infoLetsPlayBtn = document.getElementById('info-lets-play-btn');
     infoBtn.addEventListener('click', () => {
       sounds.playClick();
       this.infoModal.classList.add('active');
+    });
+    infoCustomiseBtn.addEventListener('click', () => {
+      sounds.playClick();
+      this.infoModal.classList.remove('active');
+      openCustomiseModal();
+    });
+    infoLetsPlayBtn.addEventListener('click', () => {
+      this.infoModal.classList.remove('active');
     });
     closeInfoBtn.addEventListener('click', () => {
       sounds.playClick();
@@ -961,24 +1024,30 @@ class NeverHaveIEverApp {
       switch (e.key) {
         case 'ArrowUp':
           e.preventDefault();
+          this.popKeyboardTargetArrow('top');
           this.handleTargetTap('top');
           break;
         case 'ArrowLeft':
           e.preventDefault();
+          this.popKeyboardTargetArrow('left');
           this.handleTargetTap('left');
           break;
         case 'ArrowRight':
           e.preventDefault();
+          this.popKeyboardTargetArrow('right');
           this.handleTargetTap('right');
           break;
         case 'ArrowDown':
           e.preventDefault();
+          this.popKeyboardTargetArrow('bottom');
           this.handleTargetTap('bottom');
           break;
         case ' ':
           e.preventDefault();
           const dirs = ['top', 'left', 'right', 'bottom'];
-          this.handleTargetTap(dirs[Math.floor(Math.random() * dirs.length)]);
+          const direction = dirs[Math.floor(Math.random() * dirs.length)];
+          this.popKeyboardTargetArrow(direction);
+          this.handleTargetTap(direction);
           break;
         case 'z':
         case 'Z':
