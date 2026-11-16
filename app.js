@@ -275,6 +275,17 @@ class NeverHaveIEverApp {
 
     this.cheersTimer = setTimeout(() => this.finishCheersCelebration(), 2750);
     sounds.playCheers();
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setTimeout(() => {
+        this.confetti.burst(
+          window.innerWidth / 2,
+          window.innerHeight / 2 - 170,
+          180,
+          ['#ffd43b', '#a855f7'],
+          'droplet'
+        );
+      }, 980);
+    }
     if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches && 'vibrate' in navigator) {
       try {
         navigator.vibrate([12, 63, 15, 60, 18, 57, 21, 54, 24, 51, 27, 48, 30, 45, 33, 362, 110]);
@@ -338,6 +349,7 @@ class NeverHaveIEverApp {
     const nextLevel = SPICY_LEVELS[nextLevelIndex];
 
     card.classList.add('level-up-card');
+    if (nextLevel === 'unhinged') card.classList.add('level-up-card-unhinged');
     card.dataset.levelUpPrevious = data.spicyLevel ?? this.spicyLevel;
     card.dataset.levelUpNext = nextLevel ?? '';
     card.dataset.levelUpReturnCategory = data.returnCategory ?? this.levelUpReturnCategory;

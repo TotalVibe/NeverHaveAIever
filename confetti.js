@@ -15,7 +15,7 @@ export class ConfettiEngine {
     this.canvas.height = window.innerHeight;
   }
 
-  burst(x, y, count = 35, colors = ['#ff2d75', '#ff922b', '#20c997', '#748ffc', '#ffd43b']) {
+  burst(x, y, count = 35, colors = ['#ff2d75', '#ff922b', '#20c997', '#748ffc', '#ffd43b'], shape = 'rect') {
     if (!this.ctx) return;
     const originX = x ?? window.innerWidth / 2;
     const originY = y ?? window.innerHeight / 2;
@@ -23,18 +23,22 @@ export class ConfettiEngine {
     for (let i = 0; i < count; i++) {
       const angle = Math.random() * Math.PI * 2;
       const speed = Math.random() * 8 + 3;
+      const isLargeDroplet = shape === 'droplet' && Math.random() < 0.06;
       this.particles.push({
         x: originX,
         y: originY,
         vx: Math.cos(angle) * speed,
         vy: Math.sin(angle) * speed - 2,
-        size: Math.random() * 7 + 4,
+        size: shape === 'droplet'
+          ? isLargeDroplet ? Math.random() * 5 + 9 : Math.random() * 3 + 4
+          : Math.random() * 7 + 4,
         color: colors[Math.floor(Math.random() * colors.length)],
         rotation: Math.random() * 360,
         rotationSpeed: (Math.random() - 0.5) * 12,
         opacity: 1,
         life: 1,
-        decay: Math.random() * 0.02 + 0.015
+        decay: shape === 'droplet' ? Math.random() * 0.012 + 0.01 : Math.random() * 0.02 + 0.015,
+        shape
       });
     }
 
@@ -73,7 +77,15 @@ export class ConfettiEngine {
       this.ctx.rotate((p.rotation * Math.PI) / 180);
       this.ctx.globalAlpha = Math.max(0, p.life);
       this.ctx.fillStyle = p.color;
-      this.ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.6);
+      if (p.shape === 'droplet') {
+        this.ctx.beginPath();
+        this.ctx.moveTo(0, -p.size);
+        this.ctx.bezierCurveTo(p.size * 0.55, -p.size * 0.45, p.size * 0.9, p.size * 0.2, 0, p.size);
+        this.ctx.bezierCurveTo(-p.size * 0.9, p.size * 0.2, -p.size * 0.55, -p.size * 0.45, 0, -p.size);
+        this.ctx.fill();
+      } else {
+        this.ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.6);
+      }
       this.ctx.restore();
     }
 

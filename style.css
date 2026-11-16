@@ -726,6 +726,55 @@ body.unhinged-screen-shake {
   box-shadow: 0 -4px 14px rgba(0, 0, 0, 0.55);
 }
 
+@property --level-up-edge-angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+.game-card.level-up-card::after,
+.game-card.intro-card::after {
+  --level-up-edge-dim: rgba(215, 200, 255, 0.12);
+  --level-up-edge-glow: rgba(184, 155, 255, 0.72);
+  --level-up-edge-hot: rgba(255, 255, 255, 0.82);
+  --level-up-edge-shadow: rgba(184, 155, 255, 0.4);
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  box-sizing: border-box;
+  padding: 2px;
+  border-radius: inherit;
+  background: conic-gradient(
+    from var(--level-up-edge-angle),
+    var(--level-up-edge-dim),
+    var(--level-up-edge-dim) 69%,
+    var(--level-up-edge-glow) 77%,
+    var(--level-up-edge-hot) 80%,
+    var(--level-up-edge-glow) 84%,
+    var(--level-up-edge-dim) 91%,
+    var(--level-up-edge-dim)
+  );
+  content: '';
+  pointer-events: none;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  filter: drop-shadow(0 0 4px var(--level-up-edge-shadow));
+  animation: level-up-edge-rotate 12s linear infinite;
+}
+
+.game-card.level-up-card-unhinged::after {
+  --level-up-edge-dim: rgba(255, 90, 175, 0.12);
+  --level-up-edge-glow: rgba(255, 75, 190, 0.82);
+  --level-up-edge-hot: rgba(255, 220, 250, 0.9);
+  --level-up-edge-shadow: rgba(205, 55, 255, 0.48);
+}
+
+@keyframes level-up-edge-rotate {
+  to { --level-up-edge-angle: 360deg; }
+}
+
 /* =========================================================
    FRONT FACE: CLEAN STATEMENT (NO COPY BUTTON, NO NUMBER)
    ========================================================= */
@@ -1897,7 +1946,7 @@ body.unhinged-screen-shake {
   height: 100vh;
   height: 100dvh;
   pointer-events: none;
-  z-index: 999;
+  z-index: 1001;
 }
 
 /* Extra small mobile screens */
@@ -2107,6 +2156,10 @@ body.unhinged-screen-shake {
     animation: none;
   }
   .level-up-card.level-up-anticipating {
+    animation: none;
+  }
+  .game-card.level-up-card::after,
+  .game-card.intro-card::after {
     animation: none;
   }
 }
