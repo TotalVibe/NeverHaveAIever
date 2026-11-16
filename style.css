@@ -258,21 +258,21 @@ body.unhinged-screen-shake {
   animation-delay: 0ms;
 }
 
-.game-arena.intro-revealed .target-left {
-  --intro-x: -12px;
-  --intro-y: 0px;
-  animation-delay: 360ms;
-}
-
 .game-arena.intro-revealed .target-right {
   --intro-x: 12px;
   --intro-y: 0px;
-  animation-delay: 720ms;
+  animation-delay: 360ms;
 }
 
 .game-arena.intro-revealed .target-bottom {
   --intro-x: 0px;
   --intro-y: 12px;
+  animation-delay: 720ms;
+}
+
+.game-arena.intro-revealed .target-left {
+  --intro-x: -12px;
+  --intro-y: 0px;
   animation-delay: 1080ms;
 }
 
@@ -983,6 +983,8 @@ body.unhinged-screen-shake {
    ========================================================= */
 
 .card-back {
+  --card-back-frame-inset: 20px;
+  --card-back-inner-inset: 4px;
   background: #111420;
   transform: rotateY(180deg);
   display: flex;
@@ -1014,7 +1016,7 @@ body.unhinged-screen-shake {
   width: 100%;
   height: 100%;
   border: 1.5px solid rgba(255, 255, 255, 0.16);
-  border-radius: calc(var(--radius-card) - 6px);
+  border-radius: calc(var(--radius-card) - var(--card-back-frame-inset));
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1026,12 +1028,12 @@ body.unhinged-screen-shake {
 .card-back-frame::before {
   content: '';
   position: absolute;
-  top: 6px;
-  left: 6px;
-  right: 6px;
-  bottom: 6px;
+  top: var(--card-back-inner-inset);
+  left: var(--card-back-inner-inset);
+  right: var(--card-back-inner-inset);
+  bottom: var(--card-back-inner-inset);
   border: 1px dashed rgba(255, 255, 255, 0.08);
-  border-radius: calc(var(--radius-card) - 10px);
+  border-radius: calc(var(--radius-card) - var(--card-back-frame-inset) - 1.5px - var(--card-back-inner-inset));
   pointer-events: none;
 }
 
@@ -1082,6 +1084,35 @@ body.unhinged-screen-shake {
   text-transform: uppercase;
   color: var(--text-dim);
   transform: translateY(57px);
+}
+
+.game-card.current.face-down .emblem-sub {
+  animation: swipe-direction-cue 20s ease-in-out 6.5s infinite;
+}
+
+@keyframes swipe-direction-cue {
+  0%, 5%, 14%, 25%, 34%, 45%, 54%, 65%, 74%, 85%, 94%, 100% {
+    transform: translate(0, 57px);
+  }
+  5%, 25%, 45%, 65% {
+    animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  8% {
+    transform: translate(9px, 57px);
+    animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  28% {
+    transform: translate(0, 66px);
+    animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  48% {
+    transform: translate(-9px, 57px);
+    animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  68% {
+    transform: translate(0, 48px);
+    animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
 }
 
 .crest-diamond {
@@ -1892,6 +1923,7 @@ body.unhinged-screen-shake {
     transform: translateY(-8px);
   }
   .card-back {
+    --card-back-frame-inset: 8px;
     padding: 6px;
   }
   .card-back-frame {
@@ -1961,6 +1993,9 @@ body.unhinged-screen-shake {
     animation-duration: 0.01ms;
   }
   .celebration-shake {
+    animation: none;
+  }
+  .game-card.current.face-down .emblem-sub {
     animation: none;
   }
 }

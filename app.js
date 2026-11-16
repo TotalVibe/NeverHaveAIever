@@ -383,12 +383,12 @@ class NeverHaveIEverApp {
                 <span class="cursive-line">Never Have</span>
                 <span class="cursive-line">Ai Ever</span>
               </div>
-              <button class="customise-btn" type="button" aria-label="Customise cards with AI">
+              <button class="customise-btn" type="button" aria-label="Customize cards with AI">
                 <svg viewBox="0 0 24 24" aria-hidden="true">
                   <path d="M12 2.8 13.9 9l6.3 2-6.3 2-1.9 6.2L10.1 13 3.8 11l6.3-2L12 2.8Z" />
                   <path d="m19 14 .9 2.4 2.3.8-2.3.8L19 20.5l-.8-2.5-2.4-.8 2.4-.8.8-2.4Z" />
                 </svg>
-                <span>CUSTOMISE</span>
+                <span>CUSTOMIZE</span>
               </button>
               <div class="emblem-line"></div>
               <div class="emblem-sub">Swipe to Reveal</div>
