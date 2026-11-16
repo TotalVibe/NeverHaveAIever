@@ -7,10 +7,10 @@ A swipe-based party game for choosing the next kind of “Never Have I Ever” p
 1. Open the game and reveal the first card.
 2. Swipe the card toward a category, tap one of the emoji buttons, or use an arrow key to choose the topic for the next prompt.
 3. Tap **Done It!** if you have done what the card describes. Each card only counts once, even if you undo it.
-4. Keep playing: a level-up card appears after **15 card swipes or 7 Done It! responses**, whichever happens first. It appears once per round when a higher intensity is available.
+4. Keep playing: a level-up card appears after **15 card swipes or 7 Done It! responses**, whichever happens first. After accepting a level-up, both counters reset and progression starts again toward the next intensity.
 5. On the level-up card, swipe right or choose **Yes** to advance the intensity; the next prompt comes from the newly selected spicy level. Swipe left or choose **No** to keep the current intensity.
 
-The three spicy intensities are **Cheeky**, **Spicy**, and **Unhinged**. Leveling up is only offered below Unhinged. Undo can restore the level-up card after accepting a change; **Restart** starts a fresh round at Spicy.
+The three spicy intensities are **Cheeky**, **Spicy**, and **Unhinged**. Leveling up is offered at each stage until Unhinged. Undo can restore the level-up card after accepting a change; **Restart** starts a fresh round at Spicy.
 
 ## Categories
 

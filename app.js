@@ -431,6 +431,9 @@ class NeverHaveIEverApp {
       this.spicyLevel = nextLevel;
       this.questions.spicy = [...SPICY_QUESTION_LEVELS[nextLevel]];
       this.updateSpicyLevelPresentation();
+      this.swipeCount = 0;
+      this.doneItCount = 0;
+      this.levelUpPromptShown = false;
     }
 
     this.isAnimating = true;
@@ -1065,6 +1068,7 @@ class NeverHaveIEverApp {
       : this.createCardElement(prevCardData, 'current', prevCardData.faceDown);
     if (prevCardData.cardType === 'level-up') {
       restoredCard.classList.remove('face-down');
+      this.levelUpPromptShown = true;
     }
 
     restoredCard.style.transition = 'none';
