@@ -1,40 +1,44 @@
-# Never Have AI ever • Tinder Swipe Edition 🔥
+# Never Have AI ever
 
-A modern, tactile **Never Have AI ever** party web application featuring Tinder-style card sliding mechanics to choose the topic of the next question.
+A swipe-based party game for choosing the next kind of “Never Have I Ever” prompt. Play with a group, pick a topic with a swipe or tap, and react with **Done It!** when a prompt applies to you.
 
-## ✨ Features
+## How to play
 
-- **Tinder-Style Sliding Physics**: Drag cards using mouse or touch gestures with realistic tilt, inertia, spring snaps, and fly-out animations.
-- **4-Directional Emoji Topic Selectors**:
-  - ⬆️ **TOP — 😈 Spicy & Wild**: Dating secrets, romantic fails, guilty pleasures & intimate truths.
-  - ⬅️ **LEFT — 😳 Awkward & Cringe**: Hilarious fails, embarrassing moments & caught red-handed memories.
-  - ➡️ **RIGHT — 🥳 Party & Chaos**: Nightlife adventures, drinking dares, wild stunts & festival stories.
-  - ⬇️ **DOWN — 😇 Wholesome & Quirky**: Childhood memories, funny daily habits, food quirks & relatable life.
-- **Tap-to-Select**: Tap any of the 4 directional emoji icons to instantly choose that category.
-- **Dynamic Stamps & Target Proximity**: Real-time visual stamps appear on the card as you drag towards each emoji, while the target emoji illuminates with its signature neon glow.
-- **Built-in Web Audio API Effects**: Completely offline synthesized sound effects for swipe whooshes, spicy sizzles, party fanfares, wholesome chimes, cringe boings, and taps.
+1. Open the game and reveal the first card.
+2. Swipe the card toward a category, tap one of the emoji buttons, or use an arrow key to choose the topic for the next prompt.
+3. Tap **Done It!** if you have done what the card describes. Each card only counts once, even if you undo it.
+4. Keep playing: a level-up card appears after **15 card swipes or 7 Done It! responses**, whichever happens first. It appears once per round when a higher intensity is available.
+5. On the level-up card, swipe right or choose **Yes** to advance the intensity; the next prompt comes from the newly selected spicy level. Swipe left or choose **No** to keep the current intensity.
 
-- **Reshuffle**: Reset the deck to its face-down opening card with a short shuffle animation.
-- **➕ Custom Card Creator**: Add your own inside jokes or party questions to any category (persisted in `localStorage`).
-- **↺ Undo**: Revisit accidentally swiped cards from the header or with the `Z` shortcut.
-- **⌨️ Keyboard Shortcuts**:
-  - `↑` (Arrow Up): Spicy
-  - `←` (Arrow Left): Cringe
-  - `→` (Arrow Right): Party
-  - `↓` (Arrow Down): Wholesome
-  - `Space`: Choose a random topic
-  - `Z`: Undo previous card
-  - `H`: React "I Have!"
-  - `N`: React "Never!"
-  - `M`: Toggle Sound (Mute/Unmute)
-- **Idle Hint**: "Drag card or tap emoji" fades in after 7 seconds without interaction.
+The three spicy intensities are **Cheeky**, **Spicy**, and **Unhinged**. Leveling up is only offered below Unhinged. Undo can restore the level-up card after accepting a change; **Restart** starts a fresh round at Spicy.
 
-## 🚀 How to Run
+## Categories
 
-Simply open [index.html](file:///Users/mollevi/Downloads/AI%20test/index.html) in any web browser!
+| Direction | Category | Prompts |
+| --- | --- | --- |
+| Up | Spicy | Dating secrets, romantic fails, guilty pleasures, and intimate truths |
+| Left | Cringe | Awkward moments, embarrassing stories, and funny fails |
+| Right | Party | Nightlife, drinking, wild nights out, and adventures |
+| Down | Wholesome | Childhood memories, daily habits, food quirks, and relatable moments |
 
-Or serve locally with Python:
+## Controls
+
+- **Swipe or drag** the card toward one of the four category buttons.
+- **Tap** an emoji button to choose that category immediately.
+- **Arrow keys** select Up/Spicy, Left/Cringe, Right/Party, or Down/Wholesome.
+- **Spacebar** chooses a random category.
+- **Z** undoes the previous card.
+- **M** toggles sound.
+- **Restart** resets the round and intensity to Spicy.
+
+The **Customize** screen lets you choose an intensity and select audience options or describe your group. Audience selections and the group description are preview-only; the selected intensity changes the spicy question pool and is saved in the browser.
+
+## Run locally
+
+The game is a static web app with JavaScript modules. Serve the project directory locally, for example:
+
 ```bash
 python3 -m http.server 3000
 ```
-Then visit `http://localhost:3000`.
+
+Then open <http://localhost:3000> in a browser.

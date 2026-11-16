@@ -243,6 +243,38 @@ body.unhinged-screen-shake {
   pointer-events: none;
 }
 
+.game-arena.level-up-active .target-top,
+.game-arena.level-up-active .target-bottom {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.game-arena.level-up-active .target-left,
+.game-arena.level-up-active .target-right {
+  width: 56px;
+  gap: 4px;
+  padding-right: 2px;
+  padding-left: 2px;
+}
+
+.game-arena.level-up-active .target-left .emoji,
+.game-arena.level-up-active .target-right .emoji {
+  color: #fff;
+}
+
+.game-arena.level-up-active .target-left .emoji svg,
+.game-arena.level-up-active .target-right .emoji svg {
+  display: block;
+  width: 0.9em;
+  height: 0.9em;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
 .game-arena.intro-hiding .target-btn {
   pointer-events: none;
   animation: target-intro-hide 180ms ease-in both;
@@ -707,6 +739,68 @@ body.unhinged-screen-shake {
   transform: rotateY(0deg);
 }
 
+.level-up-card .category-watermark {
+  justify-content: center;
+}
+
+.level-up-card .cat-tag-emoji {
+  opacity: 0.16;
+  transform: none;
+}
+
+.level-up-card .prompt-prefix {
+  color: #d7c8ff;
+}
+
+.level-up-card .prompt-text {
+  font-family: 'Great Vibes', 'Alex Brush', 'Dancing Script', cursive;
+  font-size: clamp(2.8rem, 11vw, 4.2rem);
+  font-weight: 400;
+  line-height: 1.08;
+  color: #fff;
+  text-shadow: 0 0 18px rgba(215, 200, 255, 0.35);
+}
+
+.level-up-card .card-hint-text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(8px, 2vw, 16px);
+  opacity: 0.9;
+  transform: none;
+  white-space: nowrap;
+}
+
+.game-card:not(.intro-card) .customise-btn {
+  display: none;
+}
+
+.game-card.current.level-up-card:not(.face-down) .level-up-choice-hint span:first-child {
+  animation: none;
+}
+
+.game-card.current.level-up-card:not(.face-down) .level-up-choice-hint span:last-child {
+  animation: level-up-choice-right 18s ease-in-out 3s infinite;
+}
+
+.level-up-card.level-up-anticipating {
+  animation: level-up-anticipation 180ms ease-in-out infinite;
+  will-change: translate;
+}
+
+@keyframes level-up-choice-right {
+  0%, 100% { opacity: 0.82; transform: translateX(0); }
+  4% { opacity: 1; transform: translateX(3px); }
+  8% { opacity: 0.82; transform: translateX(0); }
+}
+
+@keyframes level-up-anticipation {
+  0%, 100% { translate: 0 0; rotate: 0deg; }
+  25% { translate: -3px 1.2px; rotate: -0.55deg; }
+  50% { translate: 2.5px -1.5px; rotate: 0.5deg; }
+  75% { translate: -1.5px -1px; rotate: -0.35deg; }
+}
+
 .card-header {
   display: flex;
   align-items: center;
@@ -1086,7 +1180,7 @@ body.unhinged-screen-shake {
   transform: translateY(57px);
 }
 
-.game-card.current.face-down .emblem-sub {
+.game-card.current.face-down:not(.level-up-card) .emblem-sub {
   animation: swipe-direction-cue 20s ease-in-out 6.5s infinite;
 }
 
@@ -1847,6 +1941,17 @@ body.unhinged-screen-shake {
   .target-btn .label {
     font-size: 0.58rem;
   }
+  .game-arena.level-up-active .target-left,
+  .game-arena.level-up-active .target-right {
+    width: 48px;
+    gap: 2px;
+    padding: 8px 1px;
+  }
+  .game-arena.level-up-active .target-left .emoji svg,
+  .game-arena.level-up-active .target-right .emoji svg {
+    width: 0.75em;
+    height: 0.75em;
+  }
   .prompt-text {
     font-size: 1.1rem;
   }
@@ -1995,7 +2100,13 @@ body.unhinged-screen-shake {
   .celebration-shake {
     animation: none;
   }
-  .game-card.current.face-down .emblem-sub {
+  .game-card.current.face-down:not(.level-up-card) .emblem-sub {
+    animation: none;
+  }
+  .game-card.current.level-up-card .level-up-choice-hint span:last-child {
+    animation: none;
+  }
+  .level-up-card.level-up-anticipating {
     animation: none;
   }
 }

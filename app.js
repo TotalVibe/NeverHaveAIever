@@ -1,8 +1,10 @@
 import { CATEGORIES, QUESTIONS, SPICY_QUESTION_LEVELS } from './questions.js?v=2';
-import { sounds } from './sound.js?v=3';
+import { sounds } from './sound.js?v=4';
 import { ConfettiEngine } from './confetti.js';
 
 const SPICY_LEVELS = ['cheeky', 'spicy', 'unhinged'];
+const LEVEL_UP_SWIPE_THRESHOLD = 15;
+const LEVEL_UP_DONE_IT_THRESHOLD = 7;
 const SPICY_LEVEL_LABELS = {
   cheeky: 'Cheeky',
   spicy: 'Spicy',
@@ -42,6 +44,12 @@ class NeverHaveIEverApp {
     this.currentDominantDirection = null;
     this.hasVibratedThreshold = false;
     this.cardHistory = []; // Store past cards for undo feature
+    this.swipeCount = 0;
+    this.doneItCount = 0;
+    this.levelUpPromptShown = false;
+    this.levelUpPromptPending = false;
+    this.levelUpReturnCategory = 'spicy';
+    this.lastLevelUpNoiseAt = 0;
     this.idleHintTimer = null;
     this.isCelebrating = false;
     this.cheersTimer = null;
@@ -252,6 +260,12 @@ class NeverHaveIEverApp {
   celebrateDoneIt() {
     if (this.isCelebrating || !this.activeCard || !this.cheersOverlay) return;
 
+    if (this.activeCard.dataset.doneIt !== 'true') {
+      this.activeCard.dataset.doneIt = 'true';
+      this.doneItCount += 1;
+      this.queueLevelUpPromptIfEligible();
+    }
+
     this.isCelebrating = true;
     clearTimeout(this.idleHintTimer);
     this.activeCard.classList.remove('hint-visible');
@@ -278,6 +292,193 @@ class NeverHaveIEverApp {
     document.body.classList.remove('celebration-shake');
     this.isCelebrating = false;
     this.resetIdleHint();
+    if (this.levelUpPromptPending) {
+      this.levelUpPromptPending = false;
+      this.showLevelUpCard();
+    }
+  }
+
+  queueLevelUpPromptIfEligible() {
+    if (
+      !this.levelUpPromptShown &&
+      SPICY_LEVELS.indexOf(this.spicyLevel) < SPICY_LEVELS.length - 1 &&
+      (this.swipeCount >= LEVEL_UP_SWIPE_THRESHOLD || this.doneItCount >= LEVEL_UP_DONE_IT_THRESHOLD)
+    ) {
+      this.levelUpPromptPending = true;
+    }
+  }
+
+  setLevelUpTargetMode(isActive) {
+    const arena = document.querySelector('.game-arena');
+    arena.classList.toggle('level-up-active', isActive);
+
+    const leftButton = this.targetButtons.left;
+    const rightButton = this.targetButtons.right;
+    leftButton.querySelector('.emoji').innerHTML = isActive
+      ? '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>'
+      : '😳';
+    leftButton.querySelector('.label').textContent = isActive ? 'No' : 'Cringe';
+    leftButton.querySelector('.arrow-indicator').textContent = '◄';
+    leftButton.title = isActive ? 'Drag LEFT or Tap No' : 'Drag LEFT or Tap for Awkward & Cringe';
+    rightButton.querySelector('.emoji').innerHTML = isActive
+      ? '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4.5 12.5 5 5L19.5 7.5"/></svg>'
+      : '🥳';
+    rightButton.querySelector('.label').textContent = isActive ? 'Yes' : 'Party';
+    rightButton.querySelector('.arrow-indicator').textContent = '►';
+    rightButton.title = isActive ? 'Drag RIGHT or Tap Yes' : 'Drag RIGHT or Tap for Party & Chaos';
+  }
+
+  createLevelUpCardElement(data = {}) {
+    const card = this.createCardElement({
+      category: 'spicy',
+      text: 'Turn it up?',
+      cardType: 'level-up'
+    }, 'current', true);
+    const nextLevelIndex = SPICY_LEVELS.indexOf(this.spicyLevel) + 1;
+    const nextLevel = SPICY_LEVELS[nextLevelIndex];
+
+    card.classList.add('level-up-card');
+    card.dataset.levelUpPrevious = data.spicyLevel ?? this.spicyLevel;
+    card.dataset.levelUpNext = nextLevel ?? '';
+    card.dataset.levelUpReturnCategory = data.returnCategory ?? this.levelUpReturnCategory;
+    card.querySelector('.cat-tag-emoji').textContent = nextLevel
+      ? SPICY_LEVEL_EMOJIS[nextLevel]
+      : SPICY_LEVEL_EMOJIS[this.spicyLevel];
+    card.querySelector('.cat-tag-name').textContent = `Next level: ${SPICY_LEVEL_LABELS[nextLevel]}`;
+    card.querySelector('.prompt-prefix').remove();
+    card.querySelector('.prompt-text').textContent = 'Turn it up?';
+    card.querySelector('.prompt-text').classList.add('level-up-message');
+    const choiceHint = card.querySelector('.card-hint-text');
+    choiceHint.classList.add('level-up-choice-hint');
+    choiceHint.innerHTML = '<span>Swipe left ◄: NO</span><span>right: YES ►</span>';
+    card.querySelector('.done-it-btn').remove();
+    card.querySelectorAll('.swipe-stamp').forEach(stamp => stamp.remove());
+    card.querySelector('.customise-btn').remove();
+    return card;
+  }
+
+  showLevelUpCard() {
+    if (!this.activeCard || this.spicyLevel === SPICY_LEVELS[SPICY_LEVELS.length - 1]) return;
+
+    this.isAnimating = true;
+    clearTimeout(this.idleHintTimer);
+    this.activeCard.classList.remove('hint-visible');
+    this.levelUpPromptShown = true;
+    this.levelUpReturnCategory = this.activeCard.dataset.category || this.activeCardCategory;
+    this.cardHistory.push({
+      category: this.activeCard.dataset.category,
+      text: this.activeCard.dataset.fullText,
+      faceDown: this.activeCard.classList.contains('face-down'),
+      doneIt: this.activeCard.dataset.doneIt === 'true'
+    });
+    if (this.cardHistory.length > 15) this.cardHistory.shift();
+
+    const previousCard = this.activeCard;
+    previousCard.style.transition = 'transform 0.32s ease, opacity 0.28s ease';
+    previousCard.style.transform = `translate3d(0, -${window.innerHeight}px, 0) rotate(-5deg)`;
+    previousCard.style.opacity = '0';
+    this.stackContainer.querySelectorAll('.game-card.next').forEach(card => card.remove());
+
+    const levelUpCard = this.createLevelUpCardElement({ returnCategory: this.levelUpReturnCategory });
+    levelUpCard.classList.add('card-entering');
+    const nextQuestion = this.createCardElement({
+      category: this.levelUpReturnCategory,
+      text: this.getRandomQuestion(this.levelUpReturnCategory)
+    }, 'next', true);
+    this.stackContainer.append(nextQuestion, levelUpCard);
+    this.activeCard = levelUpCard;
+    this.bindCardGesture(levelUpCard);
+    this.setLevelUpTargetMode(true);
+
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const flipDelay = reducedMotion ? 0 : 220;
+    const settleDelay = reducedMotion ? 50 : 700;
+    setTimeout(() => {
+      levelUpCard.classList.remove('face-down');
+      sounds.playSnapBack();
+    }, flipDelay);
+    setTimeout(() => {
+      previousCard.remove();
+      levelUpCard.classList.remove('card-entering');
+      this.isAnimating = false;
+      if (this.restartRequested) this.restartGame();
+    }, settleDelay);
+  }
+
+  resolveLevelUp(direction) {
+    if (this.isAnimating || !this.activeCard) return;
+    if (direction !== 'left' && direction !== 'right') {
+      this.resetCardPosition(this.activeCard);
+      return;
+    }
+
+    const previousLevel = this.spicyLevel;
+    if (direction === 'right') {
+      const nextLevel = SPICY_LEVELS[SPICY_LEVELS.indexOf(this.spicyLevel) + 1];
+      if (!nextLevel) {
+        this.resetCardPosition(this.activeCard);
+        return;
+      }
+      try {
+        localStorage.setItem('never-have-ai-ever-spicy-level', nextLevel);
+      } catch (error) {
+        console.error('Unable to save the card intensity level.', error);
+        this.showToast('Could not save your card intensity level.');
+        this.resetCardPosition(this.activeCard);
+        return;
+      }
+
+      this.spicyLevel = nextLevel;
+      this.questions.spicy = [...SPICY_QUESTION_LEVELS[nextLevel]];
+      this.updateSpicyLevelPresentation();
+    }
+
+    this.isAnimating = true;
+    this.resetIdleHint();
+    this.cardHistory.push({
+      cardType: 'level-up',
+      category: 'spicy',
+      text: 'Turn it up?',
+      faceDown: false,
+      spicyLevel: previousLevel,
+      returnCategory: this.levelUpReturnCategory
+    });
+    if (this.cardHistory.length > 15) this.cardHistory.shift();
+
+    const oldCard = this.activeCard;
+    oldCard.style.transition = 'transform 0.42s cubic-bezier(0.2, 0.9, 0.3, 1), opacity 0.35s ease-out';
+    oldCard.style.transform = `translate3d(${direction === 'right' ? window.innerWidth : -window.innerWidth}px, 0, 0) rotate(${direction === 'right' ? 28 : -28}deg)`;
+    oldCard.style.opacity = '0';
+
+    this.stackContainer.querySelectorAll('.game-card.next').forEach(card => card.remove());
+    const category = direction === 'right' ? 'spicy' : this.levelUpReturnCategory;
+    const nextCard = this.createCardElement({
+      category,
+      text: this.getRandomQuestion(category)
+    }, 'current', true);
+    nextCard.classList.add('card-entering');
+    const backgroundCategory = ['spicy', 'cringe', 'party', 'wholesome'][Math.floor(Math.random() * 4)];
+    const backgroundCard = this.createCardElement({
+      category: backgroundCategory,
+      text: this.getRandomQuestion(backgroundCategory)
+    }, 'next', true);
+    this.stackContainer.append(backgroundCard, nextCard);
+    this.activeCard = nextCard;
+    this.activeCardCategory = category;
+    this.bindCardGesture(nextCard);
+    this.updateAmbientGlow(category);
+    this.setLevelUpTargetMode(false);
+
+    setTimeout(() => {
+      nextCard.classList.remove('face-down');
+      sounds.playSnapBack();
+    }, 100);
+    setTimeout(() => {
+      oldCard.remove();
+      nextCard.classList.remove('card-entering');
+      this.isAnimating = false;
+      if (direction === 'right') this.showToast('Level up!');
+    }, 480);
   }
 
   updateAmbientGlow(category) {
@@ -305,7 +506,8 @@ class NeverHaveIEverApp {
     const initialCategory = 'spicy';
     const cardData1 = {
       category: initialCategory,
-      text: this.getRandomQuestion(initialCategory)
+      text: this.getRandomQuestion(initialCategory),
+      showCustomise: true
     };
     const cardData2 = {
       category: 'party',
@@ -329,7 +531,10 @@ class NeverHaveIEverApp {
     const card = document.createElement('div');
     card.className = `game-card ${stackClass} ${isFaceDown ? 'face-down' : ''}`;
     card.dataset.category = data.category;
+    card.dataset.cardType = data.cardType || 'question';
     card.dataset.fullText = data.text;
+    if (data.showCustomise) card.classList.add('intro-card');
+    if (data.doneIt) card.dataset.doneIt = 'true';
     card.style.setProperty('--active-card-color', cat.color);
     card.style.setProperty('--active-card-glow', cat.glow);
 
@@ -407,7 +612,7 @@ class NeverHaveIEverApp {
     let currentPointerId = null;
 
     const onPointerDown = (e) => {
-      if (this.isAnimating) return;
+      if (this.isAnimating || this.isCelebrating) return;
       if (e.target.closest('button')) return;
 
       this.isDragging = true;
@@ -446,9 +651,13 @@ class NeverHaveIEverApp {
       const rotation = Math.max(-25, Math.min(25, dx * 0.08));
       card.style.transform = `translate3d(${dx}px, ${dy}px, 0) rotate(${rotation}deg)`;
 
-      // Direction calculation (4 quadrants centered on each axis)
+      // The level-up prompt accepts only horizontal choices.
       let direction = null;
-      if (dist > 25) {
+      if (card.dataset.cardType === 'level-up') {
+        if (Math.abs(dx) > 25 && Math.abs(dx) >= Math.abs(dy)) {
+          direction = dx > 0 ? 'right' : 'left';
+        }
+      } else if (dist > 25) {
         const angle = Math.atan2(dy, dx) * (180 / Math.PI);
         if (angle >= -135 && angle < -45) {
           direction = 'top'; // 😈 Spicy
@@ -465,6 +674,7 @@ class NeverHaveIEverApp {
       const cursorX = e.clientX;
       const cursorY = e.clientY;
       for (const [dir, btn] of Object.entries(this.targetButtons)) {
+        if (card.dataset.cardType === 'level-up' && dir !== 'left' && dir !== 'right') continue;
         if (btn) {
           const rect = btn.getBoundingClientRect();
           if (
@@ -534,6 +744,9 @@ class NeverHaveIEverApp {
 
   updateDirectionHighlight(direction, dist, card) {
     this.currentDominantDirection = direction;
+    if (card.dataset.cardType === 'level-up') {
+      this.setLevelUpAnticipation(direction === 'right' && dist > 25, card);
+    }
 
     Object.values(this.targetButtons).forEach(btn => btn.classList.remove('highlight'));
 
@@ -556,7 +769,18 @@ class NeverHaveIEverApp {
     }
   }
 
+  setLevelUpAnticipation(isActive, card = this.activeCard) {
+    if (card?.dataset.cardType !== 'level-up') return;
+    const wasActive = card.classList.contains('level-up-anticipating');
+    card.classList.toggle('level-up-anticipating', isActive);
+    if (isActive && !wasActive && Date.now() - this.lastLevelUpNoiseAt >= 600) {
+      this.lastLevelUpNoiseAt = Date.now();
+      sounds.playAnticipation();
+    }
+  }
+
   resetCardPosition(card) {
+    this.setLevelUpAnticipation(false, card);
     card.style.transition = 'transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
     card.style.transform = 'translate3d(0, 0, 0) rotate(0deg)';
 
@@ -574,7 +798,13 @@ class NeverHaveIEverApp {
   }
 
   executeSwipe(direction) {
-    if (this.isAnimating || !this.activeCard) return;
+    if (this.isAnimating || this.isCelebrating || !this.activeCard) return;
+    if (this.activeCard.dataset.cardType === 'level-up') {
+      this.resolveLevelUp(direction);
+      return;
+    }
+    this.swipeCount += 1;
+    this.queueLevelUpPromptIfEligible();
     this.isAnimating = true;
     this.resetIdleHint();
     if (direction === 'top' && this.spicyLevel === 'unhinged') {
@@ -606,7 +836,8 @@ class NeverHaveIEverApp {
     this.cardHistory.push({
       category: this.activeCard.dataset.category,
       text: this.activeCard.dataset.fullText,
-      faceDown: this.activeCard.classList.contains('face-down')
+      faceDown: this.activeCard.classList.contains('face-down'),
+      doneIt: this.activeCard.dataset.doneIt === 'true'
     });
     if (this.cardHistory.length > 15) this.cardHistory.shift();
 
@@ -718,7 +949,12 @@ class NeverHaveIEverApp {
         this.bindCardGesture(this.activeCard);
       }
       this.isAnimating = false;
-      if (this.restartRequested) this.restartGame();
+      if (this.restartRequested) {
+        this.restartGame();
+      } else if (this.levelUpPromptPending) {
+        this.levelUpPromptPending = false;
+        this.showLevelUpCard();
+      }
     }, 480);
   }
 
@@ -731,6 +967,11 @@ class NeverHaveIEverApp {
 
     this.restartRequested = false;
     this.cardHistory = [];
+    this.swipeCount = 0;
+    this.doneItCount = 0;
+    this.levelUpPromptShown = false;
+    this.levelUpPromptPending = false;
+    this.setLevelUpTargetMode(false);
     Object.values(this.usedQuestions).forEach(used => used.clear());
     this.activeCardCategory = 'spicy';
     this.cardCount = 1;
@@ -803,14 +1044,35 @@ class NeverHaveIEverApp {
     }
     this.isAnimating = true;
 
-    const prevCardData = this.cardHistory.pop();
-    const restoredCard = this.createCardElement(prevCardData, 'current', prevCardData.faceDown);
+    const prevCardData = this.cardHistory[this.cardHistory.length - 1];
+    if (prevCardData.cardType === 'level-up' && prevCardData.spicyLevel !== this.spicyLevel) {
+      try {
+        localStorage.setItem('never-have-ai-ever-spicy-level', prevCardData.spicyLevel);
+      } catch (error) {
+        console.error('Unable to restore the previous card intensity level.', error);
+        this.showToast('Could not restore the previous card intensity.');
+        this.isAnimating = false;
+        return;
+      }
+      this.spicyLevel = prevCardData.spicyLevel;
+      this.questions.spicy = [...SPICY_QUESTION_LEVELS[this.spicyLevel]];
+      this.updateSpicyLevelPresentation();
+    }
+
+    this.cardHistory.pop();
+    const restoredCard = prevCardData.cardType === 'level-up'
+      ? this.createLevelUpCardElement(prevCardData)
+      : this.createCardElement(prevCardData, 'current', prevCardData.faceDown);
+    if (prevCardData.cardType === 'level-up') {
+      restoredCard.classList.remove('face-down');
+    }
 
     restoredCard.style.transition = 'none';
     restoredCard.style.transform = 'translate3d(0, -500px, 0) scale(0.9)';
     restoredCard.style.opacity = '0';
 
     this.stackContainer.appendChild(restoredCard);
+    this.stackContainer.querySelectorAll('.game-card.next').forEach(card => card.remove());
 
     if (this.activeCard) {
       this.activeCard.className = 'game-card next face-down';
@@ -824,8 +1086,12 @@ class NeverHaveIEverApp {
     restoredCard.style.opacity = '1';
 
     this.activeCard = restoredCard;
-    this.activeCardCategory = prevCardData.category;
-    this.updateAmbientGlow(prevCardData.category);
+    this.levelUpReturnCategory = prevCardData.returnCategory || this.levelUpReturnCategory;
+    this.activeCardCategory = prevCardData.cardType === 'level-up'
+      ? this.levelUpReturnCategory
+      : prevCardData.category;
+    this.updateAmbientGlow(this.activeCardCategory);
+    this.setLevelUpTargetMode(prevCardData.cardType === 'level-up');
     this.bindCardGesture(this.activeCard);
     this.resetIdleHint();
 
@@ -840,7 +1106,8 @@ class NeverHaveIEverApp {
 
   handleTargetTap(direction) {
     this.resetIdleHint();
-    if (this.isAnimating || !this.activeCard) return;
+    if (this.isAnimating || this.isCelebrating || !this.activeCard) return;
+    if (this.activeCard.dataset.cardType === 'level-up' && direction !== 'left' && direction !== 'right') return;
 
     sounds.init();
     const targetBtn = this.targetButtons[direction];
@@ -968,6 +1235,20 @@ class NeverHaveIEverApp {
         });
       }
     });
+    this.targetButtons.right.addEventListener('pointerenter', (event) => {
+      if (event.pointerType === 'mouse' && this.activeCard?.dataset.cardType === 'level-up') {
+        this.setLevelUpAnticipation(true);
+      }
+    });
+    this.targetButtons.right.addEventListener('pointerleave', (event) => {
+      if (
+        event.pointerType === 'mouse' &&
+        this.activeCard?.dataset.cardType === 'level-up' &&
+        (!this.isDragging || this.currentDominantDirection !== 'right')
+      ) {
+        this.setLevelUpAnticipation(false);
+      }
+    });
 
     // Sound Toggle
     this.soundToggleBtn.addEventListener('click', () => {
@@ -1044,6 +1325,7 @@ class NeverHaveIEverApp {
           break;
         case ' ':
           e.preventDefault();
+          if (this.activeCard?.dataset.cardType === 'level-up') break;
           const dirs = ['top', 'left', 'right', 'bottom'];
           const direction = dirs[Math.floor(Math.random() * dirs.length)];
           this.popKeyboardTargetArrow(direction);
