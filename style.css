@@ -250,14 +250,6 @@ body.unhinged-screen-shake {
   pointer-events: none;
 }
 
-.game-arena.level-up-active .target-left,
-.game-arena.level-up-active .target-right {
-  width: 56px;
-  gap: 4px;
-  padding-right: 2px;
-  padding-left: 2px;
-}
-
 .game-arena.level-up-active .target-left .emoji,
 .game-arena.level-up-active .target-right .emoji {
   color: #fff;
@@ -1989,12 +1981,6 @@ body.unhinged-screen-shake {
   }
   .target-btn .label {
     font-size: 0.58rem;
-  }
-  .game-arena.level-up-active .target-left,
-  .game-arena.level-up-active .target-right {
-    width: 48px;
-    gap: 2px;
-    padding: 8px 1px;
   }
   .game-arena.level-up-active .target-left .emoji svg,
   .game-arena.level-up-active .target-right .emoji svg {
