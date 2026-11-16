@@ -277,9 +277,10 @@ class NeverHaveIEverApp {
     sounds.playCheers();
     if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       setTimeout(() => {
+        const overlayBounds = this.cheersOverlay.getBoundingClientRect();
         this.confetti.burst(
-          window.innerWidth / 2,
-          window.innerHeight / 2 - 170,
+          overlayBounds.left + overlayBounds.width / 2,
+          overlayBounds.top + overlayBounds.height * 0.39,
           180,
           ['#ffd43b', '#a855f7'],
           'droplet'
