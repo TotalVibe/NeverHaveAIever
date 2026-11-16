@@ -3,6 +3,14 @@ import { sounds } from './sound.js?v=4';
 import { ConfettiEngine } from './confetti.js';
 
 const SPICY_LEVELS = ['cheeky', 'spicy', 'unhinged'];
+const DONE_IT_REACTION_IMAGES = {
+  cheeky: 'images/cheeky.png',
+  spicy: 'images/angel.png',
+  unhinged: 'images/explosion.png',
+  cringe: 'images/akward.png',
+  party: 'images/party.png',
+  wholesome: 'images/angel.png'
+};
 const LEVEL_UP_SWIPE_THRESHOLD = 15;
 const LEVEL_UP_DONE_IT_THRESHOLD = 7;
 const SPICY_LEVEL_LABELS = {
@@ -69,6 +77,7 @@ class NeverHaveIEverApp {
     this.soundToggleBtn = document.getElementById('sound-toggle-btn');
     this.ambientGlow = document.getElementById('ambient-glow');
     this.cheersOverlay = document.getElementById('cheers-overlay');
+    this.cheersCounterpart = this.cheersOverlay.querySelector('.cheers-counterpart');
 
     // Modals
     this.infoModal = document.getElementById('info-modal');
@@ -269,6 +278,10 @@ class NeverHaveIEverApp {
     this.isCelebrating = true;
     clearTimeout(this.idleHintTimer);
     this.activeCard.classList.remove('hint-visible');
+    const reactionKey = this.activeCard.dataset.category === 'spicy'
+      ? this.spicyLevel
+      : this.activeCard.dataset.category;
+    this.cheersCounterpart.src = DONE_IT_REACTION_IMAGES[reactionKey] ?? DONE_IT_REACTION_IMAGES.spicy;
     this.cheersOverlay.classList.add('active');
     this.cheersOverlay.setAttribute('aria-hidden', 'false');
     document.body.classList.add('celebration-shake');

@@ -1073,15 +1073,15 @@ body.unhinged-screen-shake {
   filter: drop-shadow(0 14px 28px rgba(0, 0, 0, 0.45));
 }
 
-.cheers-overlay.active .cheers-angel {
-  animation: cheers-angel 2.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+.cheers-overlay.active .cheers-counterpart {
+  animation: cheers-counterpart 2.5s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .cheers-overlay.active .cheers-devil {
   animation: cheers-devil 2.5s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-@keyframes cheers-angel {
+@keyframes cheers-counterpart {
   0% { opacity: 0; transform: translate(calc(-50% + 120vw), -50%) rotate(24deg) scale(0.5); }
   35% { opacity: 1; transform: translate(calc(-50% + 20vmin), -50%) rotate(-9deg) scale(1.08); }
   42% { transform: translate(calc(-50% + 16vmin), -50%) rotate(7deg) scale(1.15); }
