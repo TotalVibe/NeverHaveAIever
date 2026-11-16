@@ -1,4 +1,4 @@
-import { CATEGORIES, QUESTIONS, SPICY_QUESTION_LEVELS } from './questions.js?v=2';
+import { CATEGORIES, QUESTIONS, SPICY_QUESTION_LEVELS } from './questions.js?v=3';
 import { sounds } from './sound.js?v=4';
 import { ConfettiEngine } from './confetti.js';
 
