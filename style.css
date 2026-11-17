@@ -2309,16 +2309,34 @@ body.unhinged-screen-shake {
     flex-direction: row;
     align-items: center;
   }
+  /* All header buttons stack in one left-aligned column of round buttons, leaving the centre to the cards */
   .app-header {
     flex-direction: column;
-    width: 140px;
+    align-items: flex-start;
+    justify-content: flex-start;
+    width: auto;
     height: 100%;
     padding: 10px 8px;
-    justify-content: space-around;
+    gap: 8px;
   }
   .header-actions {
     flex-direction: column;
+    align-items: flex-start;
     gap: 8px;
+  }
+  /* Restart is icon-only here, so it matches the round buttons */
+  .app-header .reshuffle-btn {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    gap: 0;
+  }
+  .app-header .reshuffle-btn span {
+    display: none;
+  }
+  .app-header .icon-btn {
+    width: 40px;
+    height: 40px;
   }
   #toast {
     top: 0;
