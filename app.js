@@ -191,6 +191,10 @@ class NeverHaveIEverApp {
     this.renderInitialDeck();
     this.bindEvents();
     this.bindKeyboard();
+    const howToPlayCustomise = document.getElementById('info-customise-btn');
+    if (howToPlayCustomise) {
+      this.addBorderSparkles(howToPlayCustomise, { inset: 3, count: 6, sizeMin: 5, sizeRange: 3, durMin: 7, durRange: 4 });
+    }
     this.targetIntroTimer = setTimeout(() => this.revealTargetButtons(), 2000);
     this.updateAmbientGlow(this.activeCardCategory);
     this.bindIdleHintEvents();
@@ -664,6 +668,70 @@ class NeverHaveIEverApp {
     }
   }
 
+  // Golden-ratio sparkles spread around the border of a parent, padded inwards by `inset`.
+  // Each star flashes on its own slow rhythm.
+  addBorderSparkles(parent, { inset = 8, count = 12, sizeMin = 4, sizeRange = 3, durMin = 7, durRange = 5 } = {}) {
+    const layer = document.createElement('div');
+    layer.className = 'card-sparkles';
+    layer.setAttribute('aria-hidden', 'true');
+    const phi = 0.6180339887;
+    for (let i = 0; i < count; i += 1) {
+      const t = ((i + 1) * phi) % 1;
+      const side = Math.floor(t * 4);
+      const f = (t * 4) % 1;
+      const along = `calc(${inset}px + (100% - ${inset * 2}px) * ${f.toFixed(3)})`;
+      const backAlong = `calc(${inset}px + (100% - ${inset * 2}px) * ${(1 - f).toFixed(3)})`;
+      const position = [
+        { left: along, top: `${inset}px` },
+        { left: `calc(100% - ${inset}px)`, top: along },
+        { left: backAlong, top: `calc(100% - ${inset}px)` },
+        { left: `${inset}px`, top: backAlong }
+      ][side];
+      const spark = document.createElement('span');
+      spark.className = 'card-sparkle';
+      spark.style.left = position.left;
+      spark.style.top = position.top;
+      spark.style.setProperty('--sparkle-size', `${(sizeMin + (i * phi) % sizeRange).toFixed(1)}px`);
+      spark.style.setProperty('--sparkle-duration', `${(durMin + (i * 1.37) % durRange).toFixed(2)}s`);
+      spark.style.setProperty('--sparkle-delay', `${(i * 0.73).toFixed(2)}s`);
+      layer.appendChild(spark);
+    }
+    parent.appendChild(layer);
+    return layer;
+  }
+
+  // Sparkles on a card's back: a border set, plus a few over the title
+  addIntroSparkles(card) {
+    const back = card.querySelector('.card-back');
+    if (!back) return;
+    this.addBorderSparkles(back, { inset: 8, count: 12 });
+
+    const title = back.querySelector('.emblem-title');
+    if (title) {
+      const phi = 0.6180339887;
+      const titleLayer = document.createElement('div');
+      titleLayer.className = 'card-sparkles title-sparkles';
+      titleLayer.setAttribute('aria-hidden', 'true');
+      for (let i = 0; i < 6; i += 1) {
+        const spark = document.createElement('span');
+        spark.className = 'card-sparkle';
+        spark.style.left = `${(10 + ((i + 1) * phi * 2 % 1) * 80).toFixed(2)}%`;
+        spark.style.top = `${(12 + ((i + 1) * phi * 3 % 1) * 76).toFixed(2)}%`;
+        spark.style.setProperty('--sparkle-size', `${(3 + (i * phi) % 2).toFixed(1)}px`);
+        spark.style.setProperty('--sparkle-duration', `${(8 + (i * 1.91) % 4).toFixed(2)}s`);
+        spark.style.setProperty('--sparkle-delay', `${(0.5 + i * 1.1).toFixed(2)}s`);
+        titleLayer.appendChild(spark);
+      }
+      title.appendChild(titleLayer);
+    }
+
+    // The starter card's Customize button gets the same sparkles as the How to Play one
+    const customiseBtn = back.querySelector('.customise-btn');
+    if (customiseBtn && card.classList.contains('intro-card')) {
+      this.addBorderSparkles(customiseBtn, { inset: 3, count: 6, sizeMin: 5, sizeRange: 3, durMin: 7, durRange: 4 });
+    }
+  }
+
   createCardElement(data, stackClass = 'next', isFaceDown = true) {
     const cat = Object.values(this.categories).find(c => c.id === data.category) || this.categories.top;
 
@@ -747,6 +815,8 @@ class NeverHaveIEverApp {
         </div>
       </div>
     `;
+
+    this.addIntroSparkles(card);
 
     return card;
   }
