@@ -1308,11 +1308,19 @@ class NeverHaveIEverApp {
       if (from === 'info') {
         // How to Play panel flips out (the card stays put), then the info overlay is hidden
         this.flipOutForModal(this.infoModal.querySelector('.modal-content'), { animateBack: false });
+        // Hand the dark backdrop over instantly so it doesn't dip while the panels swap
+        this.infoModal.classList.add('no-fade');
         this.infoModal.classList.remove('active');
+        this.customiseModal.classList.add('no-fade');
+        this.customiseModal.classList.add('active');
+        requestAnimationFrame(() => {
+          this.infoModal.classList.remove('no-fade');
+          this.customiseModal.classList.remove('no-fade');
+        });
       } else {
         this.flipOutForModal(this.stackContainer.querySelector('.game-card.current'), { animateBack: true });
+        this.customiseModal.classList.add('active');
       }
-      this.customiseModal.classList.add('active');
       this.flipModalIn();
       this.customiseModal.querySelector('.customise-modal-close').focus();
     };

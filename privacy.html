@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Privacy · Never Have AI Ever</title>
+  <meta name="description" content="What Never Have AI Ever stores, what it sends, and what it doesn't.">
+  <style>
+    :root {
+      --text-main: #f8fafc;
+      --text-soft: #d5dce6;
+      --text-dim: #a3b1c4;
+      --radius-card: 26px;
+    }
+    * { box-sizing: border-box; }
+    html, body { min-height: 100%; margin: 0; }
+    body {
+      position: relative;
+      min-height: 100dvh;
+      background-color: #111420;
+      color: var(--text-soft);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* Card-back decorations, fixed to the full screen */
+    .decor {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background-color: #111420;
+      background-image:
+        repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.018) 0px, rgba(255, 255, 255, 0.018) 1.5px, transparent 1.5px, transparent 14px),
+        repeating-linear-gradient(-45deg, rgba(255, 255, 255, 0.018) 0px, rgba(255, 255, 255, 0.018) 1.5px, transparent 1.5px, transparent 14px);
+    }
+
+    /* Darker inner panel so the text stays readable over the decorations */
+    .panel {
+      position: relative;
+      z-index: 1;
+      max-width: 640px;
+      margin: 36px auto 36px;
+      padding: 26px 30px 34px;
+      background: rgba(9, 10, 16, 0.94);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 22px;
+      box-shadow: 0 20px 48px -12px rgba(0, 0, 0, 0.7);
+    }
+
+    .title-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 4px;
+    }
+    .back {
+      display: inline-flex;
+      flex-shrink: 0;
+      color: var(--text-main);
+      text-decoration: none;
+    }
+    .back svg {
+      width: 24px;
+      height: 24px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    h1 {
+      font-family: 'Great Vibes', 'Alex Brush', 'Dancing Script', cursive;
+      font-weight: 400;
+      font-size: 2.6rem;
+      line-height: 1.1;
+      color: #ffffff;
+      text-shadow: 0 0 20px rgba(255, 255, 255, 0.5), 0 2px 10px rgba(0, 0, 0, 0.9);
+      margin: 0;
+    }
+    h2 {
+      font-size: 1.02rem;
+      color: #ffffff;
+      margin: 26px 0 6px;
+    }
+    p { margin: 0 0 4px; }
+    .updated {
+      color: var(--text-dim);
+      font-size: 0.85rem;
+      margin: 8px 0 18px;
+    }
+    a { color: #c4b5fd; }
+    @media (max-width: 480px) {
+      .panel { margin: 24px 14px; padding: 22px 20px 28px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="decor" aria-hidden="true"></div>
+
+  <div class="panel">
+    <div class="title-row">
+      <a class="back" href="index.html" aria-label="Back to the game">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5m6-6-6 6 6 6" /></svg>
+      </a>
+      <h1>Privacy</h1>
+    </div>
+    <p class="updated">Last updated: 17 November 2026</p>
+
+    <p>Never Have AI Ever is a card game. This page explains what the game stores, what it sends, and what it doesn't.</p>
+
+    <h2>What we collect</h2>
+    <p>Nothing. There are no accounts, no sign-up and no analytics.</p>
+
+    <h2>Your group description</h2>
+    <p>If you type a description of your group in Customize, the text is only used to show a placeholder. It is never saved or sent anywhere.</p>
+
+    <h2>What stays on your device</h2>
+    <p>The game remembers your chosen card intensity (Cheeky, Spicy or Unhinged) in your browser's local storage. This value never leaves your device. You can remove it by clearing this site's data in your browser settings.</p>
+
+    <h2>Advertising</h2>
+    <p>The game currently shows no ads. In the future we plan to show a short video ad after you save your preferences in Customize. If that happens, the ad provider may use cookies or device identifiers to show and measure the ad. This page will be updated before any ads go live.</p>
+
+    <h2>Third-party services</h2>
+    <p>The game loads its fonts from Google Fonts. When a font loads, Google receives standard connection details such as your IP address, as it does for any website that uses Google Fonts. The game sends nothing else to third parties.</p>
+
+    <h2>Contact</h2>
+    <p>Questions about this page: <a href="https://www.mollevi.com" target="_blank" rel="noopener noreferrer">mollevi.com</a></p>
+  </div>
+</body>
+</html>
