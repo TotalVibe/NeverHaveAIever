@@ -800,6 +800,22 @@ class NeverHaveIEverApp {
       const skew = Math.max(-3, Math.min(3, dx * 0.02));
       card.style.transform = `translate3d(${dx}px, ${dy}px, 0) rotate(${rotation}deg) rotateX(${tiltX}deg) rotateY(${tiltY}deg) skewX(${skew}deg)`;
 
+      // Edge shade: each side darkens on its own as the card nears that arena edge
+      const arenaBox = document.querySelector('.game-arena')?.getBoundingClientRect();
+      if (arenaBox) {
+        const cardBox = card.getBoundingClientRect();
+        const gaps = {
+          left: cardBox.left - arenaBox.left,
+          right: arenaBox.right - cardBox.right,
+          top: cardBox.top - arenaBox.top,
+          bottom: arenaBox.bottom - cardBox.bottom
+        };
+        for (const [side, gap] of Object.entries(gaps)) {
+          const near = Math.max(0, Math.min(1, 1 - gap / 160));
+          card.style.setProperty(`--shade-${side}`, (near * near * 0.6).toFixed(3));
+        }
+      }
+
       // The level-up prompt accepts only horizontal choices.
       let direction = null;
       if (card.dataset.cardType === 'level-up') {
@@ -866,6 +882,7 @@ class NeverHaveIEverApp {
       if (!this.isDragging) return;
       this.isDragging = false;
       this.resetIdleHint();
+      ['left', 'right', 'top', 'bottom'].forEach(side => card.style.setProperty(`--shade-${side}`, '0'));
 
       if (currentPointerId !== null && card.releasePointerCapture) {
         try { card.releasePointerCapture(currentPointerId); } catch (err) {}

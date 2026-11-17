@@ -2628,3 +2628,19 @@ body.unhinged-screen-shake {
     margin-top: clamp(8px, 3.5dvh, 24px);
   }
 }
+
+/* Edge shade: a straight gradient from each side toward the centre, darkening the side
+   of a dragged card that is nearing that arena edge */
+.game-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  border-radius: inherit;
+  pointer-events: none;
+  background:
+    linear-gradient(to right, rgba(0, 0, 0, var(--shade-left, 0)), transparent 40%),
+    linear-gradient(to left, rgba(0, 0, 0, var(--shade-right, 0)), transparent 40%),
+    linear-gradient(to bottom, rgba(0, 0, 0, var(--shade-top, 0)), transparent 40%),
+    linear-gradient(to top, rgba(0, 0, 0, var(--shade-bottom, 0)), transparent 40%);
+}
