@@ -1191,6 +1191,64 @@ class NeverHaveIEverApp {
     arrow.classList.add('keyboard-pop');
   }
 
+  // Customise pop-up transition: the current card flips away from the deck while the
+  // pop-up flips in from the same direction. The card is copied onto a fixed layer so it
+  // stays visible above the dimmed overlay.
+  prefersReducedMotion() {
+    return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  }
+
+  // Copies `element` onto a fixed layer and flips the copy out to the left.
+  // `animateBack` = true means closing the pop-up flips the copy back in (used for the card).
+  flipOutForModal(element, { animateBack = true } = {}) {
+    if (!element || this.prefersReducedMotion()) return;
+
+    const rect = element.getBoundingClientRect();
+    const stage = document.createElement('div');
+    stage.className = 'card-flip-stage';
+    const ghost = element.cloneNode(true);
+    ghost.style.cssText = `position:fixed;left:${rect.left}px;top:${rect.top}px;width:${rect.width}px;height:${rect.height}px;margin:0;transform:none;transition:none;pointer-events:none;`;
+    stage.append(ghost);
+    document.body.append(stage);
+    element.style.visibility = 'hidden';
+
+    ghost.animate([
+      { transform: 'rotateY(0deg) translateX(0)', opacity: 1, filter: 'blur(0px)' },
+      { transform: 'rotateY(-75deg) translateX(-60px) scale(0.92)', opacity: 0, filter: 'blur(10px)' }
+    ], { duration: 520, easing: 'cubic-bezier(0.4, 0, 0.2, 1)', fill: 'forwards' });
+
+    this.customiseFlip = { element, stage, ghost, animateBack };
+  }
+
+  flipModalIn(delay = 160) {
+    if (this.prefersReducedMotion()) return;
+    const content = this.customiseModal.querySelector('.modal-content');
+    content.animate([
+      { transform: 'perspective(1200px) rotateY(75deg) translateX(40px) scale(0.92)', opacity: 0 },
+      { transform: 'perspective(1200px) rotateY(0deg) translateX(0) scale(1)', opacity: 1 }
+    ], { duration: 520, delay, easing: 'cubic-bezier(0.2, 0.85, 0.25, 1)', fill: 'backwards' });
+  }
+
+  returnFlippedPanel({ animate = true } = {}) {
+    const flip = this.customiseFlip;
+    if (!flip) return;
+    this.customiseFlip = null;
+
+    const finish = () => {
+      flip.stage.remove();
+      flip.element.style.visibility = '';
+    };
+
+    if (!animate || !flip.animateBack || this.prefersReducedMotion()) {
+      finish();
+      return;
+    }
+    flip.ghost.animate([
+      { transform: 'rotateY(-75deg) translateX(-60px) scale(0.92)', opacity: 0, filter: 'blur(10px)' },
+      { transform: 'rotateY(0deg) translateX(0)', opacity: 1, filter: 'blur(0px)' }
+    ], { duration: 420, easing: 'cubic-bezier(0.2, 0.85, 0.25, 1)', fill: 'forwards' }).onfinish = finish;
+  }
+
   bindEvents() {
     const groupDescriptionExamples = [
       'A bride-to-be, her ex, his new boyfriend, and eight friends with Ibiza screenshots.',
@@ -1200,12 +1258,20 @@ class NeverHaveIEverApp {
       'A birthday girl, her chaotic roommates, and the friend who keeps saying “one more bar.”'
     ];
     let nextGroupDescriptionExample = 0;
-    const openCustomiseModal = () => {
+    const openCustomiseModal = ({ from = 'card' } = {}) => {
       this.updateSpicyLevelPreview(this.spicyLevel);
       const descriptionField = this.customiseModal.querySelector('.customise-group-description');
       descriptionField.placeholder = groupDescriptionExamples[nextGroupDescriptionExample];
       nextGroupDescriptionExample = (nextGroupDescriptionExample + 1) % groupDescriptionExamples.length;
+      if (from === 'info') {
+        // How to Play panel flips out (the card stays put), then the info overlay is hidden
+        this.flipOutForModal(this.infoModal.querySelector('.modal-content'), { animateBack: false });
+        this.infoModal.classList.remove('active');
+      } else {
+        this.flipOutForModal(this.stackContainer.querySelector('.game-card.current'), { animateBack: true });
+      }
       this.customiseModal.classList.add('active');
+      this.flipModalIn();
       this.customiseModal.querySelector('.customise-modal-close').focus();
     };
 
@@ -1233,10 +1299,12 @@ class NeverHaveIEverApp {
       this.celebrateDoneIt();
     });
 
-    const closeCustomiseModal = () => {
+    const closeCustomiseModal = ({ returnCard = true } = {}) => {
       this.customiseModal.classList.remove('active');
+      this.returnFlippedPanel({ animate: returnCard });
       this.stackContainer.querySelector('.game-card.current .customise-btn')?.focus();
     };
+    this.closeCustomiseModal = closeCustomiseModal;
     this.customiseModal.querySelector('.customise-modal-close').addEventListener('click', () => {
       sounds.playClick();
       closeCustomiseModal();
@@ -1265,7 +1333,7 @@ class NeverHaveIEverApp {
         this.questions.spicy = [...SPICY_QUESTION_LEVELS[selectedLevel]];
       }
       this.showToast('New level');
-      closeCustomiseModal();
+      closeCustomiseModal({ returnCard: false });
       this.reshuffleGame();
     });
     const levelSlider = this.customiseModal.querySelector('.customise-level-slider');
@@ -1335,8 +1403,7 @@ class NeverHaveIEverApp {
     });
     infoCustomiseBtn.addEventListener('click', () => {
       sounds.playClick();
-      this.infoModal.classList.remove('active');
-      openCustomiseModal();
+      openCustomiseModal({ from: 'info' });
     });
     infoLetsPlayBtn.addEventListener('click', () => {
       this.infoModal.classList.remove('active');
@@ -1358,8 +1425,7 @@ class NeverHaveIEverApp {
   bindKeyboard() {
     window.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && this.customiseModal.classList.contains('active')) {
-        this.customiseModal.classList.remove('active');
-        this.stackContainer.querySelector('.game-card.current .customise-btn')?.focus();
+        this.closeCustomiseModal();
         return;
       }
       if (this.isCelebrating) return;

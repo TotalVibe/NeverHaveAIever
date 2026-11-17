@@ -1382,6 +1382,20 @@ body.unhinged-screen-shake {
   pointer-events: auto;
 }
 
+/* Temporary layer holding the card while it flips out for the customise pop-up.
+   Sits above the modal overlay so the flip stays visible. */
+.card-flip-stage {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  perspective: 1200px;
+  pointer-events: none;
+  z-index: 101;
+}
+
 .modal-content {
   background: #181b29;
   border: 1px solid rgba(255, 255, 255, 0.14);
