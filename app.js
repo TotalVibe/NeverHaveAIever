@@ -402,6 +402,7 @@ class NeverHaveIEverApp {
     this.cardHistory.push({
       category: this.activeCard.dataset.category,
       text: this.activeCard.dataset.fullText,
+      emoji: this.activeCard.dataset.cardEmoji,
       faceDown: this.activeCard.classList.contains('face-down'),
       doneIt: this.activeCard.dataset.doneIt === 'true'
     });
@@ -578,7 +579,7 @@ class NeverHaveIEverApp {
     // Support per-question { text, emoji } objects (cringe) or plain strings
     const question = typeof data.text === 'object' && data.text !== null ? data.text : { text: data.text };
     card.dataset.fullText = question.text;
-    const cardEmoji = question.emoji ?? this.getCategoryEmoji(data.category);
+    const cardEmoji = data.emoji ?? question.emoji ?? this.getCategoryEmoji(data.category);
     card.dataset.cardEmoji = cardEmoji;
     card.style.setProperty('--card-emoji', cardEmoji);
 
@@ -880,6 +881,7 @@ class NeverHaveIEverApp {
     this.cardHistory.push({
       category: this.activeCard.dataset.category,
       text: this.activeCard.dataset.fullText,
+      emoji: this.activeCard.dataset.cardEmoji,
       faceDown: this.activeCard.classList.contains('face-down'),
       doneIt: this.activeCard.dataset.doneIt === 'true'
     });
