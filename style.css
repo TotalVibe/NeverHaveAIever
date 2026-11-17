@@ -1841,6 +1841,7 @@ body.unhinged-screen-shake {
 /* Customize pop-up: same card look as How to Play; the panel itself scrolls on small screens */
 .customise-modal-content.info-reverse {
   display: block;
+  height: auto;
   max-height: 85vh;
   max-height: 85dvh;
   overflow-y: auto;
