@@ -794,7 +794,11 @@ class NeverHaveIEverApp {
 
       const dist = Math.sqrt(dx * dx + dy * dy);
       const rotation = Math.max(-25, Math.min(25, dx * 0.08));
-      card.style.transform = `translate3d(${dx}px, ${dy}px, 0) rotate(${rotation}deg)`;
+      // Subtle 3D lean toward the drag, so the card looks like it's tilting in space
+      const tiltY = Math.max(-8, Math.min(8, dx * 0.05));
+      const tiltX = Math.max(-6, Math.min(6, dy * 0.05));
+      const skew = Math.max(-3, Math.min(3, dx * 0.02));
+      card.style.transform = `translate3d(${dx}px, ${dy}px, 0) rotate(${rotation}deg) rotateX(${tiltX}deg) rotateY(${tiltY}deg) skewX(${skew}deg)`;
 
       // The level-up prompt accepts only horizontal choices.
       let direction = null;
@@ -1202,8 +1206,10 @@ class NeverHaveIEverApp {
     }
 
     // Undo entrance: starts small in the bottom-right corner, spins and zooms in
+    // Every undo comes from the same imaginary pile outside the arena (bottom-right),
+    // flipping and tilting as it lands. The swipe direction only picks the next category.
     restoredCard.style.transition = 'none';
-    restoredCard.style.transform = 'translate3d(38vw, 38vh, 0) rotate(90deg) scale(0.3)';
+    restoredCard.style.transform = 'translate3d(45vw, 45vh, 0) rotate(10deg) rotateY(180deg) scale(0.6)';
     restoredCard.style.opacity = '0';
 
     this.stackContainer.appendChild(restoredCard);
@@ -1217,7 +1223,7 @@ class NeverHaveIEverApp {
     restoredCard.offsetHeight;
 
     restoredCard.style.transition = 'transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.4s ease';
-    restoredCard.style.transform = 'translate3d(0, 0, 0) rotate(0deg) scale(1)';
+    restoredCard.style.transform = 'translate3d(0, 0, 0) rotate(0deg) rotateY(0deg) scale(1)';
     restoredCard.style.opacity = '1';
 
     this.activeCard = restoredCard;

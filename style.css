@@ -2070,13 +2070,17 @@ body.unhinged-screen-shake {
 /* Arrow column runs the full height of each row */
 .info-cat-arrow {
   flex-shrink: 0;
-  width: 66px;
+  /* Runs out to the row's right edge (cancelling its 18px padding), so the content centres
+     between the divider and the edge */
+  width: 84px;
+  margin-right: -18px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 4px;
-  padding-left: 8px;
+  /* No side padding, so the content centres in the space right of the dashed divider */
+  padding: 0;
   border-left: 1px dashed rgba(255, 255, 255, 0.18);
   color: var(--cat-accent, #ffffff);
 }
@@ -2609,10 +2613,18 @@ body.unhinged-screen-shake {
     padding: 28px 22px;
   }
 
+  /* Sized to its content; only capped at the screen height, then the middle scrolls */
   .customise-modal-content.info-reverse {
-    height: calc(100vh - 56px);
-    height: calc(100dvh - 56px);
+    height: auto;
     max-height: calc(100vh - 56px);
     max-height: calc(100dvh - 56px);
+  }
+
+  .customise-scroll {
+    flex: 0 1 auto;
+  }
+
+  .customise-modal-done {
+    margin-top: clamp(8px, 3.5dvh, 24px);
   }
 }
