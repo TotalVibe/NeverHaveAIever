@@ -1097,7 +1097,7 @@ class NeverHaveIEverApp {
     this.activeCard?.classList.remove('hint-visible');
     this.stackContainer.classList.remove('reshuffle-arriving');
     this.stackContainer.classList.add('shuffling');
-    sounds.playSwoosh('neutral');
+    sounds.playShuffle();
 
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const shuffleDuration = reducedMotion ? 0 : 650;
