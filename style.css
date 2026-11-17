@@ -1673,6 +1673,7 @@ body.unhinged-screen-shake {
 
 .customise-modal-done:hover {
   background: linear-gradient(135deg, #8261c7, #6748a7 55%, #513986);
+  border-color: rgba(198, 173, 255, 0.48);
   box-shadow: 0 10px 28px rgba(128, 83, 207, 0.58), 0 0 18px rgba(164, 125, 255, 0.34), inset 0 1px 0 rgba(255, 255, 255, 0.22);
 }
 
@@ -1941,6 +1942,7 @@ body.unhinged-screen-shake {
 #info-modal .btn-primary:hover,
 #info-modal .btn-primary:focus-visible {
   background: linear-gradient(135deg, #8261c7, #6748a7 55%, #513986);
+  border-color: rgba(198, 173, 255, 0.48);
   box-shadow: 0 10px 28px rgba(128, 83, 207, 0.58), 0 0 18px rgba(164, 125, 255, 0.34), inset 0 1px 0 rgba(255, 255, 255, 0.22);
 }
 
