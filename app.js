@@ -622,6 +622,11 @@ class NeverHaveIEverApp {
     });
 
     front.querySelector('.age-gate-no').addEventListener('click', () => {
+      // Nudge the card and bring in the message; restarting the class replays the nudge
+      card.classList.remove('is-nudging');
+      void card.offsetWidth;
+      card.classList.add('is-nudging');
+      sounds.playWildSound();
       front.querySelector('.age-gate-denied').classList.add('is-visible');
       front.querySelectorAll('button').forEach(button => { button.disabled = true; });
     });

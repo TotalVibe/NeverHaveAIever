@@ -220,6 +220,14 @@ class SoundEffects {
     }
   }
 
+  // The Spicy & Wild sound on its own, used to signal a "no"
+  playWildSound() {
+    if (!this.enabled) return;
+    this.init();
+    if (!this.ctx) return;
+    this.playSpicySound(this.ctx.currentTime);
+  }
+
   playSpicySound(now) {
     // Low sub rumble + harmonic sizzle
     const osc1 = this.ctx.createOscillator();

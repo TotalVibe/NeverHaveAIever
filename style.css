@@ -2694,3 +2694,32 @@ body.unhinged-screen-shake {
 .card-back .customise-btn {
   position: relative;
 }
+
+/* Age gate "No": the card gives a small nudge and the message slides in */
+.game-card.is-nudging {
+  animation: age-gate-nudge 0.45s ease;
+}
+
+.age-gate-denied.is-visible {
+  animation: age-gate-note-in 0.4s ease both;
+}
+
+@keyframes age-gate-nudge {
+  0%, 100% { transform: translateX(0) rotate(0deg); }
+  20% { transform: translateX(-7px) rotate(-1deg); }
+  40% { transform: translateX(6px) rotate(0.8deg); }
+  60% { transform: translateX(-4px) rotate(-0.5deg); }
+  80% { transform: translateX(2px) rotate(0.2deg); }
+}
+
+@keyframes age-gate-note-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .game-card.is-nudging,
+  .age-gate-denied.is-visible {
+    animation: none;
+  }
+}
