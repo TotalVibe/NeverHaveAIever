@@ -894,7 +894,7 @@ class NeverHaveIEverApp {
         for (const side of Object.keys(restGaps)) {
           const ratio = Math.max(0, Math.min(1, moved[side] / Math.max(1, restGaps[side])));
           const ramp = Math.max(0, (ratio - 0.4) / 0.6);
-          card.style.setProperty(`--shade-${side}`, (ramp * ramp * 0.6).toFixed(3));
+          card.style.setProperty(`--shade-${side}`, (ramp * ramp * 0.35).toFixed(3));
         }
       }
 
