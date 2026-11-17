@@ -53,3 +53,13 @@ python3 -m http.server 3000
 ```
 
 Then open <http://localhost:3000> in a browser.
+
+## Project layout
+
+- `index.html`, `style.css`, `app.js`: the game. It's a static app with no build step.
+- `questions.js`: question banks for each category and intensity. Each question can carry its own emoji, which becomes the card's background watermark.
+- `sound.js`, `confetti.js`: sound effects and the confetti burst.
+- `privacy.html`: the privacy page.
+- `images/`: reaction and decoration images.
+- `manifest.json`, `sw.js`, icon files: installable app support.
+- `tools/compress_images.py`: optional image compression. It backs up the originals to `images_backup/`, which is git-ignored.

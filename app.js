@@ -825,6 +825,7 @@ class NeverHaveIEverApp {
     if (!card) return;
 
     let currentPointerId = null;
+    let restGaps = null; // distance from the card's resting spot to each arena edge
 
     const onPointerDown = (e) => {
       if (this.isAnimating || this.isCelebrating) return;
@@ -840,6 +841,17 @@ class NeverHaveIEverApp {
 
       if (card.setPointerCapture) {
         try { card.setPointerCapture(e.pointerId); } catch (err) {}
+      }
+
+      const arenaAtStart = document.querySelector('.game-arena')?.getBoundingClientRect();
+      if (arenaAtStart) {
+        const restBox = card.getBoundingClientRect();
+        restGaps = {
+          left: restBox.left - arenaAtStart.left,
+          right: arenaAtStart.right - restBox.right,
+          top: restBox.top - arenaAtStart.top,
+          bottom: arenaAtStart.bottom - restBox.bottom
+        };
       }
 
       card.style.transition = 'none';
@@ -870,19 +882,14 @@ class NeverHaveIEverApp {
       const skew = Math.max(-3, Math.min(3, dx * 0.02));
       card.style.transform = `translate3d(${dx}px, ${dy}px, 0) rotate(${rotation}deg) rotateX(${tiltX}deg) rotateY(${tiltY}deg) skewX(${skew}deg)`;
 
-      // Edge shade: each side darkens on its own as the card nears that arena edge
-      const arenaBox = document.querySelector('.game-arena')?.getBoundingClientRect();
-      if (arenaBox) {
-        const cardBox = card.getBoundingClientRect();
-        const gaps = {
-          left: cardBox.left - arenaBox.left,
-          right: arenaBox.right - cardBox.right,
-          top: cardBox.top - arenaBox.top,
-          bottom: arenaBox.bottom - cardBox.bottom
-        };
-        for (const [side, gap] of Object.entries(gaps)) {
-          const near = Math.max(0, Math.min(1, 1 - gap / 160));
-          card.style.setProperty(`--shade-${side}`, (near * near * 0.6).toFixed(3));
+      // Edge shade: how far the card has moved toward each side, relative to the room it had
+      // at rest, so a card already close to an edge (on phones) doesn't shade on grab
+      if (restGaps) {
+        const moved = { left: -dx, right: dx, top: -dy, bottom: dy };
+        for (const side of Object.keys(restGaps)) {
+          const ratio = Math.max(0, Math.min(1, moved[side] / Math.max(1, restGaps[side])));
+          const ramp = Math.max(0, (ratio - 0.4) / 0.6);
+          card.style.setProperty(`--shade-${side}`, (ramp * ramp * 0.6).toFixed(3));
         }
       }
 
@@ -1292,8 +1299,7 @@ class NeverHaveIEverApp {
       this.levelUpPromptShown = true;
     }
 
-    // Undo entrance: starts small in the bottom-right corner, spins and zooms in
-    // Every undo comes from the same imaginary pile outside the arena (bottom-right),
+    // Undo: the card returns from an imaginary pile outside the arena (bottom-right),
     // flipping and tilting as it lands. The swipe direction only picks the next category.
     restoredCard.style.transition = 'none';
     restoredCard.style.transform = 'translate3d(45vw, 45vh, 0) rotate(10deg) rotateY(180deg) scale(0.6)';
