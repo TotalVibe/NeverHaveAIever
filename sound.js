@@ -24,46 +24,45 @@ class SoundEffects {
     return this.enabled;
   }
 
-  // Card shuffle: four soft paper-like slides, fading out,
-  // so it sounds like several cards being moved
+  // One soft paper-like card slide starting at time `t`; `level` scales its volume
+  playCardSlide(t, level = 1) {
+    const ctx = this.ctx;
+    const slide = 0.22;
+    const length = Math.ceil(ctx.sampleRate * (slide + 0.05));
+    const buffer = ctx.createBuffer(1, length, ctx.sampleRate);
+    const channel = buffer.getChannelData(0);
+    for (let i = 0; i < length; i++) {
+      channel[i] = Math.random() * 2 - 1;
+    }
+
+    const source = ctx.createBufferSource();
+    const lowpass = ctx.createBiquadFilter();
+    const gain = ctx.createGain();
+    source.buffer = buffer;
+    lowpass.type = 'lowpass';
+    lowpass.frequency.setValueAtTime(6000, t);
+    lowpass.frequency.exponentialRampToValueAtTime(800, t + slide);
+    gain.gain.setValueAtTime(0.0001, t);
+    gain.gain.exponentialRampToValueAtTime(0.035 * level, t + 0.025);
+    gain.gain.exponentialRampToValueAtTime(0.0001, t + slide);
+    source.connect(lowpass);
+    lowpass.connect(gain);
+    gain.connect(ctx.destination);
+    source.start(t);
+    source.stop(t + slide + 0.05);
+  }
+
+  // Card shuffle: four soft slides that fade out, so it sounds like several cards moving
   playShuffle() {
     if (!this.enabled) return;
     this.init();
     if (!this.ctx) return;
 
-    const ctx = this.ctx;
-    const start = ctx.currentTime + 0.02;
+    const start = this.ctx.currentTime + 0.02;
     const passes = 4;
-    const slide = 0.22;
-    const gap = 0.085;
-
+    const spacing = 0.22 + 0.085;
     for (let p = 0; p < passes; p++) {
-      const t = start + p * (slide + gap);
-      // Each pass is quieter than the last, so the shuffle fades out
-      const level = 1 - p * 0.22;
-      const length = Math.ceil(ctx.sampleRate * (slide + 0.05));
-      const buffer = ctx.createBuffer(1, length, ctx.sampleRate);
-      const channel = buffer.getChannelData(0);
-      for (let i = 0; i < length; i++) {
-        channel[i] = Math.random() * 2 - 1;
-      }
-
-      const source = ctx.createBufferSource();
-      const lowpass = ctx.createBiquadFilter();
-      const gain = ctx.createGain();
-      source.buffer = buffer;
-      lowpass.type = 'lowpass';
-      lowpass.frequency.setValueAtTime(6000, t);
-      lowpass.frequency.exponentialRampToValueAtTime(800, t + slide);
-      gain.gain.setValueAtTime(0.0001, t);
-      gain.gain.exponentialRampToValueAtTime(0.035 * level, t + 0.025);
-      gain.gain.exponentialRampToValueAtTime(0.0001, t + slide);
-      source.connect(lowpass);
-      lowpass.connect(gain);
-      gain.connect(ctx.destination);
-      source.start(t);
-      source.stop(t + slide + 0.05);
-
+      this.playCardSlide(start + p * spacing, 1 - p * 0.22);
     }
   }
 
@@ -190,19 +189,22 @@ class SoundEffects {
     if (!this.ctx) return;
 
     const now = this.ctx.currentTime;
+    // Start with the beginning of a card slide, then the category's own sound
+    this.playCardSlide(now, 1.2);
+    const categoryNow = now + 0.14;
 
     switch (direction) {
       case 'top': // 😈 Spicy: fiery sizzle & bass pulse
-        this.playSpicySound(now);
+        this.playSpicySound(categoryNow);
         break;
       case 'left': // 😳 Cringe: comical spring wobble / boing
-        this.playCringeSound(now);
+        this.playCringeSound(categoryNow);
         break;
       case 'right': // 🥳 Party: cheerful celebratory fanfare
-        this.playPartySound(now);
+        this.playPartySound(categoryNow);
         break;
       case 'bottom': // 😇 Wholesome: sweet crystalline chime
-        this.playWholesomeSound(now);
+        this.playWholesomeSound(categoryNow);
         break;
       default:
         this.playSwoosh();

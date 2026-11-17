@@ -971,7 +971,7 @@ class NeverHaveIEverApp {
     }
 
     // Active Card flies away
-    this.activeCard.style.transition = 'transform 0.42s cubic-bezier(0.2, 0.9, 0.3, 1), opacity 0.35s ease-out';
+    this.activeCard.style.transition = 'transform 0.52s cubic-bezier(0.2, 0.9, 0.3, 1), opacity 0.44s ease-out';
     this.activeCard.style.transform = `translate3d(${exitX}px, ${exitY}px, 0) rotate(${exitRotation}deg)`;
     this.activeCard.style.opacity = '0';
 
@@ -982,7 +982,7 @@ class NeverHaveIEverApp {
 
     if (nextCard) {
       // 1. Slide next card into center showing its vector texture reverse side
-      nextCard.style.transition = 'transform 0.36s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+      nextCard.style.transition = 'transform 0.46s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
       nextCard.className = 'game-card current face-down';
       nextCard.classList.add('card-entering');
       nextCard.addEventListener('animationend', (event) => {
@@ -1059,7 +1059,7 @@ class NeverHaveIEverApp {
         this.levelUpPromptPending = false;
         this.showLevelUpCard();
       }
-    }, 480);
+    }, 600);
   }
 
   restartGame() {
@@ -1172,8 +1172,9 @@ class NeverHaveIEverApp {
       this.levelUpPromptShown = true;
     }
 
+    // Undo entrance: starts small in the bottom-right corner, spins and zooms in
     restoredCard.style.transition = 'none';
-    restoredCard.style.transform = 'translate3d(0, -500px, 0) scale(0.9)';
+    restoredCard.style.transform = 'translate3d(38vw, 38vh, 0) rotate(360deg) scale(0.3)';
     restoredCard.style.opacity = '0';
 
     this.stackContainer.appendChild(restoredCard);
@@ -1186,8 +1187,8 @@ class NeverHaveIEverApp {
 
     restoredCard.offsetHeight;
 
-    restoredCard.style.transition = 'transform 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.35s ease';
-    restoredCard.style.transform = 'translate3d(0, 0, 0) scale(1)';
+    restoredCard.style.transition = 'transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.4s ease';
+    restoredCard.style.transform = 'translate3d(0, 0, 0) rotate(0deg) scale(1)';
     restoredCard.style.opacity = '1';
 
     this.activeCard = restoredCard;
@@ -1206,7 +1207,7 @@ class NeverHaveIEverApp {
     setTimeout(() => {
       this.isAnimating = false;
       if (this.restartRequested) this.restartGame();
-    }, 460);
+    }, 640);
   }
 
   handleTargetTap(direction) {
