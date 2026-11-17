@@ -178,7 +178,11 @@ class NeverHaveIEverApp {
     const originalIdx = list.indexOf(chosenQuestion);
     used.add(originalIdx);
 
-    return chosenQuestion;
+    // Normalize: allow per-question { text, emoji } objects (cringe) or plain strings (other categories)
+    if (chosenQuestion && typeof chosenQuestion === 'object') {
+      return { text: chosenQuestion.text, emoji: chosenQuestion.emoji };
+    }
+    return { text: chosenQuestion, emoji: undefined };
   }
 
   init() {
@@ -571,7 +575,14 @@ class NeverHaveIEverApp {
     card.style.setProperty('--active-card-color', cat.color);
     card.style.setProperty('--active-card-glow', cat.glow);
 
-    const cleanQuestion = data.text.replace(/^Never have I ever /i, '');
+    // Support per-question { text, emoji } objects (cringe) or plain strings
+    const question = typeof data.text === 'object' && data.text !== null ? data.text : { text: data.text };
+    card.dataset.fullText = question.text;
+    const cardEmoji = question.emoji ?? this.getCategoryEmoji(data.category);
+    card.dataset.cardEmoji = cardEmoji;
+    card.style.setProperty('--card-emoji', cardEmoji);
+
+    const cleanQuestion = question.text.replace(/^Never have I ever /i, '');
 
     card.innerHTML = `
       <div class="card-inner">
@@ -592,7 +603,7 @@ class NeverHaveIEverApp {
             </div>
           </div>
           <div class="category-watermark" aria-hidden="true">
-            <span class="cat-tag-emoji">${this.getCategoryEmoji(data.category)}</span>
+            <span class="cat-tag-emoji">${cardEmoji}</span>
           </div>
 
           <!-- Card Body Statement (Centered) -->
@@ -929,7 +940,10 @@ class NeverHaveIEverApp {
       const cat = Object.values(this.categories).find(c => c.id === nextCategory);
       const newQuestion = this.getRandomQuestion(nextCategory);
       nextCard.dataset.category = nextCategory;
-      nextCard.dataset.fullText = newQuestion;
+      nextCard.dataset.fullText = newQuestion.text;
+      const nextCardEmoji = newQuestion.emoji ?? this.getCategoryEmoji(nextCategory);
+      nextCard.dataset.cardEmoji = nextCardEmoji;
+      nextCard.style.setProperty('--card-emoji', nextCardEmoji);
       nextCard.style.setProperty('--active-card-color', cat.color);
       nextCard.style.setProperty('--active-card-glow', cat.glow);
 
@@ -939,7 +953,7 @@ class NeverHaveIEverApp {
       if (catTag && catTagEmoji && catTagName) {
         catTag.style.color = cat.color;
         catTagName.textContent = this.getCardCategoryName(nextCategory);
-        catTagEmoji.textContent = this.getCategoryEmoji(nextCategory);
+        catTagEmoji.textContent = nextCardEmoji;
       }
 
       const promptText = nextCard.querySelector('.prompt-text');
