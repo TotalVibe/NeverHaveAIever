@@ -11,6 +11,7 @@ const DONE_IT_REACTION_IMAGES = {
   party: 'images/party.png',
   wholesome: 'images/angel.png'
 };
+const AGE_GATE_KEY = 'never-have-ai-ever-age-confirmed';
 const LEVEL_UP_SWIPE_THRESHOLD = 15;
 const LEVEL_UP_DONE_IT_THRESHOLD = 7;
 const SPICY_LEVEL_LABELS = {
@@ -92,14 +93,9 @@ class NeverHaveIEverApp {
     return Math.max(55, Math.min(80, minDim * 0.18));
   }
 
+  // Every visit starts on Cheeky; the intensity isn't remembered between visits
   loadSavedSpicyLevel() {
-    try {
-      const savedLevel = localStorage.getItem('never-have-ai-ever-spicy-level');
-      return SPICY_LEVELS.includes(savedLevel) ? savedLevel : 'spicy';
-    } catch (error) {
-      console.error('Unable to load the saved card intensity level.', error);
-      return 'spicy';
-    }
+    return 'cheeky';
   }
 
   loadQuestions() {
@@ -202,6 +198,7 @@ class NeverHaveIEverApp {
   }
 
   revealTargetButtons() {
+    if (this.ageGateActive) return;
     const arena = document.querySelector('.game-arena');
     arena.classList.remove('intro-hidden', 'intro-hiding');
     arena.classList.add('intro-revealed');
@@ -516,15 +513,6 @@ class NeverHaveIEverApp {
         this.resetCardPosition(this.activeCard);
         return;
       }
-      try {
-        localStorage.setItem('never-have-ai-ever-spicy-level', nextLevel);
-      } catch (error) {
-        console.error('Unable to save the card intensity level.', error);
-        this.showToast('Could not save your card intensity level.');
-        this.resetCardPosition(this.activeCard);
-        return;
-      }
-
       this.spicyLevel = nextLevel;
       this.questions.spicy = [...SPICY_QUESTION_LEVELS[nextLevel]];
       this.updateSpicyLevelPresentation();
@@ -588,6 +576,53 @@ class NeverHaveIEverApp {
     }
   }
 
+  // 18+ check: saved once on this device, then the first card is the normal intro
+  isAgeConfirmed() {
+    try {
+      return localStorage.getItem(AGE_GATE_KEY) === '1';
+    } catch (error) {
+      return false;
+    }
+  }
+
+  saveAgeConfirmed() {
+    try {
+      localStorage.setItem(AGE_GATE_KEY, '1');
+    } catch (error) {
+      // Storage unavailable: the question is asked again next visit
+    }
+  }
+
+  // The first card asks the question inside its decorated back, so it keeps the same pattern and frame
+  showAgeGate(card) {
+    this.ageGateActive = true;
+    const front = card.querySelector('.card-back-frame');
+    front.innerHTML = `
+      <div class="age-gate-front">
+        <p class="age-gate-kicker">Before we start</p>
+        <h2 class="age-gate-question">Are you 18 or older?</h2>
+        <div class="age-gate-below">
+          <div class="age-gate-buttons">
+            <button class="age-gate-btn age-gate-yes" type="button">Yes</button>
+            <button class="age-gate-btn age-gate-no" type="button">No</button>
+          </div>
+          <p class="age-gate-denied">Sorry, this game is only for adults.</p>
+        </div>
+      </div>`;
+    front.querySelector('.age-gate-yes').addEventListener('click', () => {
+      this.saveAgeConfirmed();
+      this.ageGateActive = false;
+      sounds.init();
+      // Same shuffle as the reshuffle button, which then lays out the normal intro card
+      this.reshuffleGame();
+    });
+
+    front.querySelector('.age-gate-no').addEventListener('click', () => {
+      front.querySelector('.age-gate-denied').classList.add('is-visible');
+      front.querySelectorAll('button').forEach(button => { button.disabled = true; });
+    });
+  }
+
   renderInitialDeck() {
     this.stackContainer.innerHTML = '';
 
@@ -622,7 +657,11 @@ class NeverHaveIEverApp {
 
     this.activeCard = card1;
     this.activeCardCategory = initialCategory;
-    this.bindCardGesture(this.activeCard);
+    if (this.isAgeConfirmed()) {
+      this.bindCardGesture(this.activeCard);
+    } else {
+      this.showAgeGate(card1);
+    }
   }
 
   createCardElement(data, stackClass = 'next', isFaceDown = true) {
@@ -1129,16 +1168,8 @@ class NeverHaveIEverApp {
   restartAtDefaultLevel() {
     if (this.isCelebrating) return;
 
-    try {
-      localStorage.setItem('never-have-ai-ever-spicy-level', 'spicy');
-    } catch (error) {
-      console.error('Unable to reset the card intensity level.', error);
-      this.showToast('Could not reset card intensity.');
-      return;
-    }
-
-    this.spicyLevel = 'spicy';
-    this.questions.spicy = [...SPICY_QUESTION_LEVELS.spicy];
+    this.spicyLevel = 'cheeky';
+    this.questions.spicy = [...SPICY_QUESTION_LEVELS.cheeky];
     this.customiseModal.querySelectorAll('.customise-audience-option').forEach((option) => {
       option.setAttribute('aria-pressed', 'false');
     });
@@ -1157,14 +1188,6 @@ class NeverHaveIEverApp {
 
     const prevCardData = this.cardHistory[this.cardHistory.length - 1];
     if (prevCardData.cardType === 'level-up' && prevCardData.spicyLevel !== this.spicyLevel) {
-      try {
-        localStorage.setItem('never-have-ai-ever-spicy-level', prevCardData.spicyLevel);
-      } catch (error) {
-        console.error('Unable to restore the previous card intensity level.', error);
-        this.showToast('Could not restore the previous card intensity.');
-        this.isAnimating = false;
-        return;
-      }
       this.spicyLevel = prevCardData.spicyLevel;
       this.questions.spicy = [...SPICY_QUESTION_LEVELS[this.spicyLevel]];
       this.updateSpicyLevelPresentation();
@@ -1219,7 +1242,7 @@ class NeverHaveIEverApp {
 
   handleTargetTap(direction) {
     this.resetIdleHint();
-    if (this.isAnimating || this.isCelebrating || !this.activeCard) return;
+    if (this.ageGateActive || this.isAnimating || this.isCelebrating || !this.activeCard) return;
     if (this.activeCard.dataset.cardType === 'level-up' && direction !== 'left' && direction !== 'right') return;
 
     sounds.init();
@@ -1376,14 +1399,6 @@ class NeverHaveIEverApp {
         return;
       }
 
-      try {
-        localStorage.setItem('never-have-ai-ever-spicy-level', selectedLevel);
-      } catch (error) {
-        console.error('Unable to save the card intensity level.', error);
-        this.showToast('Could not save your card intensity level.');
-        return;
-      }
-
       const levelChanged = selectedLevel !== this.spicyLevel;
       this.spicyLevel = selectedLevel;
       this.updateSpicyLevelPresentation();
@@ -1486,7 +1501,7 @@ class NeverHaveIEverApp {
         this.closeCustomiseModal();
         return;
       }
-      if (this.isCelebrating) return;
+      if (this.isCelebrating || this.ageGateActive) return;
       if (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA') return;
 
       switch (e.key) {
