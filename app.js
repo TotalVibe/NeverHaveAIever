@@ -484,7 +484,7 @@ class NeverHaveIEverApp {
     // Unhinged prompt: the background glow turns red, a little off the card's own red
     const upcomingLevel = SPICY_LEVELS[SPICY_LEVELS.indexOf(this.spicyLevel) + 1];
     if (upcomingLevel === 'unhinged' && this.ambientGlow) {
-      this.ambientGlow.style.background = 'radial-gradient(circle, rgba(170, 72, 82, 0.4) 0%, rgba(10, 11, 16, 0.4) 60%, transparent 75%)';
+      this.ambientGlow.style.background = 'radial-gradient(circle, rgba(139, 90, 95, 0.4) 0%, rgba(10, 11, 16, 0.4) 60%, transparent 75%)';
     }
 
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;

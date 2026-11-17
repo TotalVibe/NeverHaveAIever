@@ -764,9 +764,9 @@ body.unhinged-screen-shake {
     from var(--level-up-edge-angle),
     transparent 0,
     transparent 68%,
-    rgba(158, 60, 70, 0.95) 76%,
+    rgba(127, 78, 83, 0.95) 76%,
     rgba(255, 255, 255, 0.95) 80%,
-    rgba(158, 60, 70, 0.95) 84%,
+    rgba(127, 78, 83, 0.95) 84%,
     transparent 92%,
     transparent
   );
@@ -779,7 +779,7 @@ body.unhinged-screen-shake {
 
 /* Unhinged level-up card: dark magenta body to match the magenta edge shine */
 .game-card.level-up-card-unhinged .card-front {
-  background: radial-gradient(circle at 50% 0%, #3d1119 0%, #220b10 62%, #160608 100%);
+  background: radial-gradient(circle at 50% 0%, #301a1e 0%, #1b1012 62%, #110910 100%);
 }
 
 @keyframes level-up-edge-rotate {
