@@ -187,6 +187,8 @@ class NeverHaveIEverApp {
 
   init() {
     this.preloadReactionImages();
+    this.registerServiceWorker();
+    this.bindInstallPrompt();
     this.updateSpicyLevelPresentation();
     this.updateSoundTogglePresentation(sounds.enabled);
     this.renderInitialDeck();
@@ -269,6 +271,46 @@ class NeverHaveIEverApp {
     this.soundToggleBtn.setAttribute('aria-label', isEnabled ? 'Mute sound' : 'Enable sound');
     this.soundToggleBtn.setAttribute('aria-pressed', String(isEnabled));
     this.soundToggleBtn.title = isEnabled ? 'Mute Sound (M)' : 'Enable Sound (M)';
+  }
+
+  registerServiceWorker() {
+    if (!('serviceWorker' in navigator)) return;
+    navigator.serviceWorker.register('sw.js').catch((error) => {
+      console.error('Service worker registration failed.', error);
+    });
+  }
+
+  // "Add to Home Screen" row in How to Play. Android/Chrome lets us trigger the install
+  // prompt; iPhone has no API, so the row's text explains the Share menu steps instead.
+  bindInstallPrompt() {
+    const row = document.getElementById('info-install-row');
+    const button = document.getElementById('info-install-btn');
+    if (!row || !button) return;
+
+    const isInstalled = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+    if (isInstalled) {
+      row.hidden = true;
+      return;
+    }
+
+    let deferredPrompt = null;
+    window.addEventListener('beforeinstallprompt', (event) => {
+      event.preventDefault();
+      deferredPrompt = event;
+      button.hidden = false;
+    });
+    window.addEventListener('appinstalled', () => {
+      deferredPrompt = null;
+      row.hidden = true;
+    });
+    button.addEventListener('click', async () => {
+      if (!deferredPrompt) return;
+      sounds.playClick();
+      deferredPrompt.prompt();
+      await deferredPrompt.userChoice;
+      deferredPrompt = null;
+      button.hidden = true;
+    });
   }
 
   // Download and decode the DONE IT reaction images in the background at startup,

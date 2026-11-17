@@ -1780,6 +1780,8 @@ body.unhinged-screen-shake {
 /* How to Play pop-up: reverse of the cover card (same pattern, frame and crest) */
 .info-reverse {
   position: relative;
+  display: flex;
+  flex-direction: column;
   padding: 0;
   background: #111420;
   border: 2px solid rgba(255, 255, 255, 0.28);
@@ -1791,14 +1793,78 @@ body.unhinged-screen-shake {
 .info-reverse-frame {
   position: relative;
   z-index: 1;
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
   margin: 9px;
   border: 1.5px solid rgba(255, 255, 255, 0.16);
   border-radius: calc(var(--radius-card) - 9px);
   padding: 22px 20px 20px;
+  gap: 14px;
+  background: radial-gradient(circle at 50% 50%, rgba(25, 29, 44, 0.65) 0%, rgba(13, 16, 26, 0.88) 100%);
+}
+
+/* Fixed top (title + intro), scrollable list, fixed buttons at the bottom */
+.info-fixed-top {
+  flex-shrink: 0;
   display: flex;
   flex-direction: column;
   gap: 14px;
-  background: radial-gradient(circle at 50% 50%, rgba(25, 29, 44, 0.65) 0%, rgba(13, 16, 26, 0.88) 100%);
+}
+
+.info-scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  /* Soft fade at both edges so scrolled content dissolves instead of being cut off */
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 16px, #000 calc(100% - 24px), transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0, #000 16px, #000 calc(100% - 24px), transparent 100%);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  /* Padding sits inside the fade, so content is fully visible when at rest */
+  padding: 16px 6px 24px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.info-reverse-frame > .info-modal-actions {
+  flex-shrink: 0;
+}
+
+/* Customize pop-up: same card look as How to Play; the panel itself scrolls on small screens */
+.customise-modal-content.info-reverse {
+  display: block;
+  max-height: 85vh;
+  max-height: 85dvh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.customise-frame {
+  display: block;
+  flex: none;
+  overflow: visible;
+}
+
+.customise-frame .info-reverse-head {
+  margin-bottom: 16px;
+}
+
+.info-install-btn {
+  align-self: flex-start;
+  margin-top: 8px;
+  padding: 8px 14px;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  cursor: pointer;
 }
 
 .info-reverse-frame > .modal-close {

@@ -8,7 +8,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="NeverHaveAI ever">
-  <link rel="apple-touch-icon" href="favicon.jpeg">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <link rel="icon" type="image/jpeg" href="favicon.jpeg">
   <link rel="manifest" href="manifest.json">
   <meta property="og:type" content="website">
@@ -122,98 +122,113 @@
       <div class="info-reverse-frame">
         <button class="modal-close" id="close-info-btn" type="button" aria-label="Close">✕</button>
 
-        <div class="info-reverse-head">
-          <div class="crest-diamond" aria-hidden="true">
-            <svg viewBox="0 0 24 24">
-              <path d="M12 2.8 13.9 9l6.3 2-6.3 2-1.9 6.2L10.1 13 3.8 11l6.3-2L12 2.8Z" />
-              <path d="m19 14 .9 2.4 2.3.8-2.3.8L19 20.5l-.8-2.5-2.4-.8 2.4-.8.8-2.4Z" />
-            </svg>
+        <div class="info-fixed-top">
+          <div class="info-reverse-head">
+            <div class="crest-diamond" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <path d="M12 2.8 13.9 9l6.3 2-6.3 2-1.9 6.2L10.1 13 3.8 11l6.3-2L12 2.8Z" />
+                <path d="m19 14 .9 2.4 2.3.8-2.3.8L19 20.5l-.8-2.5-2.4-.8 2.4-.8.8-2.4Z" />
+              </svg>
+            </div>
+            <h2 class="info-reverse-title" id="info-modal-title">How to play</h2>
           </div>
-          <h2 class="info-reverse-title" id="info-modal-title">How to play</h2>
+
+          <p class="info-intro">Swipe or drag the card, or tap an emoji, to choose the topic for the next card.</p>
         </div>
 
-        <p class="info-intro">Swipe or drag the card, or tap an emoji, to choose the topic for the next card.</p>
+        <div class="info-scroll">
+          <div class="info-cat-list">
+            <div class="info-cat info-cat--install" id="info-install-row">
+              <div class="info-cat-main">
+                <span class="info-cat-emoji" aria-hidden="true">📲</span>
+                <div class="info-cat-text">
+                  <span class="info-cat-name">Add to Home Screen</span>
+                  <p>Android: ⋮ menu, then Add to Home screen.<br>
+                    iPhone: Share, then Add to Home Screen.</p>
+                  <button class="info-install-btn" id="info-install-btn" type="button" hidden>Install app</button>
+                </div>
+              </div>
+            </div>
 
-        <div class="info-cat-list">
-          <div class="info-cat info-cat--spicy">
-            <div class="info-cat-main">
-              <span class="info-cat-emoji" id="guide-spicy-emoji">😈</span>
-              <div class="info-cat-text">
-                <span class="info-cat-name" id="guide-spicy-label">Spicy &amp; Wild</span>
-                <p>Dating secrets, romantic fails, guilty pleasures &amp; intimate truths.</p>
+            <div class="info-cat info-cat--tap">
+              <div class="info-cat-main">
+                <span class="info-cat-emoji" aria-hidden="true">👆</span>
+                <div class="info-cat-text">
+                  <span class="info-cat-name">Tap Emoji</span>
+                  <p>Tap any emoji button to choose that topic.</p>
+                </div>
               </div>
             </div>
-            <div class="info-cat-arrow" aria-hidden="true">
-              <svg viewBox="0 0 24 24"><path d="M12 17V7m-5 5 5-5 5 5" /></svg>
-              <span>Swipe or<br>↑ key</span>
+
+            <div class="info-cat info-cat--keys">
+              <div class="info-cat-main">
+                <span class="info-cat-emoji" aria-hidden="true">⌨️</span>
+                <div class="info-cat-text">
+                  <span class="info-cat-name">Keyboard</span>
+                  <p>Arrow keys (↑ Spicy, ← Cringe, → Party, ↓ Wholesome), Spacebar to shuffle, Z to undo.</p>
+                </div>
+              </div>
             </div>
+            <div class="info-cat info-cat--spicy">
+              <div class="info-cat-main">
+                <span class="info-cat-emoji" id="guide-spicy-emoji">😈</span>
+                <div class="info-cat-text">
+                  <span class="info-cat-name" id="guide-spicy-label">Spicy &amp; Wild</span>
+                  <p>Dating secrets, romantic fails, guilty pleasures &amp; intimate truths.</p>
+                </div>
+              </div>
+              <div class="info-cat-arrow" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M12 17V7m-5 5 5-5 5 5" /></svg>
+                <span>Swipe or<br>↑ key</span>
+              </div>
+            </div>
+
+            <div class="info-cat info-cat--party">
+              <div class="info-cat-main">
+                <span class="info-cat-emoji">🥳</span>
+                <div class="info-cat-text">
+                  <span class="info-cat-name">Party</span>
+                  <p>Nightlife chaos, drinking dares, wild nights out &amp; club adventures.</p>
+                </div>
+              </div>
+              <div class="info-cat-arrow" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M7 12h10m-5-5 5 5-5 5" /></svg>
+                <span>Swipe or<br>→ key</span>
+              </div>
+            </div>
+
+            <div class="info-cat info-cat--cringe">
+              <div class="info-cat-main">
+                <span class="info-cat-emoji">😳</span>
+                <div class="info-cat-text">
+                  <span class="info-cat-name">Cringe</span>
+                  <p>Hilarious fails, caught red-handed moments &amp; public embarrassment.</p>
+                </div>
+              </div>
+              <div class="info-cat-arrow" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M17 12H7m5 5-5-5 5-5" /></svg>
+                <span>Swipe or<br>← key</span>
+              </div>
+            </div>
+
+            <div class="info-cat info-cat--wholesome">
+              <div class="info-cat-main">
+                <span class="info-cat-emoji">😇</span>
+                <div class="info-cat-text">
+                  <span class="info-cat-name">Wholesome</span>
+                  <p>Childhood memories, weird daily habits, food quirks &amp; relatable life.</p>
+                </div>
+              </div>
+              <div class="info-cat-arrow" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M12 7v10m5-5-5 5-5-5" /></svg>
+                <span>Swipe or<br>↓ key</span>
+              </div>
+            </div>
+
           </div>
 
-          <div class="info-cat info-cat--party">
-            <div class="info-cat-main">
-              <span class="info-cat-emoji">🥳</span>
-              <div class="info-cat-text">
-                <span class="info-cat-name">Party</span>
-                <p>Nightlife chaos, drinking dares, wild nights out &amp; club adventures.</p>
-              </div>
-            </div>
-            <div class="info-cat-arrow" aria-hidden="true">
-              <svg viewBox="0 0 24 24"><path d="M7 12h10m-5-5 5 5-5 5" /></svg>
-              <span>Swipe or<br>→ key</span>
-            </div>
-          </div>
-
-          <div class="info-cat info-cat--cringe">
-            <div class="info-cat-main">
-              <span class="info-cat-emoji">😳</span>
-              <div class="info-cat-text">
-                <span class="info-cat-name">Cringe</span>
-                <p>Hilarious fails, caught red-handed moments &amp; public embarrassment.</p>
-              </div>
-            </div>
-            <div class="info-cat-arrow" aria-hidden="true">
-              <svg viewBox="0 0 24 24"><path d="M17 12H7m5 5-5-5 5-5" /></svg>
-              <span>Swipe or<br>← key</span>
-            </div>
-          </div>
-
-          <div class="info-cat info-cat--wholesome">
-            <div class="info-cat-main">
-              <span class="info-cat-emoji">😇</span>
-              <div class="info-cat-text">
-                <span class="info-cat-name">Wholesome</span>
-                <p>Childhood memories, weird daily habits, food quirks &amp; relatable life.</p>
-              </div>
-            </div>
-            <div class="info-cat-arrow" aria-hidden="true">
-              <svg viewBox="0 0 24 24"><path d="M12 7v10m5-5-5 5-5-5" /></svg>
-              <span>Swipe or<br>↓ key</span>
-            </div>
-          </div>
-          <div class="info-cat info-cat--tap">
-            <div class="info-cat-main">
-              <span class="info-cat-emoji" aria-hidden="true">👆</span>
-              <div class="info-cat-text">
-                <span class="info-cat-name">Tap Emoji</span>
-                <p>Tap any emoji button to choose that topic.</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="info-cat info-cat--keys">
-            <div class="info-cat-main">
-              <span class="info-cat-emoji" aria-hidden="true">⌨️</span>
-              <div class="info-cat-text">
-                <span class="info-cat-name">Keyboard</span>
-                <p>Arrow keys (↑ Spicy, ← Cringe, → Party, ↓ Wholesome), Spacebar to shuffle, Z to undo.</p>
-              </div>
-            </div>
-          </div>
+          <p class="info-attribution">© 2026 Molleví · <a href="https://www.mollevi.com" target="_blank" rel="noopener noreferrer">mollevi.com</a></p>
         </div>
-
-
-
-        <p class="info-attribution">© 2026 Molleví · <a href="https://www.mollevi.com" target="_blank" rel="noopener noreferrer">mollevi.com</a></p>
 
         <div class="info-modal-actions">
           <button class="btn-primary info-customise-btn" id="info-customise-btn" type="button">
@@ -232,10 +247,18 @@
   </div>
 
   <div class="modal-overlay" id="customise-modal" role="dialog" aria-modal="true" aria-labelledby="customise-modal-title">
-    <div class="modal-content customise-modal-content">
+    <div class="modal-content customise-modal-content info-reverse">
+      <div class="vector-pattern" aria-hidden="true"></div>
+      <div class="info-reverse-frame customise-frame">
       <button class="modal-close customise-modal-close" type="button" aria-label="Close">✕</button>
-      <div class="modal-header customise-modal-header">
-        <h2 class="modal-title" id="customise-modal-title">Who is playing?</h2>
+      <div class="info-reverse-head">
+        <div class="crest-diamond" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 2.8 13.9 9l6.3 2-6.3 2-1.9 6.2L10.1 13 3.8 11l6.3-2L12 2.8Z" />
+            <path d="m19 14 .9 2.4 2.3.8-2.3.8L19 20.5l-.8-2.5-2.4-.8 2.4-.8.8-2.4Z" />
+          </svg>
+        </div>
+        <h2 class="info-reverse-title" id="customise-modal-title">Who is playing?</h2>
       </div>
       <div class="customise-audience-grid" role="group" aria-label="Preview audience options">
         <button class="customise-audience-option" type="button" aria-pressed="false">Mostly men</button>
@@ -280,6 +303,7 @@
           <span>AD</span>
         </span>
       </button>
+      </div>
     </div>
   </div>
 
