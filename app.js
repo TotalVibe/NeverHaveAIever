@@ -151,10 +151,13 @@ class NeverHaveIEverApp {
     const [glow, glowSoft] = markerGlows[level];
     thumb.style.setProperty('--marker-glow', glow);
     thumb.style.setProperty('--marker-glow-soft', glowSoft);
-    const thumbSize = 22;
-    const thumbCenter = slider.offsetLeft + thumbSize / 2
-      + selectedIndex * (slider.offsetWidth - thumbSize) / (SPICY_LEVELS.length - 1);
-    thumb.style.left = `${thumbCenter}px`;
+    // Centre the thumb over the selected level's name, measured from the page
+    const selectedOption = this.customiseModal.querySelectorAll('.customise-level-option')[selectedIndex];
+    const wrapBox = slider.parentElement.getBoundingClientRect();
+    const optionBox = selectedOption?.getBoundingClientRect();
+    if (optionBox) {
+      thumb.style.left = `${optionBox.left + optionBox.width / 2 - wrapBox.left}px`;
+    }
     this.customiseModal.querySelectorAll('.customise-level-option').forEach((option, index) => {
       option.classList.toggle('is-current', index === selectedIndex);
     });
@@ -1520,6 +1523,16 @@ class NeverHaveIEverApp {
     window.addEventListener('resize', () => {
       const level = SPICY_LEVELS[Number(levelSlider.value)];
       if (level) this.updateSpicyLevelPreview(level);
+    });
+    // Tapping a level's name selects it, the same as dragging the slider to it
+    this.customiseModal.querySelectorAll('.customise-level-option').forEach((option) => {
+      option.addEventListener('click', () => {
+        const index = SPICY_LEVELS.indexOf(option.dataset.level);
+        if (index < 0) return;
+        levelSlider.value = String(index);
+        this.updateSpicyLevelPreview(option.dataset.level);
+        sounds.playClick();
+      });
     });
     this.customiseModal.querySelectorAll('.customise-audience-option').forEach((option) => {
       option.addEventListener('click', () => {

@@ -1529,12 +1529,15 @@ body.unhinged-screen-shake {
   font-weight: 700;
 }
 
+/* Touch area covers the whole bar and a little above and below it */
 .customise-level-slider {
   display: block;
-  width: calc(66.6667% + 11px);
-  height: 50px;
-  margin: 0 auto;
-  position: relative;
+  position: absolute;
+  top: -7px;
+  left: 0;
+  width: 100%;
+  height: 64px;
+  margin: 0;
   z-index: 1;
   appearance: none;
   -webkit-appearance: none;
@@ -1685,6 +1688,7 @@ body.unhinged-screen-shake {
 }
 
 .customise-level-option {
+  cursor: pointer;
   position: relative;
   top: 4px;
   color: var(--text-dim);
