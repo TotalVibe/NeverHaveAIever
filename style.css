@@ -1868,18 +1868,39 @@ body.unhinged-screen-shake {
 
 /* Customize pop-up: same card look as How to Play; the panel itself scrolls on small screens */
 .customise-modal-content.info-reverse {
-  display: block;
+  display: flex;
+  flex-direction: column;
   height: auto;
   max-height: 85vh;
   max-height: 85dvh;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
+  overflow: hidden;
 }
 
+/* Close and Save stay fixed; everything between them scrolls with a faded edge */
 .customise-frame {
-  display: block;
-  flex: none;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
   overflow: visible;
+}
+
+/* Spans the full width of the pop-up, with the same inset on both sides, so the
+   slider's blur glow isn't cut off at the scroll box edges */
+.customise-scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 14px, #000 calc(100% - 20px), transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0, #000 14px, #000 calc(100% - 20px), transparent 100%);
+  margin: 0 -24px;
+  padding: 2px 24px 6px;
+}
+
+.customise-frame > .customise-modal-done {
+  flex-shrink: 0;
 }
 
 .customise-frame .info-reverse-head {
