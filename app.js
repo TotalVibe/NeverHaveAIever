@@ -1201,7 +1201,7 @@ class NeverHaveIEverApp {
     this.bindCardGesture(this.activeCard);
     this.resetIdleHint();
 
-    sounds.playSwoosh('bottom');
+    sounds.playUndo();
     this.showToast('Undo');
 
     setTimeout(() => {

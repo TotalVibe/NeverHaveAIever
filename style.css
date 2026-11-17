@@ -956,13 +956,13 @@ body.unhinged-screen-shake {
 
 .done-it-btn {
   flex: 0 0 auto;
-  padding: 8px 12px;
+  padding: 9px 14px;
   border: 1px solid color-mix(in srgb, var(--active-card-color, #ff2d75) 65%, transparent);
   border-radius: var(--radius-pill);
   background: rgba(255, 255, 255, 0.1);
   color: #fff;
   font: inherit;
-  font-size: 0.68rem;
+  font-size: 0.74rem;
   font-weight: 800;
   letter-spacing: 0.55px;
   line-height: 1;
@@ -1141,7 +1141,7 @@ body.unhinged-screen-shake {
 .card-back {
   --card-back-frame-inset: 20px;
   --card-back-inner-inset: 4px;
-  background: #111420;
+  background: #0b0b0f;
   transform: rotateY(180deg);
   display: flex;
   align-items: center;
@@ -1166,6 +1166,11 @@ body.unhinged-screen-shake {
   pointer-events: none;
 }
 
+/* Card back only: darker, more neutral texture base (modals keep their own) */
+.card-back .vector-pattern {
+  background-color: #0b0b0f;
+}
+
 /* Ornate Frame on Card Back */
 .card-back-frame {
   position: relative;
@@ -1178,7 +1183,7 @@ body.unhinged-screen-shake {
   align-items: center;
   justify-content: center;
   padding: 20px 16px;
-  background: radial-gradient(circle at 50% 50%, rgba(25, 29, 44, 0.65) 0%, rgba(13, 16, 26, 0.88) 100%);
+  background: radial-gradient(circle at 50% 50%, rgba(22, 22, 27, 0.65) 0%, rgba(10, 10, 14, 0.88) 100%);
 }
 
 .card-back-frame::before {
@@ -1831,8 +1836,8 @@ body.unhinged-screen-shake {
   margin: 9px;
   border: 1.5px solid rgba(255, 255, 255, 0.16);
   border-radius: calc(var(--radius-card) - 9px);
-  padding: 22px 20px 20px;
-  gap: 14px;
+  padding: 25px 14px 23px;
+  gap: 17px;
   background: radial-gradient(circle at 50% 50%, rgba(25, 29, 44, 0.65) 0%, rgba(13, 16, 26, 0.88) 100%);
 }
 
@@ -1841,7 +1846,7 @@ body.unhinged-screen-shake {
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 17px;
 }
 
 .info-scroll {
@@ -1855,10 +1860,11 @@ body.unhinged-screen-shake {
   -webkit-overflow-scrolling: touch;
   touch-action: pan-y;
   /* Padding sits inside the fade, so content is fully visible when at rest */
-  padding: 16px 6px 24px 12px;
+  padding: 0;
+  margin: 0 -14px;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 10px;
 }
 
 .info-reverse-frame > .info-modal-actions {
@@ -1885,20 +1891,25 @@ body.unhinged-screen-shake {
   margin-bottom: 30px;
 }
 
-/* Finger waves gently from side to side, like a hand waving */
+/* Finger waves side to side, then pops up with a small bounce (a tap), and repeats */
 .info-cat--tap .info-cat-emoji {
   display: inline-block;
   position: relative;
   z-index: 2;
   transform-origin: 50% 85%;
-  animation: finger-wave 2.4s ease-in-out infinite;
+  animation: finger-cycle 4.2s ease-in-out infinite;
 }
 
-@keyframes finger-wave {
-  0%, 100% { transform: translateX(0) rotate(0deg); }
-  25% { transform: translateX(7px) rotate(14deg); }
-  50% { transform: translateX(0) rotate(0deg); }
-  75% { transform: translateX(-7px) rotate(-14deg); }
+@keyframes finger-cycle {
+  0%, 100% { transform: translate(0, 0) rotate(0deg) scale(1); }
+  12% { transform: translate(3px, 0) rotate(10deg) scale(1); }
+  24% { transform: translate(0, 0) rotate(0deg) scale(1); }
+  36% { transform: translate(-3px, 0) rotate(-10deg) scale(1); }
+  48% { transform: translate(0, 0) rotate(0deg) scale(1); }
+  56% { transform: translate(0, 0) rotate(0deg) scale(1); }
+  61% { transform: translate(0, -6px) rotate(0deg) scale(1.12); }
+  65% { transform: translate(0, -2px) rotate(0deg) scale(1.04); }
+  69%, 100% { transform: translate(0, 0) rotate(0deg) scale(1); }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1955,11 +1966,14 @@ body.unhinged-screen-shake {
 }
 
 /* Rows are separated by soft lines, not boxes */
+/* Every instruction row shares the same height so the list has an even rhythm */
 .info-cat {
   display: flex;
   align-items: stretch;
   gap: 10px;
-  padding: 12px 0;
+  min-height: 72px;
+  /* Side padding insets the text; the border still runs edge to edge */
+  padding: 11px 18px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
@@ -1985,7 +1999,7 @@ body.unhinged-screen-shake {
 .info-cat-text {
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 4px;
   min-width: 0;
 }
 
@@ -2092,7 +2106,7 @@ body.unhinged-screen-shake {
   transform: translateX(-50%);
 }
 
-#info-modal .info-customise-btn {
+.info-reverse:not(.customise-modal-content) .info-customise-btn {
   position: relative;
   background: linear-gradient(135deg, #7453b8, #593b9a 55%, #463078);
   border: 1px solid rgba(198, 173, 255, 0.48);
@@ -2102,8 +2116,8 @@ body.unhinged-screen-shake {
   transition: background 0.35s ease, box-shadow 0.35s ease, transform 0.25s ease, opacity 0.25s ease;
 }
 
-#info-modal .info-customise-btn:hover,
-#info-modal .info-customise-btn:focus-visible {
+.info-reverse:not(.customise-modal-content) .info-customise-btn:hover,
+.info-reverse:not(.customise-modal-content) .info-customise-btn:focus-visible {
   background: linear-gradient(135deg, #8261c7, #6748a7 55%, #513986);
   box-shadow: 0 10px 28px rgba(128, 83, 207, 0.58), 0 0 18px rgba(164, 125, 255, 0.34), inset 0 1px 0 rgba(255, 255, 255, 0.22);
 }
@@ -2126,12 +2140,12 @@ body.unhinged-screen-shake {
   transform: translateY(-1px);
 }
 
-#info-modal .btn-primary {
+.info-reverse:not(.customise-modal-content) .btn-primary {
   transition: background 0.35s ease, box-shadow 0.35s ease, transform 0.25s ease, opacity 0.25s ease;
 }
 
-#info-modal .btn-primary:hover,
-#info-modal .btn-primary:focus-visible {
+.info-reverse:not(.customise-modal-content) .btn-primary:hover,
+.info-reverse:not(.customise-modal-content) .btn-primary:focus-visible {
   background: linear-gradient(135deg, #8261c7, #6748a7 55%, #513986);
   border-color: rgba(198, 173, 255, 0.48);
   box-shadow: 0 10px 28px rgba(128, 83, 207, 0.58), 0 0 18px rgba(164, 125, 255, 0.34), inset 0 1px 0 rgba(255, 255, 255, 0.22);
@@ -2213,8 +2227,8 @@ body.unhinged-screen-shake {
     gap: 5px;
   }
   .done-it-btn {
-    padding: 8px 9px;
-    font-size: 0.62rem;
+    padding: 9px 11px;
+    font-size: 0.68rem;
   }
 }
 
@@ -2327,7 +2341,7 @@ body.unhinged-screen-shake {
     bottom: 8px;
   }
   .done-it-btn {
-    padding: 6px 9px;
+    padding: 7px 11px;
   }
 }
 

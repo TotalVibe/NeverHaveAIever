@@ -24,6 +24,15 @@ class SoundEffects {
     return this.enabled;
   }
 
+  // Undo: a card slide blended into the swoosh
+  playUndo() {
+    if (!this.enabled) return;
+    this.init();
+    if (!this.ctx) return;
+    this.playCardSlide(this.ctx.currentTime, 1.1);
+    this.playSwoosh('bottom');
+  }
+
   // One soft paper-like card slide starting at time `t`; `level` scales its volume
   playCardSlide(t, level = 1) {
     const ctx = this.ctx;
