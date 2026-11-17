@@ -2570,3 +2570,18 @@ body.unhinged-screen-shake {
 .age-gate-denied.is-visible {
   visibility: visible;
 }
+
+/* Phones: pop-ups fill the screen instead of floating with empty bands above and below */
+@media (max-width: 480px) {
+  .modal-overlay {
+    padding: 8px;
+  }
+
+  .info-reverse,
+  .customise-modal-content.info-reverse {
+    height: calc(100vh - 16px);
+    height: calc(100dvh - 16px);
+    max-height: calc(100vh - 16px);
+    max-height: calc(100dvh - 16px);
+  }
+}
