@@ -756,15 +756,44 @@ body.unhinged-screen-shake {
   animation: level-up-edge-rotate 12s linear infinite;
 }
 
+/* Unhinged level-up edge: red at the centre of the shine, bleeding into white,
+   then fading to transparent on both sides */
 .game-card.level-up-card-unhinged::after {
-  --level-up-edge-dim: rgba(255, 90, 175, 0.12);
-  --level-up-edge-glow: rgba(255, 75, 190, 0.82);
-  --level-up-edge-hot: rgba(255, 220, 250, 0.9);
-  --level-up-edge-shadow: rgba(205, 55, 255, 0.48);
+  --level-up-edge-shadow: rgba(255, 50, 60, 0.45);
+  background: conic-gradient(
+    from var(--level-up-edge-angle),
+    transparent 0,
+    transparent 68%,
+    rgba(158, 60, 70, 0.95) 76%,
+    rgba(255, 255, 255, 0.95) 80%,
+    rgba(158, 60, 70, 0.95) 84%,
+    transparent 92%,
+    transparent
+  );
+}
+
+/* Swipe NO / YES hint on the unhinged level-up card: soft grey */
+.game-card.level-up-card-unhinged .level-up-choice-hint {
+  color: #a9adb8;
+}
+
+/* Unhinged level-up card: dark magenta body to match the magenta edge shine */
+.game-card.level-up-card-unhinged .card-front {
+  background: radial-gradient(circle at 50% 0%, #3d1119 0%, #220b10 62%, #160608 100%);
 }
 
 @keyframes level-up-edge-rotate {
   to { --level-up-edge-angle: 360deg; }
+}
+
+/* Next-level border stays hidden for the first second, while the card settles in */
+.game-card.level-up-card::after {
+  animation: level-up-edge-rotate 12s linear infinite, level-up-edge-reveal 0.4s ease 1s both;
+}
+
+@keyframes level-up-edge-reveal {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 /* =========================================================
@@ -1606,15 +1635,21 @@ body.unhinged-screen-shake {
   place-items: center;
   border: 0;
   border-radius: 50%;
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.16), var(--marker-glass-tint, rgba(36, 29, 55, 0.18)) 48%, rgba(12, 13, 22, 0.3));
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
+  /* Frosted glass: a dark tint over a strong backdrop blur */
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.12), rgba(30, 31, 44, 0.55) 48%, rgba(12, 13, 20, 0.65));
+  -webkit-backdrop-filter: blur(14px) saturate(1.2);
+  backdrop-filter: blur(14px) saturate(1.2);
   box-shadow: 0 0 18px 6px var(--marker-glow, rgba(180, 145, 255, 0.42)), 0 0 36px 12px var(--marker-glow-soft, rgba(164, 125, 255, 0.2));
   font-size: 30px;
   line-height: 1;
   pointer-events: none;
   transform: translate(-50%, -50%);
-  transition: left 0.12s ease-out, background 0.18s ease, box-shadow 0.18s ease;
+  transition: left 0.12s ease-out, background 0.18s ease, box-shadow 0.18s ease, font-size 0.2s ease;
+}
+
+/* The skull glyph draws larger than the other two, so it's set a little smaller */
+.customise-level-thumb.is-unhinged {
+  font-size: 26px;
 }
 
 .customise-level-thumb::before {
@@ -2002,7 +2037,7 @@ body.unhinged-screen-shake {
   min-width: 0;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 16px;
 }
 
 .info-cat-emoji {

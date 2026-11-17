@@ -26,7 +26,7 @@ const SPICY_LEVEL_CATEGORY_NAMES = {
 const SPICY_LEVEL_EMOJIS = {
   cheeky: '🤪',
   spicy: '😈',
-  unhinged: '🤯'
+  unhinged: '💀'
 };
 
 class NeverHaveIEverApp {
@@ -145,15 +145,16 @@ class NeverHaveIEverApp {
     slider.value = String(selectedIndex);
     slider.setAttribute('aria-valuetext', SPICY_LEVEL_LABELS[level]);
     thumb.textContent = SPICY_LEVEL_EMOJIS[level];
-    const markerTints = {
-      cheeky: ['rgba(56, 217, 169, 0.42)', 'rgba(56, 217, 169, 0.2)', 'rgba(56, 217, 169, 0.14)'],
-      spicy: ['rgba(155, 93, 229, 0.42)', 'rgba(155, 93, 229, 0.2)', 'rgba(155, 93, 229, 0.14)'],
-      unhinged: ['rgba(255, 77, 79, 0.42)', 'rgba(255, 77, 79, 0.2)', 'rgba(255, 77, 79, 0.14)']
+    thumb.classList.toggle('is-unhinged', level === 'unhinged');
+    // Shadow colour follows the gradient position: cheeky green, spicy purple, unhinged red
+    const markerGlows = {
+      cheeky: ['rgba(56, 217, 169, 0.55)', 'rgba(56, 217, 169, 0.26)'],
+      spicy: ['rgba(155, 93, 229, 0.55)', 'rgba(155, 93, 229, 0.26)'],
+      unhinged: ['rgba(255, 77, 79, 0.55)', 'rgba(255, 77, 79, 0.26)']
     };
-    const [glow, glowSoft, glassTint] = markerTints[level];
+    const [glow, glowSoft] = markerGlows[level];
     thumb.style.setProperty('--marker-glow', glow);
     thumb.style.setProperty('--marker-glow-soft', glowSoft);
-    thumb.style.setProperty('--marker-glass-tint', glassTint);
     const thumbSize = 22;
     const thumbCenter = slider.offsetLeft + thumbSize / 2
       + selectedIndex * (slider.offsetWidth - thumbSize) / (SPICY_LEVELS.length - 1);
@@ -479,6 +480,12 @@ class NeverHaveIEverApp {
     this.activeCard = levelUpCard;
     this.bindCardGesture(levelUpCard);
     this.setLevelUpTargetMode(true);
+
+    // Unhinged prompt: the background glow turns red, a little off the card's own red
+    const upcomingLevel = SPICY_LEVELS[SPICY_LEVELS.indexOf(this.spicyLevel) + 1];
+    if (upcomingLevel === 'unhinged' && this.ambientGlow) {
+      this.ambientGlow.style.background = 'radial-gradient(circle, rgba(170, 72, 82, 0.4) 0%, rgba(10, 11, 16, 0.4) 60%, transparent 75%)';
+    }
 
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const flipDelay = reducedMotion ? 0 : 220;
