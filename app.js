@@ -958,7 +958,7 @@ class NeverHaveIEverApp {
 
       const promptText = nextCard.querySelector('.prompt-text');
       if (promptText) {
-        promptText.textContent = newQuestion.replace(/^Never have I ever /i, '');
+        promptText.textContent = newQuestion.text.replace(/^Never have I ever /i, '');
       }
 
       // 3. FLIP REVEAL: Rotate card 180° in 3D to reveal front face
