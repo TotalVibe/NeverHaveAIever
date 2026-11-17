@@ -1907,7 +1907,10 @@ body.unhinged-screen-shake {
 #info-modal .info-customise-btn {
   position: relative;
   background: linear-gradient(135deg, #7453b8, #593b9a 55%, #463078);
-  box-shadow: 0 8px 20px rgba(75, 48, 132, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(198, 173, 255, 0.48);
+  box-shadow: 0 0 16px rgba(164, 125, 255, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
   transition: background 0.35s ease, box-shadow 0.35s ease, transform 0.25s ease, opacity 0.25s ease;
 }
 
