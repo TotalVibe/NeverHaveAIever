@@ -472,7 +472,7 @@ export const QUESTIONS = {
     { text: "made a terrible decision because my friends dared me.", emoji: "🎲" },
     { text: "gotten separated from my friends on a night out and joined another squad for the night.", emoji: "👥" },
     { text: "blacked out and woke up with a random club wristband I don't remember getting.", emoji: "🎟️" },
-    { text: "tried to order drinks at the bar but realized I left my ID at home.", emoji: "🆔" },
+    { text: "tried to order drinks at the bar but realized I left my ID at home.", emoji: "🪪" },
     { text: "started a conga line that absolutely nobody joined.", emoji: "🕺" },
     { text: "woke up with a mysterious marker drawing or temp tattoo on my body.", emoji: "🖍️" },
     { text: "tried to argue with a bouncer and lost spectacularly.", emoji: "🚨" },
