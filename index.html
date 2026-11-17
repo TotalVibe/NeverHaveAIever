@@ -117,80 +117,116 @@
 
   <!-- Info & Game Rules Modal -->
   <div class="modal-overlay" id="info-modal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2 class="modal-title">How to play</h2>
-        <button class="modal-close" id="close-info-btn">✕</button>
-      </div>
+    <div class="modal-content info-reverse">
+      <div class="vector-pattern" aria-hidden="true"></div>
+      <div class="info-reverse-frame">
+        <button class="modal-close" id="close-info-btn" type="button" aria-label="Close">✕</button>
 
-      <div class="guide-category-grid">
-        <div class="guide-cat-item" style="--guide-color: #ff2d75; border-color: rgba(255, 45, 117, 0.35);">
-          <div class="cat-header" style="color: #ff2d75;">
-            <span id="guide-spicy-emoji">😈</span>
-            <span id="guide-spicy-label">Spicy &amp; Wild</span>
+        <div class="info-reverse-head">
+          <div class="crest-diamond" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path d="M12 2.8 13.9 9l6.3 2-6.3 2-1.9 6.2L10.1 13 3.8 11l6.3-2L12 2.8Z" />
+              <path d="m19 14 .9 2.4 2.3.8-2.3.8L19 20.5l-.8-2.5-2.4-.8 2.4-.8.8-2.4Z" />
+            </svg>
           </div>
-          <span class="guide-key-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24"><path d="M12 17V7m-5 5 5-5 5 5" /></svg>
-          </span>
-          <p>Dating secrets, romantic fails, guilty pleasures & intimate truths.</p>
+          <h2 class="info-reverse-title" id="info-modal-title">How to play</h2>
         </div>
 
-        <div class="guide-cat-item" style="--guide-color: #20c997; border-color: rgba(32, 201, 151, 0.35);">
-          <div class="cat-header" style="color: #20c997;">
-            <span>🥳</span>
-            <span>Party</span>
+        <p class="info-intro">Swipe or drag the card, or tap an emoji, to choose the topic for the next card.</p>
+
+        <div class="info-cat-list">
+          <div class="info-cat info-cat--spicy">
+            <div class="info-cat-main">
+              <span class="info-cat-emoji" id="guide-spicy-emoji">😈</span>
+              <div class="info-cat-text">
+                <span class="info-cat-name" id="guide-spicy-label">Spicy &amp; Wild</span>
+                <p>Dating secrets, romantic fails, guilty pleasures &amp; intimate truths.</p>
+              </div>
+            </div>
+            <div class="info-cat-arrow" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M12 17V7m-5 5 5-5 5 5" /></svg>
+              <span>Swipe or<br>↑ key</span>
+            </div>
           </div>
-          <span class="guide-key-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24"><path d="M7 12h10m-5-5 5 5-5 5" /></svg>
-          </span>
-          <p>Nightlife chaos, drinking dares, wild nights out & club adventures.</p>
+
+          <div class="info-cat info-cat--party">
+            <div class="info-cat-main">
+              <span class="info-cat-emoji">🥳</span>
+              <div class="info-cat-text">
+                <span class="info-cat-name">Party</span>
+                <p>Nightlife chaos, drinking dares, wild nights out &amp; club adventures.</p>
+              </div>
+            </div>
+            <div class="info-cat-arrow" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M7 12h10m-5-5 5 5-5 5" /></svg>
+              <span>Swipe or<br>→ key</span>
+            </div>
+          </div>
+
+          <div class="info-cat info-cat--cringe">
+            <div class="info-cat-main">
+              <span class="info-cat-emoji">😳</span>
+              <div class="info-cat-text">
+                <span class="info-cat-name">Cringe</span>
+                <p>Hilarious fails, caught red-handed moments &amp; public embarrassment.</p>
+              </div>
+            </div>
+            <div class="info-cat-arrow" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M17 12H7m5 5-5-5 5-5" /></svg>
+              <span>Swipe or<br>← key</span>
+            </div>
+          </div>
+
+          <div class="info-cat info-cat--wholesome">
+            <div class="info-cat-main">
+              <span class="info-cat-emoji">😇</span>
+              <div class="info-cat-text">
+                <span class="info-cat-name">Wholesome</span>
+                <p>Childhood memories, weird daily habits, food quirks &amp; relatable life.</p>
+              </div>
+            </div>
+            <div class="info-cat-arrow" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M12 7v10m5-5-5 5-5-5" /></svg>
+              <span>Swipe or<br>↓ key</span>
+            </div>
+          </div>
+          <div class="info-cat info-cat--tap">
+            <div class="info-cat-main">
+              <span class="info-cat-emoji" aria-hidden="true">👆</span>
+              <div class="info-cat-text">
+                <span class="info-cat-name">Tap Emoji</span>
+                <p>Tap any emoji button to choose that topic.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="info-cat info-cat--keys">
+            <div class="info-cat-main">
+              <span class="info-cat-emoji" aria-hidden="true">⌨️</span>
+              <div class="info-cat-text">
+                <span class="info-cat-name">Keyboard</span>
+                <p>Arrow keys (↑ Spicy, ← Cringe, → Party, ↓ Wholesome), Spacebar to shuffle, Z to undo.</p>
+              </div>
+            </div>
+          </div>
         </div>
 
-        <div class="guide-cat-item" style="--guide-color: #ff922b; border-color: rgba(255, 146, 43, 0.35);">
-          <div class="cat-header" style="color: #ff922b;">
-            <span>😳</span>
-            <span>Cringe</span>
-          </div>
-          <span class="guide-key-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24"><path d="M17 12H7m5 5-5-5 5-5" /></svg>
-          </span>
-          <p>Hilarious fails, caught red-handed moments & public embarrassment.</p>
+
+
+        <p class="info-attribution">© 2026 Molleví · <a href="https://www.mollevi.com" target="_blank" rel="noopener noreferrer">mollevi.com</a></p>
+
+        <div class="info-modal-actions">
+          <button class="btn-primary info-customise-btn" id="info-customise-btn" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 2.8 13.9 9l6.3 2-6.3 2-1.9 6.2L10.1 13 3.8 11l6.3-2L12 2.8Z" />
+              <path d="m19 14 .9 2.4 2.3.8-2.3.8L19 20.5l-.8-2.5-2.4-.8 2.4-.8.8-2.4Z" />
+            </svg>
+            <span>CUSTOMIZE</span>
+          </button>
+          <button class="btn-primary" id="info-lets-play-btn" type="button">
+            LET'S PLAY!
+          </button>
         </div>
-
-        <div class="guide-cat-item" style="--guide-color: #748ffc; border-color: rgba(116, 143, 252, 0.35);">
-          <div class="cat-header" style="color: #748ffc;">
-            <span>😇</span>
-            <span>Wholesome</span>
-          </div>
-          <span class="guide-key-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24"><path d="M12 7v10m5-5-5 5-5-5" /></svg>
-          </span>
-          <p>Childhood memories, weird daily habits, food quirks & relatable life.</p>
-        </div>
-      </div>
-
-      <div style="font-size: 0.88rem; line-height: 1.6; color: #cbd5e1; margin: 24px 0 16px;">
-        <h3 style="color: #fff; font-size: 1rem; margin-bottom: 6px;">Controls</h3>
-        <ul class="info-controls-list" style="padding-left: 20px; margin-bottom: 12px;">
-          <li><strong>Swipe / Drag Card</strong>: Drag the active card towards or on top of any of the 4 emojis to choose that topic for the next card.</li>
-          <li><strong>Tap Emoji</strong>: Directly tap any of the 4 emoji buttons to immediately choose that topic!</li>
-          <li><strong>Keyboard</strong>: Arrow Keys (↑ Spicy, ← Cringe, → Party, ↓ Wholesome), Spacebar to shuffle, Z to undo.</li>
-        </ul>
-      </div>
-
-      <p class="info-attribution">© 2026 Molleví · <a href="https://www.mollevi.com" target="_blank" rel="noopener noreferrer">mollevi.com</a></p>
-
-      <div class="info-modal-actions">
-        <button class="btn-primary info-customise-btn" id="info-customise-btn" type="button">
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M12 2.8 13.9 9l6.3 2-6.3 2-1.9 6.2L10.1 13 3.8 11l6.3-2L12 2.8Z" />
-            <path d="m19 14 .9 2.4 2.3.8-2.3.8L19 20.5l-.8-2.5-2.4-.8 2.4-.8.8-2.4Z" />
-          </svg>
-          <span>CUSTOMIZE</span>
-        </button>
-        <button class="btn-primary" id="info-lets-play-btn" type="button">
-          LET'S PLAY!
-        </button>
       </div>
     </div>
   </div>
