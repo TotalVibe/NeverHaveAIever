@@ -906,6 +906,7 @@ body.unhinged-screen-shake {
 }
 
 .prompt-text {
+  font-family: 'Baumans', var(--font-sans), cursive;
   font-size: clamp(1.2rem, 4.2vw, 1.55rem);
   font-weight: 700;
   line-height: 1.42;
