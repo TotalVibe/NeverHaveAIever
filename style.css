@@ -1782,6 +1782,9 @@ body.unhinged-screen-shake {
   position: relative;
   display: flex;
   flex-direction: column;
+  /* Fixed height (not just max-height) so the list inside has a definite space to scroll in */
+  height: 85vh;
+  height: 85dvh;
   padding: 0;
   background: #111420;
   border: 2px solid rgba(255, 255, 255, 0.28);
@@ -1823,6 +1826,7 @@ body.unhinged-screen-shake {
   overflow-y: auto;
   overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
   /* Padding sits inside the fade, so content is fully visible when at rest */
   padding: 16px 6px 24px 0;
   display: flex;
