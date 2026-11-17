@@ -1174,7 +1174,7 @@ class NeverHaveIEverApp {
 
     // Undo entrance: starts small in the bottom-right corner, spins and zooms in
     restoredCard.style.transition = 'none';
-    restoredCard.style.transform = 'translate3d(38vw, 38vh, 0) rotate(360deg) scale(0.3)';
+    restoredCard.style.transform = 'translate3d(38vw, 38vh, 0) rotate(90deg) scale(0.3)';
     restoredCard.style.opacity = '0';
 
     this.stackContainer.appendChild(restoredCard);
