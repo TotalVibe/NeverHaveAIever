@@ -1077,6 +1077,10 @@ body.unhinged-screen-shake {
   animation: cheers-counterpart 2.5s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
+.cheers-overlay.active .cheers-counterpart.cheers-reaction--big {
+  animation-name: cheers-counterpart-big;
+}
+
 .cheers-overlay.active .cheers-devil {
   animation: cheers-devil 2.5s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
@@ -1089,6 +1093,17 @@ body.unhinged-screen-shake {
   58% { transform: translate(calc(-50% + 17vmin), -50%) rotate(3deg) scale(1.08); }
   66%, 82% { opacity: 1; transform: translate(calc(-50% + 18vmin), -50%) rotate(0) scale(1.05); }
   100% { opacity: 0; transform: translate(calc(-50% + 15vmin), -58%) rotate(8deg) scale(0.82); }
+}
+
+/* Bigger version of the cheers-counterpart animation for cheeky, cringe, party and unhinged images */
+@keyframes cheers-counterpart-big {
+  0% { opacity: 0; transform: translate(calc(-50% + 120vw), -50%) rotate(24deg) scale(0.53); }
+  35% { opacity: 1; transform: translate(calc(-50% + 20vmin), -50%) rotate(-9deg) scale(1.15); }
+  42% { transform: translate(calc(-50% + 16vmin), -50%) rotate(7deg) scale(1.23); }
+  50% { transform: translate(calc(-50% + 20vmin), -50%) rotate(-5deg) scale(1.09); }
+  58% { transform: translate(calc(-50% + 17vmin), -50%) rotate(3deg) scale(1.15); }
+  66%, 82% { opacity: 1; transform: translate(calc(-50% + 18vmin), -50%) rotate(0) scale(1.11); }
+  100% { opacity: 0; transform: translate(calc(-50% + 15vmin), -58%) rotate(8deg) scale(0.85); }
 }
 
 @keyframes cheers-devil {

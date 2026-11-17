@@ -282,6 +282,10 @@ class NeverHaveIEverApp {
       ? this.spicyLevel
       : this.activeCard.dataset.category;
     this.cheersCounterpart.src = DONE_IT_REACTION_IMAGES[reactionKey] ?? DONE_IT_REACTION_IMAGES.spicy;
+    this.cheersCounterpart.className = 'cheers-image cheers-counterpart';
+    if (['cheeky', 'unhinged', 'cringe', 'party'].includes(reactionKey)) {
+      this.cheersCounterpart.classList.add('cheers-reaction--big');
+    }
     this.cheersOverlay.classList.add('active');
     this.cheersOverlay.setAttribute('aria-hidden', 'false');
     document.body.classList.add('celebration-shake');
