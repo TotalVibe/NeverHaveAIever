@@ -1141,7 +1141,7 @@ body.unhinged-screen-shake {
 .card-back {
   --card-back-frame-inset: 20px;
   --card-back-inner-inset: 4px;
-  background: #0b0b0f;
+  background: #111420;
   transform: rotateY(180deg);
   display: flex;
   align-items: center;
@@ -1166,11 +1166,6 @@ body.unhinged-screen-shake {
   pointer-events: none;
 }
 
-/* Card back only: darker, more neutral texture base (modals keep their own) */
-.card-back .vector-pattern {
-  background-color: #0b0b0f;
-}
-
 /* Ornate Frame on Card Back */
 .card-back-frame {
   position: relative;
@@ -1183,7 +1178,7 @@ body.unhinged-screen-shake {
   align-items: center;
   justify-content: center;
   padding: 20px 16px;
-  background: radial-gradient(circle at 50% 50%, rgba(22, 22, 27, 0.65) 0%, rgba(10, 10, 14, 0.88) 100%);
+  background: radial-gradient(circle at 50% 50%, rgba(25, 29, 44, 0.65) 0%, rgba(13, 16, 26, 0.88) 100%);
 }
 
 .card-back-frame::before {
