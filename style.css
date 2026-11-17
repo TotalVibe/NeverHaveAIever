@@ -1227,7 +1227,11 @@ body.unhinged-screen-shake {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  height: 100%;
+  width: 100%;
+  /* Spacing and sizes scale with screen height so the emblem fits short screens */
+  gap: clamp(4px, 1.1vh, 10px);
+  max-width: 100%;
   text-align: center;
   z-index: 2;
 }
@@ -1235,7 +1239,7 @@ body.unhinged-screen-shake {
 /* Fancy Cursive 2-Line Title ("Never Have" / "AI Ever") */
 .emblem-title {
   font-family: 'Great Vibes', 'Alex Brush', 'Dancing Script', cursive;
-  font-size: clamp(2.4rem, 7.5vw, 3.4rem);
+  font-size: clamp(2rem, min(7.5vw, 5.4vh), 3.4rem);
   font-weight: 400;
   line-height: 1.05;
   color: #ffffff;
@@ -1244,7 +1248,7 @@ body.unhinged-screen-shake {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin: 4px 0 8px;
+  margin: clamp(2px, 0.6vh, 4px) 0;
   transform: rotate(-2deg);
 }
 
@@ -1253,22 +1257,17 @@ body.unhinged-screen-shake {
   white-space: nowrap;
 }
 
-.emblem-line {
-  width: 70px;
-  height: 1.5px;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.45), transparent);
-  margin: 6px 0;
-  transform: translateY(40px);
-}
-
 .emblem-sub {
+  /* Pinned near the bottom of the card; the crest and title centre in the space above */
+  margin-top: auto;
+  margin-bottom: clamp(12px, 3.4vh, 28px);
   font-family: var(--font-sans);
-  font-size: 0.68rem;
+  font-size: clamp(0.6rem, 1.4vh, 0.68rem);
   font-weight: 700;
+  white-space: nowrap;
   letter-spacing: 2.2px;
   text-transform: uppercase;
   color: var(--text-dim);
-  transform: translateY(57px);
 }
 
 .game-card.current.face-down:not(.level-up-card) .emblem-sub {
@@ -1277,35 +1276,36 @@ body.unhinged-screen-shake {
 
 @keyframes swipe-direction-cue {
   0%, 5%, 14%, 25%, 34%, 45%, 54%, 65%, 74%, 85%, 94%, 100% {
-    transform: translate(0, 57px);
+    transform: translate(0px, 0px);
   }
   5%, 25%, 45%, 65% {
     animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
   }
   8% {
-    transform: translate(9px, 57px);
+    transform: translate(9px, 0px);
     animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   }
   28% {
-    transform: translate(0, 66px);
+    transform: translate(0px, 9px);
     animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   }
   48% {
-    transform: translate(-9px, 57px);
+    transform: translate(-9px, 0px);
     animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   }
   68% {
-    transform: translate(0, 48px);
+    transform: translate(0px, -9px);
     animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   }
 }
 
 .crest-diamond {
+  margin-top: auto;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
+  width: clamp(24px, 4.6vh, 36px);
+  height: clamp(24px, 4.6vh, 36px);
   color: #d7c8ff;
 }
 
@@ -1710,15 +1710,16 @@ body.unhinged-screen-shake {
 .customise-group-description {
   display: block;
   width: 100%;
-  min-height: 96px;
+  min-height: 0;
   resize: none;
-  padding: 13px 14px;
+  overflow: hidden;
+  padding: 15px 12px;
   border: 1px solid rgba(198, 173, 255, 0.26);
   border-radius: 12px;
   outline: none;
   background: linear-gradient(135deg, rgba(130, 96, 190, 0.09), rgba(8, 10, 18, 0.55) 58%);
   color: var(--text-main);
-  font: 500 0.84rem/1.45 var(--font-sans);
+  font: 500 0.76rem/1.45 var(--font-sans);
   box-shadow: 0 0 14px rgba(164, 125, 255, 0.09), inset 0 1px 0 rgba(255, 255, 255, 0.035);
   transition: border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
 }
@@ -1734,7 +1735,7 @@ body.unhinged-screen-shake {
 }
 
 .customise-preview-note {
-  margin: 18px 0 34px;
+  margin: 10px 0 6px;
   color: var(--text-dim);
   font-size: 0.72rem;
   line-height: 1.4;
@@ -1928,10 +1929,10 @@ body.unhinged-screen-shake {
   overflow-y: auto;
   overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 14px, #000 calc(100% - 20px), transparent 100%);
-  mask-image: linear-gradient(to bottom, transparent 0, #000 14px, #000 calc(100% - 20px), transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 14px, #000 calc(100% - 12px), transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0, #000 14px, #000 calc(100% - 12px), transparent 100%);
   margin: 0 -24px;
-  padding: 2px 24px 6px;
+  padding: 2px 24px 0;
 }
 
 .customise-frame > .customise-modal-done {
@@ -2361,15 +2362,9 @@ body.unhinged-screen-shake {
   .emblem-title {
     display: none;
   }
-  .emblem-line {
-    width: 38px;
-    margin: 2px 0;
-    transform: translateY(4px);
-  }
   .emblem-sub {
     font-size: 0.48rem;
     letter-spacing: 1.2px;
-    transform: translateY(14px);
   }
   .customise-btn {
     gap: 4px;
@@ -2577,11 +2572,22 @@ body.unhinged-screen-shake {
     padding: 8px;
   }
 
-  .info-reverse,
-  .customise-modal-content.info-reverse {
+  .info-reverse {
     height: calc(100vh - 16px);
     height: calc(100dvh - 16px);
     max-height: calc(100vh - 16px);
     max-height: calc(100dvh - 16px);
+  }
+
+  /* Customize is a card-like panel, so it sits inside a generous frame of space */
+  #customise-modal {
+    padding: 28px 22px;
+  }
+
+  .customise-modal-content.info-reverse {
+    height: calc(100vh - 56px);
+    height: calc(100dvh - 56px);
+    max-height: calc(100vh - 56px);
+    max-height: calc(100dvh - 56px);
   }
 }

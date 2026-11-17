@@ -741,7 +741,6 @@ class NeverHaveIEverApp {
                 </svg>
                 <span>CUSTOMIZE</span>
               </button>
-              <div class="emblem-line"></div>
               <div class="emblem-sub">Swipe to Reveal</div>
             </div>
           </div>
@@ -1324,11 +1323,11 @@ class NeverHaveIEverApp {
 
   bindEvents() {
     const groupDescriptionExamples = [
-      'A bride-to-be, her ex, his new boyfriend, and eight friends with Ibiza screenshots.',
-      'Six coworkers, one office crush, and a group chat that should never be subpoenaed.',
-      'Four gay besties, three exes, and absolutely no one trusted with the aux cord.',
-      'Two couples, one situationship, and a holiday photo nobody has explained.',
-      'A birthday girl, her chaotic roommates, and the friend who keeps saying “one more bar.”'
+      'A bride-to-be, her ex, and eight friends with Ibiza screenshots.',
+      'Six coworkers, one office crush, and a group chat to avoid.',
+      'Four gay besties, three exes, and no one trusted with the aux.',
+      'Two couples, one situationship, and a holiday photo nobody explained.',
+      'A birthday girl, her chaotic roommates, and “one more bar.”'
     ];
     let nextGroupDescriptionExample = 0;
     const openCustomiseModal = ({ from = 'card' } = {}) => {
