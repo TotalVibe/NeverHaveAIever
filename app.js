@@ -186,6 +186,7 @@ class NeverHaveIEverApp {
   }
 
   init() {
+    this.preloadReactionImages();
     this.updateSpicyLevelPresentation();
     this.updateSoundTogglePresentation(sounds.enabled);
     this.renderInitialDeck();
@@ -268,6 +269,18 @@ class NeverHaveIEverApp {
     this.soundToggleBtn.setAttribute('aria-label', isEnabled ? 'Mute sound' : 'Enable sound');
     this.soundToggleBtn.setAttribute('aria-pressed', String(isEnabled));
     this.soundToggleBtn.title = isEnabled ? 'Mute Sound (M)' : 'Enable Sound (M)';
+  }
+
+  // Download and decode the DONE IT reaction images in the background at startup,
+  // so the first celebration doesn't have to wait for them to load and pop in.
+  preloadReactionImages() {
+    const sources = new Set([...Object.values(DONE_IT_REACTION_IMAGES), 'images/devil.png']);
+    this.reactionImageCache = [...sources].map((src) => {
+      const img = new Image();
+      img.src = src;
+      if (img.decode) img.decode().catch(() => {});
+      return img;
+    });
   }
 
   celebrateDoneIt() {

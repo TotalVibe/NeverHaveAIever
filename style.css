@@ -2144,6 +2144,54 @@ body.unhinged-screen-shake {
   }
 }
 
+/* Desktop / laptop browsers: scale the game up so it fills the window at 100% zoom.
+   Placed after the mobile rules so it wins on large screens; mobile is unchanged. */
+@media (min-width: 768px) and (min-height: 760px) {
+  .app-header {
+    max-width: 920px;
+  }
+  .game-arena {
+    max-width: min(96vw, 1040px);
+  }
+  /* Round icon buttons only; the Restart pill keeps its own sizing */
+  .icon-btn:not(.reshuffle-btn) {
+    width: clamp(44px, 3.4vw, 50px);
+    height: clamp(44px, 3.4vw, 50px);
+  }
+  .icon-btn:not(.reshuffle-btn) svg {
+    width: 23px;
+    height: 23px;
+  }
+  .reshuffle-btn {
+    height: clamp(42px, 3.3vw, 48px);
+    font-size: clamp(0.85rem, 1.1vw, 0.98rem);
+  }
+  .reshuffle-btn svg {
+    width: 20px;
+    height: 20px;
+  }
+  .card-stack {
+    width: clamp(340px, 40vw, 480px);
+    height: clamp(420px, 64dvh, 600px);
+  }
+  .card-front {
+    padding: 26px 28px;
+  }
+  .prompt-text {
+    font-size: clamp(1.5rem, 2.9vw, 2rem);
+  }
+  .target-btn .emoji {
+    font-size: clamp(1.9rem, 2.9vw, 2.4rem);
+  }
+  .target-btn .label {
+    font-size: clamp(0.8rem, 1.1vw, 0.92rem);
+  }
+  .target-btn.target-left,
+  .target-btn.target-right {
+    width: 76px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   body.unhinged-screen-shake {
     animation: none;
