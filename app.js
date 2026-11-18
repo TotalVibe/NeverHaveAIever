@@ -4,13 +4,41 @@ import { ConfettiEngine } from './confetti.js';
 
 const SPICY_LEVELS = ['cheeky', 'spicy', 'unhinged'];
 const DONE_IT_REACTION_IMAGES = {
-  cheeky: 'images/cheeky.png',
-  spicy: 'images/angel.png',
-  unhinged: 'images/explosion.png',
-  cringe: 'images/akward.png',
-  party: 'images/party.png',
-  wholesome: 'images/angel.png'
+  cheeky: 'images/cheeky.webp',
+  spicy: 'images/angel.webp',
+  unhinged: 'images/explosion.webp',
+  cringe: 'images/akward.webp',
+  party: 'images/party.webp',
+  wholesome: 'images/angel.webp'
 };
+// Fluent Emoji 3D artwork (MIT License, Microsoft Corporation; see THIRD_PARTY_LICENSES.md).
+// Emoji without a file here stay as text.
+const FLUENT_CODES = new Set(['1F319', '1F346', '1F351', '1F354', '1F355', '1F370', '1F374', '1F37A', '1F37B', '1F3A4', '1F3A5', '1F3A7', '1F3AA', '1F3AB', '1F3B2', '1F3B9', '1F3CA', '1F3D3', '1F3E0', '1F3EB', '1F446', '1F446_1F3FB', '1F446_1F3FC', '1F446_1F3FD', '1F446_1F3FE', '1F446_1F3FF', '1F44B', '1F451', '1F457', '1F45A', '1F45E', '1F465', '1F468', '1F47B', '1F480', '1F483', '1F48A', '1F48B', '1F48E', '1F494', '1F4A5', '1F4A8', '1F4A9', '1F4AC', '1F4B3', '1F4B8', '1F4BC', '1F4DA', '1F4DD', '1F4DE', '1F4E2', '1F4E7', '1F4F1', '1F4F2', '1F504', '1F50D', '1F511', '1F51E', '1F525', '1F57A', '1F607', '1F608', '1F60E', '1F610', '1F633', '1F634', '1F648', '1F64B', '1F695', '1F6A6', '1F6A8', '1F6AA', '1F6AB', '1F6BB', '1F6CC', '1F918', '1F925', '1F927', '1F92A', '1F92F', '1F938', '1F943', '1F94A', '1F964', '1F973', '1F984', '1F9A0', '1F9B6', '1F9B7', '1F9E5', '1F9E9', '1F9ED', '1F9F9', '1FA9E', '1FAA2', '1FAAA', '2615']);
+const SKIN_TONE_HEX = new Set(['1F3FB', '1F3FC', '1F3FD', '1F3FE', '1F3FF']);
+
+// Turns emoji text into markup, using artwork where a file exists.
+// A base emoji followed by a skin-tone modifier uses the matching tone file when there is one.
+function emojiMarkup(text) {
+  const chars = [...text];
+  let html = '';
+  for (let i = 0; i < chars.length; i += 1) {
+    const ch = chars[i];
+    const hex = ch.codePointAt(0).toString(16).toUpperCase();
+    if (ch === '\uFE0F' || SKIN_TONE_HEX.has(hex)) continue; // variation selectors and stray tones
+    const nextHex = chars[i + 1] ? chars[i + 1].codePointAt(0).toString(16).toUpperCase() : '';
+    const tonedKey = `${hex}_${nextHex}`;
+    if (SKIN_TONE_HEX.has(nextHex) && FLUENT_CODES.has(tonedKey)) {
+      html += `<img class="emoji-img" src="images/fluent/${tonedKey}.webp" alt="${ch}">`;
+      i += 1;
+    } else if (FLUENT_CODES.has(hex)) {
+      html += `<img class="emoji-img" src="images/fluent/${hex}.webp" alt="${ch}">`;
+    } else {
+      html += ch;
+    }
+  }
+  return html;
+}
+
 const AGE_GATE_KEY = 'never-have-ai-ever-age-confirmed';
 const LEVEL_UP_SWIPE_THRESHOLD = 15;
 const LEVEL_UP_DONE_IT_THRESHOLD = 7;
@@ -127,10 +155,10 @@ class NeverHaveIEverApp {
 
   updateSpicyLevelPresentation() {
     const topTarget = this.targetButtons.top;
-    topTarget.querySelector('.emoji').textContent = this.getCategoryEmoji('spicy');
+    topTarget.querySelector('.emoji').innerHTML = emojiMarkup(this.getCategoryEmoji('spicy'));
     topTarget.querySelector('.label').textContent = this.getCategoryName('spicy');
     topTarget.title = `Drag UP or Tap for ${this.getCategoryName('spicy')}`;
-    document.getElementById('guide-spicy-emoji').textContent = this.getCategoryEmoji('spicy');
+    document.getElementById('guide-spicy-emoji').innerHTML = emojiMarkup(this.getCategoryEmoji('spicy'));
     document.getElementById('guide-spicy-label').textContent = this.getCategoryName('spicy');
   }
 
@@ -140,7 +168,7 @@ class NeverHaveIEverApp {
     const selectedIndex = SPICY_LEVELS.indexOf(level);
     slider.value = String(selectedIndex);
     slider.setAttribute('aria-valuetext', SPICY_LEVEL_LABELS[level]);
-    thumb.textContent = SPICY_LEVEL_EMOJIS[level];
+    thumb.innerHTML = emojiMarkup(SPICY_LEVEL_EMOJIS[level]);
     thumb.classList.toggle('is-unhinged', level === 'unhinged');
     // Shadow colour follows the gradient position: cheeky green, spicy purple, unhinged red
     const markerGlows = {
@@ -215,6 +243,9 @@ class NeverHaveIEverApp {
     this.bindEvents();
     this.bindKeyboard();
     this.setupBackButton();
+    document.querySelectorAll('.target-btn .emoji, .info-cat-emoji').forEach((el) => {
+      if (!el.children.length) el.innerHTML = emojiMarkup(el.textContent);
+    });
     const howToPlayCustomise = document.getElementById('info-customise-btn');
     if (howToPlayCustomise) {
       this.addBorderSparkles(howToPlayCustomise, { inset: 3, count: 6, sizeMin: 5, sizeRange: 3, durMin: 7, durRange: 4 });
@@ -342,7 +373,7 @@ class NeverHaveIEverApp {
   // Download and decode the DONE IT reaction images in the background at startup,
   // so the first celebration doesn't have to wait for them to load and pop in.
   preloadReactionImages() {
-    const sources = new Set([...Object.values(DONE_IT_REACTION_IMAGES), 'images/devil.png']);
+    const sources = new Set([...Object.values(DONE_IT_REACTION_IMAGES), 'images/devil.webp']);
     this.reactionImageCache = [...sources].map((src) => {
       const img = new Image();
       img.src = src;
@@ -430,13 +461,13 @@ class NeverHaveIEverApp {
     const rightButton = this.targetButtons.right;
     leftButton.querySelector('.emoji').innerHTML = isActive
       ? '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>'
-      : '😳';
+      : emojiMarkup('😳');
     leftButton.querySelector('.label').textContent = isActive ? 'No' : 'Cringe';
     leftButton.querySelector('.arrow-indicator').textContent = '◄';
     leftButton.title = isActive ? 'Drag LEFT or Tap No' : 'Drag LEFT or Tap for Awkward & Cringe';
     rightButton.querySelector('.emoji').innerHTML = isActive
       ? '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4.5 12.5 5 5L19.5 7.5"/></svg>'
-      : '🥳';
+      : emojiMarkup('🥳');
     rightButton.querySelector('.label').textContent = isActive ? 'Yes' : 'Party';
     rightButton.querySelector('.arrow-indicator').textContent = '►';
     rightButton.title = isActive ? 'Drag RIGHT or Tap Yes' : 'Drag RIGHT or Tap for Party & Chaos';
@@ -456,9 +487,9 @@ class NeverHaveIEverApp {
     card.dataset.levelUpPrevious = data.spicyLevel ?? this.spicyLevel;
     card.dataset.levelUpNext = nextLevel ?? '';
     card.dataset.levelUpReturnCategory = data.returnCategory ?? this.levelUpReturnCategory;
-    card.querySelector('.cat-tag-emoji').textContent = nextLevel
+    card.querySelector('.cat-tag-emoji').innerHTML = emojiMarkup(nextLevel
       ? SPICY_LEVEL_EMOJIS[nextLevel]
-      : SPICY_LEVEL_EMOJIS[this.spicyLevel];
+      : SPICY_LEVEL_EMOJIS[this.spicyLevel]);
     card.querySelector('.cat-tag-name').textContent = `Next level: ${SPICY_LEVEL_LABELS[nextLevel]}`;
     card.querySelector('.prompt-prefix').remove();
     card.querySelector('.prompt-text').textContent = 'Turn it up?';
@@ -802,7 +833,7 @@ class NeverHaveIEverApp {
             </div>
           </div>
           <div class="category-watermark" aria-hidden="true">
-            <span class="cat-tag-emoji">${cardEmoji}</span>
+            <span class="cat-tag-emoji">${emojiMarkup(cardEmoji)}</span>
           </div>
 
           <!-- Card Body Statement (Centered) -->
@@ -1182,7 +1213,7 @@ class NeverHaveIEverApp {
       if (catTag && catTagEmoji && catTagName) {
         catTag.style.color = cat.color;
         catTagName.textContent = this.getCardCategoryName(nextCategory);
-        catTagEmoji.textContent = nextCardEmoji;
+        catTagEmoji.innerHTML = emojiMarkup(nextCardEmoji);
       }
 
       const promptText = nextCard.querySelector('.prompt-text');

@@ -334,7 +334,7 @@ body.unhinged-screen-shake {
 }
 
 .target-btn .emoji {
-  font-size: clamp(1.6rem, 4.8vw, 2.15rem);
+  font-size: clamp(1.75rem, 5.3vw, 2.35rem);
   line-height: 1;
   transition: transform 0.2s ease;
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
@@ -1313,9 +1313,6 @@ body.unhinged-screen-shake {
 }
 
 .crest-diamond {
-  grid-row: 1;
-  align-self: end;
-  margin-bottom: clamp(4px, 1.1vh, 10px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2295,7 +2292,7 @@ body.unhinged-screen-shake {
     padding: 14px 2px;
   }
   .target-btn .emoji {
-    font-size: 1.3rem;
+    font-size: 1.42rem;
   }
   .target-btn .label {
     font-size: 0.58rem;
@@ -2481,7 +2478,7 @@ body.unhinged-screen-shake {
     font-size: clamp(1.5rem, 2.9vw, 2rem);
   }
   .target-btn .emoji {
-    font-size: clamp(1.9rem, 2.9vw, 2.4rem);
+    font-size: clamp(2.08rem, 3.2vw, 2.64rem);
   }
   .target-btn .label {
     font-size: clamp(0.8rem, 1.1vw, 0.92rem);
@@ -2753,3 +2750,27 @@ body.unhinged-screen-shake {
   grid-row: 3;
   align-self: start;
 }
+
+/* The card back's crest sits in the top row of its emblem grid */
+.card-back-emblem > .crest-diamond {
+  grid-row: 1;
+  align-self: end;
+  margin-bottom: clamp(4px, 1.1vh, 10px);
+}
+
+/* Emoji artwork in place of text emoji: sized to the surrounding text */
+.emoji-img {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.125em;
+}
+
+/* Info rows: a fixed-width emoji column keeps the text aligned, whatever the artwork's size */
+.info-cat-emoji {
+  width: 2.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
