@@ -13,7 +13,7 @@ const DONE_IT_REACTION_IMAGES = {
 };
 // Fluent Emoji 3D artwork (MIT License, Microsoft Corporation; see THIRD_PARTY_LICENSES.md).
 // Emoji without a file here stay as text.
-const FLUENT_CODES = new Set(['1F319', '1F346', '1F351', '1F354', '1F355', '1F370', '1F374', '1F37A', '1F37B', '1F3A4', '1F3A5', '1F3A7', '1F3AA', '1F3AB', '1F3B2', '1F3B9', '1F3CA', '1F3D3', '1F3E0', '1F3EB', '1F446', '1F446_1F3FB', '1F446_1F3FC', '1F446_1F3FD', '1F446_1F3FE', '1F446_1F3FF', '1F44B', '1F451', '1F457', '1F45A', '1F45E', '1F465', '1F468', '1F47B', '1F480', '1F483', '1F48A', '1F48B', '1F48E', '1F494', '1F4A5', '1F4A8', '1F4A9', '1F4AC', '1F4B3', '1F4B8', '1F4BC', '1F4DA', '1F4DD', '1F4DE', '1F4E2', '1F4E7', '1F4F1', '1F4F2', '1F504', '1F50D', '1F511', '1F51E', '1F525', '1F57A', '1F607', '1F608', '1F60E', '1F610', '1F633', '1F634', '1F648', '1F64B', '1F695', '1F6A6', '1F6A8', '1F6AA', '1F6AB', '1F6BB', '1F6CC', '1F918', '1F925', '1F927', '1F92A', '1F92F', '1F938', '1F943', '1F94A', '1F964', '1F973', '1F984', '1F9A0', '1F9B6', '1F9B7', '1F9E5', '1F9E9', '1F9ED', '1F9F9', '1FA9E', '1FAA2', '1FAAA', '2615']);
+const FLUENT_CODES = new Set(['1F319', '1F346', '1F351', '1F354', '1F355', '1F370', '1F374', '1F37A', '1F37B', '1F3A4', '1F3A5', '1F3A7', '1F3AA', '1F3AB', '1F3B2', '1F3B9', '1F3CA', '1F3D3', '1F3E0', '1F3EB', '1F446', '1F446_1F3FB', '1F446_1F3FC', '1F446_1F3FD', '1F446_1F3FE', '1F446_1F3FF', '1F44B', '1F451', '1F457', '1F45A', '1F45E', '1F465', '1F468', '1F47B', '1F480', '1F483', '1F48A', '1F48B', '1F48E', '1F494', '1F4A5', '1F4A8', '1F4A9', '1F4AC', '1F4B3', '1F4B8', '1F4BB', '1F4BC', '1F4DA', '1F4DD', '1F4DE', '1F4E2', '1F4E7', '1F4F1', '1F4F2', '1F504', '1F50D', '1F511', '1F51E', '1F525', '1F57A', '1F607', '1F608', '1F60E', '1F610', '1F633', '1F634', '1F648', '1F64B', '1F695', '1F6A6', '1F6A8', '1F6AA', '1F6AB', '1F6BB', '1F6CC', '1F918', '1F925', '1F927', '1F92A', '1F92F', '1F938', '1F943', '1F94A', '1F964', '1F973', '1F984', '1F9A0', '1F9B6', '1F9B7', '1F9E5', '1F9E9', '1F9ED', '1F9F9', '1FA9E', '1FAA2', '1FAAA', '2615']);
 const SKIN_TONE_HEX = new Set(['1F3FB', '1F3FC', '1F3FD', '1F3FE', '1F3FF']);
 
 // Turns emoji text into markup, using artwork where a file exists.
@@ -842,7 +842,7 @@ class NeverHaveIEverApp {
             <div class="prompt-text">${cleanQuestion}</div>
           </div>
           <div class="card-hint">
-            <span class="card-hint-text">Drag card or tap emoji</span>
+            <span class="card-hint-text"><span class="hint-full">Drag card or tap emoji</span><span class="hint-short">Drag or tap</span></span>
             <button class="done-it-btn" type="button" aria-label="Celebrate that you have done it">DONE IT!</button>
           </div>
         </div>
@@ -1438,8 +1438,12 @@ class NeverHaveIEverApp {
     const stage = document.createElement('div');
     stage.className = 'card-flip-stage';
     const ghost = element.cloneNode(true);
-    ghost.style.cssText = `position:fixed;left:${rect.left}px;top:${rect.top}px;width:${rect.width}px;height:${rect.height}px;margin:0;transform:none;transition:none;pointer-events:none;`;
-    stage.append(ghost);
+    // The copy sits in a box as wide as the card, so its container-relative sizes (title, buttons) match the original
+    const box = document.createElement('div');
+    box.style.cssText = `position:fixed;left:${rect.left}px;top:${rect.top}px;width:${rect.width}px;height:${rect.height}px;container-type:inline-size;pointer-events:none;`;
+    ghost.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;margin:0;transform:none;transition:none;pointer-events:none;';
+    box.append(ghost);
+    stage.append(box);
     document.body.append(stage);
     element.style.visibility = 'hidden';
 
