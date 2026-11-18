@@ -185,6 +185,26 @@ class NeverHaveIEverApp {
     return { text: chosenQuestion, emoji: undefined };
   }
 
+  // Back button (Android and browsers): closes an open pop-up, otherwise undoes the last card.
+  // Once there is nothing left to undo, back leaves the app as usual.
+  setupBackButton() {
+    const arm = () => history.pushState({ backGuard: true }, '');
+    arm();
+    window.addEventListener('popstate', () => {
+      if (this.ageGateActive) return; // on the age question, back leaves the app
+      const openClose = document.querySelector('.modal-overlay.active .modal-close');
+      if (openClose) {
+        openClose.click();
+        arm();
+        return;
+      }
+      if (this.cardHistory.length > 0) {
+        if (!this.isAnimating && !this.isCelebrating) this.undoLastCard();
+        arm();
+      }
+    });
+  }
+
   init() {
     this.preloadReactionImages();
     this.registerServiceWorker();
@@ -194,6 +214,7 @@ class NeverHaveIEverApp {
     this.renderInitialDeck();
     this.bindEvents();
     this.bindKeyboard();
+    this.setupBackButton();
     const howToPlayCustomise = document.getElementById('info-customise-btn');
     if (howToPlayCustomise) {
       this.addBorderSparkles(howToPlayCustomise, { inset: 3, count: 6, sizeMin: 5, sizeRange: 3, durMin: 7, durRange: 4 });
