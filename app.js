@@ -372,14 +372,31 @@ class NeverHaveIEverApp {
 
   // Download and decode the DONE IT reaction images in the background at startup,
   // so the first celebration doesn't have to wait for them to load and pop in.
+  // Loads and decodes the reaction images and every emoji artwork up front, so nothing
+  // pops in mid-game. Emoji artwork is loaded in small batches when the browser is idle.
   preloadReactionImages() {
-    const sources = new Set([...Object.values(DONE_IT_REACTION_IMAGES), 'images/devil.webp']);
-    this.reactionImageCache = [...sources].map((src) => {
-      const img = new Image();
-      img.src = src;
-      if (img.decode) img.decode().catch(() => {});
-      return img;
-    });
+    const reactionSources = new Set([...Object.values(DONE_IT_REACTION_IMAGES), 'images/devil.webp']);
+    this.reactionImageCache = [...reactionSources].map((src) => this.decodeImage(src));
+
+    const emojiSources = [...FLUENT_CODES].map((code) => `images/fluent/${code}.webp`);
+    this.emojiImageCache = [];
+    const loadBatch = (start) => {
+      const batch = emojiSources.slice(start, start + 12);
+      this.emojiImageCache.push(...batch.map((src) => this.decodeImage(src)));
+      if (start + 12 < emojiSources.length) {
+        const next = () => loadBatch(start + 12);
+        if ('requestIdleCallback' in window) requestIdleCallback(next);
+        else setTimeout(next, 50);
+      }
+    };
+    loadBatch(0);
+  }
+
+  decodeImage(src) {
+    const img = new Image();
+    img.src = src;
+    if (img.decode) img.decode().catch(() => {});
+    return img;
   }
 
   celebrateDoneIt() {
