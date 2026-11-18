@@ -536,8 +536,11 @@ body.unhinged-screen-shake {
 
 .card-stack {
   position: relative;
-  /* Centered card width with plenty of margin from lateral buttons */
-  width: clamp(275px, 42vw, 380px);
+  /* Centred card width with plenty of margin from lateral buttons. Never wider than the
+     screen, so on ultra-narrow screens it stays centred instead of spilling to one side */
+  width: min(clamp(275px, 42vw, 380px), calc(100vw - 24px));
+  /* Card contents size themselves in proportion to this width */
+  container-type: inline-size;
   height: clamp(330px, 54dvh, 480px);
   margin: clamp(16px, 2.5vh, 28px) auto 0;
   transform: translateY(-42px);
@@ -1224,13 +1227,17 @@ body.unhinged-screen-shake {
 
 /* Emblem Content */
 .card-back-emblem {
-  display: flex;
-  flex-direction: column;
+  /* Three rows: crest, title, and Customize. The title sits in the exact middle row.
+     Swipe to Reveal is positioned at the bottom. */
+  position: relative;
+  display: grid;
+  grid-template-rows: 1fr auto 1fr;
+  /* One column exactly as wide as the card, so content centres and never spills to one side */
+  grid-template-columns: minmax(0, 1fr);
+  justify-items: center;
   align-items: center;
   height: 100%;
   width: 100%;
-  /* Spacing and sizes scale with screen height so the emblem fits short screens */
-  gap: clamp(4px, 1.1vh, 10px);
   max-width: 100%;
   text-align: center;
   z-index: 2;
@@ -1239,7 +1246,8 @@ body.unhinged-screen-shake {
 /* Fancy Cursive 2-Line Title ("Never Have" / "AI Ever") */
 .emblem-title {
   font-family: 'Great Vibes', 'Alex Brush', 'Dancing Script', cursive;
-  font-size: clamp(2.6rem, 8.5vw, 3.7rem);
+  grid-row: 2;
+  font-size: clamp(1.4rem, 15cqi, 3.6rem);
   font-weight: 400;
   line-height: 1.05;
   color: #ffffff;
@@ -1258,11 +1266,16 @@ body.unhinged-screen-shake {
 }
 
 .emblem-sub {
-  /* Pinned near the bottom of the card; the crest and title centre in the space above */
-  margin-top: auto;
-  margin-bottom: clamp(12px, 3.4vh, 28px);
+  /* Pinned near the bottom of the card, outside the centred stack. Flex centring keeps the
+     text centred even when it is wider than the card. */
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: clamp(12px, 3.4vh, 28px);
+  display: flex;
+  justify-content: center;
   font-family: var(--font-sans);
-  font-size: clamp(0.6rem, 1.4vh, 0.68rem);
+  font-size: clamp(0.55rem, 3.6cqi, 0.68rem);
   font-weight: 700;
   white-space: nowrap;
   letter-spacing: 2.2px;
@@ -1300,7 +1313,9 @@ body.unhinged-screen-shake {
 }
 
 .crest-diamond {
-  margin-top: auto;
+  grid-row: 1;
+  align-self: end;
+  margin-bottom: clamp(4px, 1.1vh, 10px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1324,13 +1339,13 @@ body.unhinged-screen-shake {
   justify-content: center;
   gap: 8px;
   margin-top: 16px;
-  padding: 11px 18px;
+  padding: clamp(7px, 4cqi, 12px) clamp(12px, 6.5cqi, 20px);
   border: 1px solid rgba(198, 173, 255, 0.48);
   border-radius: var(--radius-pill);
   background: rgba(130, 96, 190, 0.18);
   color: #e4d7ff;
   font-family: var(--font-sans);
-  font-size: 0.74rem;
+  font-size: clamp(0.6rem, 4.3cqi, 0.9rem);
   font-weight: 800;
   letter-spacing: 1.1px;
   line-height: 1;
@@ -2731,4 +2746,10 @@ body.unhinged-screen-shake {
   .age-gate-denied.is-visible {
     animation: none;
   }
+}
+
+/* Customize sits in the bottom row of the card back's emblem grid, under the title */
+.card-back-emblem > .customise-btn {
+  grid-row: 3;
+  align-self: start;
 }
