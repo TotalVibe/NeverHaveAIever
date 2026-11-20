@@ -334,7 +334,7 @@ body.unhinged-screen-shake {
 }
 
 .target-btn .emoji {
-  font-size: clamp(1.75rem, 5.3vw, 2.35rem);
+  font-size: clamp(2.25rem, 6.8vw, 3.05rem);
   line-height: 1;
   transition: transform 0.2s ease;
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
@@ -4134,7 +4134,7 @@ body.unhinged-screen-shake {
 }
 
 .deck-emoji {
-  font-size: 5rem;
+  font-size: 6rem;
 }
 
 @media (min-width: 720px) {
@@ -4147,7 +4147,7 @@ body.unhinged-screen-shake {
   }
 
   .deck-emoji {
-    font-size: 5.4rem;
+    font-size: 6.5rem;
   }
 }
 
@@ -4493,7 +4493,7 @@ body.unhinged-screen-shake {
 
 .deck-text .mode-desc {
   white-space: nowrap;
-  font-size: clamp(0.85rem, 5cqi, 1.25rem);
+  font-size: clamp(0.96rem, 6.2cqi, 1.25rem);
 }
 
 /* Indeed: 85% white, with its Space badge close beside it */
@@ -5268,21 +5268,28 @@ body.unhinged-screen-shake {
 }
 
 .deck-tile {
-  height: clamp(180px, 36dvh, 320px);
+  height: clamp(230px, 40dvh, 340px);
   margin-bottom: clamp(20px, 4dvh, 56px);
 }
 
 .deck-option {
-  padding: clamp(10px, 3dvh, 40px) 16px clamp(8px, 2.4dvh, 30px);
-  gap: clamp(4px, 1.4dvh, 16px);
+  padding: clamp(10px, 3dvh, 40px) 12px clamp(8px, 2.4dvh, 30px);
+  gap: clamp(12px, 2.6dvh, 24px);
 }
 
 .deck-emoji {
-  font-size: clamp(2rem, 6.2dvh, 5rem);
+  font-size: clamp(2.4rem, 7.4dvh, 6rem);
 }
 
 .deck-text .mode-name {
-  font-size: clamp(1.4rem, 4dvh, 2.3rem);
+  font-size: clamp(1.95rem, 5.2dvh, 2.6rem);
+}
+
+.deck-text .mode-desc {
+  white-space: nowrap;
+  font-size: clamp(0.96rem, 6.2cqi, 1.25rem);
+  line-height: 1.4;
+  margin-top: clamp(6px, 1.5dvh, 12px);
 }
 
 .deck-footer {
@@ -5295,7 +5302,15 @@ body.unhinged-screen-shake {
   }
 
   .deck-emoji {
-    font-size: clamp(2.2rem, 7dvh, 5.4rem);
+    font-size: clamp(2.6rem, 8.4dvh, 6.5rem);
+  }
+
+  .deck-text .mode-name {
+    font-size: clamp(1.9rem, 4.6dvh, 2.35rem);
+  }
+
+  .deck-text .mode-desc {
+    font-size: clamp(0.95rem, 5.8cqi, 1.22rem);
   }
 }
 
