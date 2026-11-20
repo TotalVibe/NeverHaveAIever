@@ -5319,3 +5319,10 @@ body.unhinged-screen-shake {
   min-height: 46px;
   height: 46px;
 }
+
+/* ===== Revisions 45: phones: the whole Pick a dare block (heading and cards) sits a little higher ===== */
+@media (max-width: 719px) {
+  .mode-shot-dare .shot-wrap {
+    transform: translateY(-100px);
+  }
+}
