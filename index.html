@@ -27,7 +27,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Baumans&family=Dancing+Script:wght@700&family=Elsie+Swash+Caps:wght@400;900&family=Great+Vibes&display=swap" rel="stylesheet">
   <meta name="description" content="A party game for hilarious confessions, wild stories, and unforgettable nights.">
-  <link rel="stylesheet" href="style.css?v=106">
+  <link rel="stylesheet" href="style.css?v=115">
 </head>
 <body>
 
@@ -112,33 +112,42 @@
       <div class="shot-dares" id="shot-dares" hidden>
         <p class="shot-dares-title">Pick a dare</p>
         <div class="shot-dare-row">
-          <button class="shot-dare" type="button" aria-label="Dare card 1">
+          <div class="shot-dare" role="button" tabindex="0" aria-label="Dare card 1">
             <span class="shot-dare-inner">
               <span class="dare-frame" aria-hidden="true"></span>
               <span class="shot-dare-back" aria-hidden="true"><span class="dare-back-emoji"></span></span>
-              <span class="shot-dare-front"><span class="dare-frame" aria-hidden="true"></span><span class="dare-watermark" aria-hidden="true">🥴</span><span class="shot-dare-text"></span></span>
+              <span class="shot-dare-front"><span class="dare-frame" aria-hidden="true"></span><span class="shot-dare-text"></span><button class="dare-again" type="button"><span class="again-long">TAKE 1 SHOT TO CHOOSE AGAIN</span><span class="again-short">1 SHOT · PICK AGAIN</span></button></span>
             </span>
-          </button>
-          <button class="shot-dare" type="button" aria-label="Dare card 2">
+          </div>
+          <div class="shot-dare" role="button" tabindex="0" aria-label="Dare card 2">
             <span class="shot-dare-inner">
               <span class="dare-frame" aria-hidden="true"></span>
               <span class="shot-dare-back" aria-hidden="true"><span class="dare-back-emoji"></span></span>
-              <span class="shot-dare-front"><span class="dare-frame" aria-hidden="true"></span><span class="dare-watermark" aria-hidden="true">🥴</span><span class="shot-dare-text"></span></span>
+              <span class="shot-dare-front"><span class="dare-frame" aria-hidden="true"></span><span class="shot-dare-text"></span><button class="dare-again" type="button"><span class="again-long">TAKE 1 SHOT TO CHOOSE AGAIN</span><span class="again-short">1 SHOT · PICK AGAIN</span></button></span>
             </span>
-          </button>
-          <button class="shot-dare" type="button" aria-label="Dare card 3">
+          </div>
+          <div class="shot-dare" role="button" tabindex="0" aria-label="Dare card 3">
             <span class="shot-dare-inner">
               <span class="dare-frame" aria-hidden="true"></span>
               <span class="shot-dare-back" aria-hidden="true"><span class="dare-back-emoji"></span></span>
-              <span class="shot-dare-front"><span class="dare-frame" aria-hidden="true"></span><span class="dare-watermark" aria-hidden="true">🥴</span><span class="shot-dare-text"></span></span>
+              <span class="shot-dare-front"><span class="dare-frame" aria-hidden="true"></span><span class="shot-dare-text"></span><button class="dare-again" type="button"><span class="again-long">TAKE 1 SHOT TO CHOOSE AGAIN</span><span class="again-short">1 SHOT · PICK AGAIN</span></button></span>
             </span>
-          </button>
+          </div>
         </div>
       </div>
     </div>
 
     <!-- Shots & Dares: CUSTOMIZE and START, pinned to the bottom of the screen -->
     <div class="shot-controls">
+        <div class="next-pill dare-pill" id="dare-pill" role="group" aria-label="Choose a dare" hidden>
+          <button class="next-arrow" type="button" id="dare-prev" aria-label="Previous dare">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6" /></svg>
+          </button>
+          <button class="next-arrow" type="button" id="dare-pick"><kbd class="key-cue">SPACE</kbd><span>Pick</span></button>
+          <button class="next-arrow" type="button" id="dare-next" aria-label="Next dare">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg>
+          </button>
+        </div>
         <div class="shot-actions" id="shot-actions">
           <button class="customise-btn shot-customise" id="shot-customise" type="button">
             <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -156,6 +165,9 @@
       <button class="next-arrow" type="button" data-dir="left" aria-label="Undo">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6" /></svg>
         <span>Undo</span>
+      </button>
+      <button class="next-arrow indeed-key" type="button" id="pill-indeed">
+        <kbd class="key-cue">SPACE</kbd><span>Indeed</span>
       </button>
       <button class="next-arrow" type="button" data-dir="right" aria-label="Next card">
         <span>Next</span>
@@ -177,10 +189,21 @@
       <span class="label">Wholesome</span>
     </button>
 
+  <!-- Classic on widescreen only: the keys, bottom left and right -->
+  <div class="classic-keys" aria-hidden="false">
+    <button class="classic-random" id="classic-random" type="button">
+      <kbd class="kbd">SPACE</kbd><span>Random card</span>
+    </button>
+    <div class="classic-keys-right" aria-label="Arrow keys: up spicy, left cringe, right party, down wholesome">
+      <span>Keys</span>
+      <kbd class="kbd">↑</kbd><kbd class="kbd">←</kbd><kbd class="kbd">→</kbd><kbd class="kbd">↓</kbd>
+    </div>
+  </div>
+
   </main>
 
   <!-- Info & Game Rules Modal -->
-  <div class="modal-overlay" id="info-modal">
+  <div class="modal-overlay" id="info-modal" data-context="classic">
     <div class="modal-content info-reverse">
       <div class="vector-pattern" aria-hidden="true"></div>
       <div class="info-reverse-frame">
@@ -200,7 +223,7 @@
 
         <div class="info-scroll">
           <div class="info-cat-list">
-            <div class="info-cat info-cat--install" id="info-install-row">
+            <div class="info-cat info-cat--install" id="info-install-row" data-ctx="deck classic most-likely shot-dare">
               <div class="info-cat-main">
                 <span class="info-cat-emoji" aria-hidden="true">📲</span>
                 <div class="info-cat-text">
@@ -212,26 +235,67 @@
               </div>
             </div>
 
-            <div class="info-cat info-cat--tap">
+            <div class="info-cat info-cat--tap" data-ctx="deck classic most-likely shot-dare">
               <div class="info-cat-main">
                 <span class="info-cat-emoji" aria-hidden="true">👆🏼</span>
                 <div class="info-cat-text">
                   <span class="info-cat-name">Tap or Swipe</span>
-                  <p>Press an emoji button, or drag the card toward one.</p>
+                  <p id="info-tap-text"></p>
                 </div>
               </div>
             </div>
 
-            <div class="info-cat info-cat--keys">
+            <div class="info-cat info-cat--keys" data-ctx="deck classic most-likely shot-dare">
               <div class="info-cat-main">
                 <span class="info-cat-emoji" aria-hidden="true">💻</span>
                 <div class="info-cat-text">
                   <span class="info-cat-name">Keyboard</span>
-                  <p>Arrow keys (↑ Spicy, ← Cringe, → Party, ↓ Wholesome), Spacebar to shuffle, Z to undo.</p>
+                  <p id="info-keys-text"></p>
                 </div>
               </div>
             </div>
-            <div class="info-cat info-cat--wholesome">
+
+            <div class="info-cat info-cat--conversation" data-ctx="deck">
+              <div class="info-cat-main">
+                <span class="info-cat-emoji" aria-hidden="true">💬</span>
+                <div class="info-cat-text">
+                  <span class="info-cat-name">Games to kickstart conversations</span>
+                  <p>Pick a game, then talk, laugh and find out what your friends have done. The fun happens in the room.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="info-cat info-cat--responsible" data-ctx="deck shot-dare">
+              <div class="info-cat-main">
+                <span class="info-cat-emoji" aria-hidden="true">🥤</span>
+                <div class="info-cat-text">
+                  <span class="info-cat-name">Drink responsibly</span>
+                  <p>Pace yourself, drink water in between, and skip anything that doesn't feel right. Nobody has to drink.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="info-cat info-cat--next" data-ctx="most-likely">
+              <div class="info-cat-main">
+                <span class="info-cat-emoji" aria-hidden="true">🔄</span>
+                <div class="info-cat-text">
+                  <span class="info-cat-name">Next and undo</span>
+                  <p>Swipe the card in any direction, or press → to go on. Press ← to bring back the last card, and Space for Indeed.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="info-cat info-cat--shotgame" data-ctx="shot-dare">
+              <div class="info-cat-main">
+                <span class="info-cat-emoji" aria-hidden="true">🎲</span>
+                <div class="info-cat-text">
+                  <span class="info-cat-name">Shots &amp; Dares</span>
+                  <p>A sentence comes up every few seconds. Drink if it's you. When the goal is reached, tap SOMEONE LOST! and the loser picks a dare from three cards.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="info-cat info-cat--wholesome" data-ctx="classic">
               <div class="info-cat-main">
                 <span class="info-cat-emoji">😇</span>
                 <div class="info-cat-text">
@@ -244,7 +308,7 @@
                 <span>Swipe or<br>↓ key</span>
               </div>
             </div>
-            <div class="info-cat info-cat--cringe">
+            <div class="info-cat info-cat--cringe" data-ctx="classic">
               <div class="info-cat-main">
                 <span class="info-cat-emoji">😳</span>
                 <div class="info-cat-text">
@@ -257,7 +321,7 @@
                 <span>Swipe or<br>← key</span>
               </div>
             </div>
-            <div class="info-cat info-cat--party">
+            <div class="info-cat info-cat--party" data-ctx="classic">
               <div class="info-cat-main">
                 <span class="info-cat-emoji">🥳</span>
                 <div class="info-cat-text">
@@ -270,7 +334,7 @@
                 <span>Swipe or<br>→ key</span>
               </div>
             </div>
-            <div class="info-cat info-cat--spicy">
+            <div class="info-cat info-cat--spicy" data-ctx="classic">
               <div class="info-cat-main">
                 <span class="info-cat-emoji" id="guide-spicy-emoji">😈</span>
                 <div class="info-cat-text">
@@ -336,7 +400,7 @@
             <span class="deck-emoji" aria-hidden="true">🍻</span>
             <span class="deck-text">
               <span class="mode-name">Classic</span>
-              <span class="mode-desc">Questions from four categories, one card at a time.</span>
+              <span class="mode-desc">Drink if <strong>you've</strong> done it,<br>perfect icebreaker game.</span>
             </span>
           </div>
         </div>
@@ -346,8 +410,8 @@
             <span class="deck-frame" aria-hidden="true"></span>
             <span class="deck-emoji" aria-hidden="true">🎯</span>
             <span class="deck-text">
-              <span class="mode-name">Who Most<br>Likely</span>
-              <span class="mode-desc">Point at your friends and see who fits best.</span>
+              <span class="mode-name">Who's Most<br>Likely</span>
+              <span class="mode-desc">Majority selects who drinks<br>by pointing at them.</span>
             </span>
           </div>
         </div>
@@ -358,14 +422,14 @@
             <span class="deck-emoji" aria-hidden="true">🍶</span>
             <span class="deck-text">
               <span class="mode-name">Shots &amp;<br>Dares</span>
-              <span class="mode-desc">Take a shot when it fits, and the one who reaches 5 shots chooses their fate.</span>
+              <span class="mode-desc">The group sets the shot goal.<br>Reach it, and the dare begins.</span>
             </span>
           </div>
         </div>
       </div>
     </div>
     <div class="deck-footer">
-      <button class="btn-primary deck-play" id="mode-start-btn" type="button">PLAY</button>
+      <button class="btn-primary deck-play" id="mode-start-btn" type="button"><kbd class="key-cue">ENTER</kbd><span>PLAY</span></button>
     </div>
   </div>
 
@@ -425,12 +489,12 @@
           <path d="m19 14 .9 2.4 2.3.8-2.3.8L19 20.5l-.8-2.5-2.4-.8 2.4-.8.8-2.4Z" />
         </svg>
         <span>SAVE AND PLAY</span>
-      </button>
+        </button>
+      </div>
       </div>
       </div>
     </div>
-  </div>
 
-  <script type="module" src="app.js?v=64"></script>
+  <script type="module" src="app.js?v=71"></script>
 </body>
 </html>

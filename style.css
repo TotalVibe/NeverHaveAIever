@@ -2849,13 +2849,6 @@ body.unhinged-screen-shake {
   -webkit-backdrop-filter: none;
 }
 
-.deck-bg {
-  background-color: #0c0d16;
-  background-image:
-    radial-gradient(circle at 50% 42%, rgba(155, 93, 229, 0.42) 0%, rgba(10, 11, 16, 0.4) 55%, transparent 75%),
-    repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.04) 0px, rgba(255, 255, 255, 0.04) 1.5px, transparent 1.5px, transparent 14px),
-    repeating-linear-gradient(-45deg, rgba(255, 255, 255, 0.04) 0px, rgba(255, 255, 255, 0.04) 1.5px, transparent 1.5px, transparent 14px);
-}
 
 .deck-inner {
   position: relative;
@@ -2931,13 +2924,6 @@ body.unhinged-screen-shake {
   --deck-color: #ff2d75;
 }
 
-.deck-option-bg {
-  background-color: #111420;
-  background-image:
-    radial-gradient(circle at 50% 35%, color-mix(in srgb, var(--deck-color) 34%, transparent) 0%, transparent 70%),
-    repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.04) 0px, rgba(255, 255, 255, 0.04) 1.5px, transparent 1.5px, transparent 14px),
-    repeating-linear-gradient(-45deg, rgba(255, 255, 255, 0.04) 0px, rgba(255, 255, 255, 0.04) 1.5px, transparent 1.5px, transparent 14px);
-}
 
 /* The distinctive colour glows on hover and when selected */
 .deck-option:hover,
@@ -3953,4 +3939,913 @@ body.unhinged-screen-shake {
 
 .shot-dare.is-focus:not(.is-revealed) .shot-dare-back {
   box-shadow: inset 0 0 0 5px rgba(0, 0, 0, 0.45), 0 0 22px -4px rgba(255, 45, 117, 0.75);
+}
+
+/* ===== Revisions 5: glow by deck colour, pattern on the cards, stacks, larger mode screens ===== */
+
+@property --deck-glow {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #9b5de5;
+}
+
+/* The screen glows in the selected deck's colour; the colour eases between decks */
+.deck-screen {
+  transition: --deck-glow 0.5s ease;
+}
+
+.deck-bg {
+  background-color: #0a0b10;
+  background-image: radial-gradient(circle at 50% 42%, color-mix(in srgb, var(--deck-glow) 55%, transparent) 0%, rgba(10, 11, 16, 0.4) 55%, transparent 75%);
+}
+
+/* Each card carries the same pattern as the pop-ups (the default .vector-pattern) */
+.deck-option-bg {
+  border-radius: calc(var(--radius-card) - 2px);
+}
+
+/* Name and description: a clear gap between them */
+.deck-text .mode-desc {
+  margin-top: 12px;
+}
+
+/* PLAY: wider, with air between the letters */
+.deck-play {
+  width: min(100%, 480px);
+  letter-spacing: 0.2em;
+}
+
+/* Decks: three piles of the same width. Each card keeps its width; only the offset steps down. */
+.deck-tile .deck-card-layer {
+  transform: translateY(calc(var(--layer-idx) * 3px));
+  opacity: 1;
+}
+
+/* Customise thumb: hidden while the pop-up is still moving in, so it never jumps into place */
+.customise-level-thumb.is-measuring {
+  opacity: 0;
+}
+
+/* Who most likely and Shots & Dares: larger, and sitting higher */
+.mode-most-likely .card-stack,
+.mode-shot-dare .shot-wrap {
+  width: min(clamp(300px, 46vw, 420px), calc(100vw - 24px));
+  transform: translateY(-70px);
+}
+
+.mode-most-likely .card-stack {
+  height: clamp(360px, 60dvh, 540px);
+}
+
+.mode-shot-dare .shot-slot,
+.mode-shot-dare .shot-dares {
+  height: clamp(360px, 60dvh, 540px);
+}
+
+.mode-shot-dare .shot-controls {
+  width: min(clamp(300px, 46vw, 420px), calc(100vw - 24px));
+}
+
+/* Shots & Dares: a larger description and title */
+.shot-blurb {
+  font-size: 1.02rem;
+  line-height: 1.45;
+}
+
+.mode-shot-dare .card-back .emblem-title {
+  font-size: clamp(1.8rem, 19cqi, 4.4rem);
+}
+
+/* ===== Revisions 6: deck spacing, colour-matched sparkles, larger text, arch animation, how-to rows ===== */
+
+/* Title, caption and decks: room between them */
+.deck-hero {
+  margin-bottom: clamp(10px, 2.2dvh, 22px);
+}
+
+.deck-caption {
+  margin: clamp(14px, 3.2dvh, 30px) 0 0;
+}
+
+.deck-list {
+  margin-top: clamp(18px, 4.2dvh, 40px);
+}
+
+/* The crest and the title sparkles take the selected deck's colour */
+.deck-screen .deck-crest {
+  color: var(--deck-glow);
+}
+
+.deck-screen .deck-hero-title .card-sparkle {
+  background: var(--deck-glow);
+  filter: drop-shadow(0 0 3px var(--deck-glow));
+}
+
+/* Descriptions: responsive size, a softer white */
+.deck-text .mode-desc {
+  max-width: none;
+  font-size: clamp(0.84rem, 2.5vw, 1.12rem);
+  line-height: 1.45;
+  color: rgba(244, 246, 251, 0.8);
+}
+
+/* PLAY: lots of side padding, as the main button of the screen */
+.deck-play {
+  width: min(100%, 520px);
+  padding-left: 72px;
+  padding-right: 72px;
+}
+
+/* Decks: a deeper pile, same width, so each deck looks taller and holds more cards */
+.deck-tile {
+  margin-bottom: 56px;
+}
+
+.deck-tile .deck-card-layer {
+  transform: translateY(calc(var(--layer-idx) * 5px));
+}
+
+/* Who most likely: the hint is larger */
+.mode-most-likely .card-hint-text {
+  font-size: clamp(0.7rem, 4.4cqi, 1rem);
+}
+
+/* Shots & Dares: no pointer cursor on the cards, which are not clickable */
+.mode-shot-dare .game-card,
+.mode-shot-dare .game-card:active {
+  cursor: default;
+}
+
+/* Shots & Dares: the description is responsive to the card and a little larger */
+.shot-blurb {
+  font-size: clamp(0.95rem, 4.4cqi, 1.2rem);
+  line-height: 1.45;
+}
+
+/* The five shot glasses: each rises in turn, ending slightly higher */
+.shot-arch svg {
+  transform: translateY(var(--arch-y, 0px)) rotate(var(--arch-r, 0deg));
+  animation: arch-in 0.7s cubic-bezier(0.2, 0.85, 0.25, 1) both;
+  animation-delay: calc(0.25s + var(--i, 0) * 0.14s);
+}
+
+.shot-arch svg:nth-child(1) { --i: 0; --arch-y: 10px; --arch-r: -16deg; }
+.shot-arch svg:nth-child(2) { --i: 1; --arch-y: 3px; --arch-r: -8deg; }
+.shot-arch svg:nth-child(3) { --i: 2; --arch-y: 0px; --arch-r: 0deg; }
+.shot-arch svg:nth-child(4) { --i: 3; --arch-y: 3px; --arch-r: 8deg; }
+.shot-arch svg:nth-child(5) { --i: 4; --arch-y: 10px; --arch-r: 16deg; }
+
+@keyframes arch-in {
+  from {
+    opacity: 0;
+    transform: translateY(calc(var(--arch-y, 0px) + 12px)) rotate(var(--arch-r, 0deg));
+  }
+  to {
+    opacity: 1;
+    transform: translateY(calc(var(--arch-y, 0px) - 5px)) rotate(var(--arch-r, 0deg));
+  }
+}
+
+/* How to play: rows only show for the screen they were opened from */
+.info-cat[hidden] {
+  display: none !important;
+}
+
+/* ===== Revisions 7: 2-line descriptions, aligned names, bigger emoji, dare selector, buttons ===== */
+
+/* Each deck is a size container, so its description scales with the card and stays on two lines */
+.deck-option {
+  container-type: inline-size;
+}
+
+.deck-text .mode-desc {
+  white-space: nowrap;
+  font-size: clamp(0.9rem, 5.8cqi, 1.3rem);
+  line-height: 1.45;
+}
+
+/* Names: a band of two lines, centred, so the three names line up across the decks */
+.deck-text .mode-name {
+  height: 2.1em;
+  min-height: 0;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.deck-emoji {
+  font-size: 5rem;
+}
+
+@media (min-width: 720px) {
+  .deck-list {
+    grid-template-columns: repeat(3, 270px);
+  }
+
+  .deck-tile {
+    height: 380px;
+  }
+
+  .deck-emoji {
+    font-size: 5.4rem;
+  }
+}
+
+/* Pick a dare: the title in the header font, and the choice */
+.shot-dares-title {
+  font-family: 'Great Vibes', 'Alex Brush', 'Dancing Script', cursive;
+  font-size: clamp(2.2rem, 8vw, 3.4rem);
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 1.05;
+  text-transform: none;
+  color: #ffffff;
+  text-shadow: 0 0 16px rgba(255, 255, 255, 0.25);
+}
+
+/* Each dare card is a sized container, so its emoji can fill it */
+.shot-dare {
+  container-type: size;
+}
+
+/* Gigantic category emoji on the back, filling the card */
+.dare-back-emoji {
+  font-size: min(70cqh, 66cqw);
+  line-height: 1;
+}
+
+.dare-watermark {
+  left: 50%;
+  top: 50%;
+  right: auto;
+  bottom: auto;
+  transform: translate(-50%, -50%) rotate(-8deg);
+  font-size: min(84cqh, 84cqw);
+  line-height: 1;
+  opacity: 0.14;
+}
+
+/* Wide screens: three taller cards in a fan; the chosen one comes to the front */
+.shot-dare-row {
+  height: clamp(340px, 54dvh, 440px);
+}
+
+.shot-dare {
+  height: clamp(300px, 48dvh, 400px);
+}
+
+.shot-dares {
+  height: auto;
+  justify-content: flex-start;
+  gap: 22px;
+}
+
+/* Phones: the three cards stack vertically, one above the next */
+@media (max-width: 719px) {
+  .shot-dare-row {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    height: auto;
+  }
+
+  .shot-dare {
+    position: relative;
+    left: auto;
+    top: auto;
+    width: 100%;
+    height: 132px;
+  }
+
+  .shot-dare.is-revealed {
+    width: 100%;
+  }
+
+  .shot-dare.is-focus:not(.is-revealed) {
+  }
+}
+
+/* Customize and START share the row equally */
+.shot-customise {
+  flex: 0 0 50%;
+}
+
+.shot-actions.is-split .shot-action {
+  flex: 1 1 50%;
+}
+
+/* ===== Revisions 8: wide deck fix, crest glow, card-back descriptions, dare picker ===== */
+
+/* Wide screens: the three decks fill their columns (they had collapsed to their content) */
+@media (min-width: 720px) {
+  .deck-list {
+    grid-template-columns: repeat(3, minmax(0, 270px));
+    justify-items: stretch;
+  }
+
+  .deck-tile {
+    width: 100%;
+  }
+}
+
+/* The crest and the title sparkles glow in the selected deck's colour */
+.deck-screen .crest-diamond {
+  color: var(--deck-glow);
+  filter: drop-shadow(0 0 10px var(--deck-glow));
+}
+
+.deck-screen .deck-hero-title .card-sparkle {
+  filter: drop-shadow(0 0 4px var(--deck-glow)) drop-shadow(0 0 10px var(--deck-glow));
+}
+
+/* Card backs: the description sits between the title and Customize */
+.card-back-emblem {
+  grid-template-rows: 1fr auto auto auto 1fr;
+}
+
+.card-back-emblem > .card-blurb {
+  grid-row: 3;
+  align-self: start;
+  max-width: 100%;
+  margin: clamp(6px, 1.4dvh, 12px) 14px 0;
+  font-size: clamp(0.8rem, 4.2cqi, 1.05rem);
+  line-height: 1.45;
+  color: rgba(244, 246, 251, 0.85);
+  text-align: center;
+  text-shadow: none;
+}
+
+.card-back-emblem > .customise-btn {
+  grid-row: 4;
+}
+
+/* Pick a dare: title with room below it */
+.shot-dares-title {
+  margin: 0 0 clamp(18px, 4dvh, 34px);
+}
+
+/* Each dare card keeps the selector's portrait proportion (the deck tile is 0.756 wide to tall) */
+.shot-dare {
+  container-type: inline-size;
+  aspect-ratio: 0.756;
+  height: auto;
+  width: 44%;
+}
+
+.shot-dare-row {
+  height: clamp(340px, 54dvh, 440px);
+}
+
+.shot-dare:nth-child(1) { --r: -6deg; --x: -56%; --y: 6px; }
+.shot-dare:nth-child(2) { --r: 1deg; --x: 0%; --y: -4px; }
+.shot-dare:nth-child(3) { --r: 7deg; --x: 56%; --y: 8px; }
+
+.shot-dare.is-focus:not(.is-revealed) {
+  z-index: 4;
+}
+
+/* The chosen card comes to the front and centre, a little larger */
+.shot-dare.is-revealed {
+  width: 62%;
+  z-index: 6;
+}
+
+/* The others are blurred and darkened, not faded */
+.shot-dare.is-dimmed {
+  opacity: 1;
+  filter: blur(3px) brightness(0.42);
+  transition: filter 0.4s ease, transform 0.55s cubic-bezier(0.2, 0.85, 0.25, 1), width 0.55s cubic-bezier(0.2, 0.85, 0.25, 1);
+}
+
+/* Front: the sentence, very large, filling the card */
+.shot-dare-front {
+  padding: 16px 14px;
+}
+
+.shot-dare-text {
+  font-size: 12.5cqw;
+  line-height: 1.12;
+  font-weight: 700;
+  hyphens: auto;
+  overflow-wrap: anywhere;
+}
+
+/* Back: the category emoji fills the card */
+.dare-back-emoji {
+  font-size: 74cqw;
+}
+
+/* Phones: the cards overlap like a hand, each one in front of the one above */
+@media (max-width: 719px) {
+  .shot-dare-row {
+    height: 410px;
+  }
+
+  .shot-dare {
+    position: absolute;
+    left: 50%;
+    top: calc(var(--n, 0) * 64px);
+    width: 62%;
+    transform: translateX(-50%) translateY(var(--y, 0px));
+  }
+
+  .shot-dare:nth-child(1) { --n: 0; }
+  .shot-dare:nth-child(2) { --n: 1; }
+  .shot-dare:nth-child(3) { --n: 2; }
+
+  .shot-dare.is-focus:not(.is-revealed) {
+    transform: translateX(-50%) translateY(-8px);
+  }
+
+  .shot-dare.is-revealed {
+    top: 50%;
+    width: 72%;
+    transform: translate(-50%, -50%);
+  }
+}
+
+/* Dare picker: the pill at the bottom, the same style as Who most likely */
+.shot-controls .dare-pill {
+  position: relative;
+  left: auto;
+  bottom: auto;
+  transform: none;
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  padding: 6px;
+}
+
+.shot-controls .dare-pill[hidden] {
+  display: none !important;
+}
+
+.shot-controls .dare-pill .next-arrow {
+  flex: 1 1 0;
+  justify-content: center;
+  height: 44px;
+  font-size: 0.85rem;
+  letter-spacing: 0.14em;
+}
+
+/* ===== Revisions 9: card-back spacing, Indeed key, dare triangle, flip keeps size ===== */
+
+/* Classic and Who's Most Likely cards: more room after the description; Customize sits near Swipe to Reveal */
+.card-back-emblem {
+  grid-template-rows: 1fr auto auto 1fr auto;
+}
+
+.card-back-emblem > .card-blurb {
+  font-size: clamp(0.95rem, 5.4cqi, 1.22rem);
+  margin-top: clamp(10px, 2dvh, 18px);
+}
+
+.card-back-emblem > .customise-btn {
+  grid-row: 5;
+  align-self: end;
+  margin-top: 0;
+  margin-bottom: calc(clamp(12px, 3.4vh, 28px) + 30px);
+}
+
+/* Who's Most Likely: the Indeed key in the bottom pill */
+.next-arrow kbd {
+  margin-left: 6px;
+  padding: 2px 6px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 6px;
+  font: inherit;
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  opacity: 0.8;
+}
+
+.next-arrow.indeed-key {
+  color: #ffd43b;
+}
+
+/* Shots & Dares: the title is larger */
+.shot-dares .shot-dares-title {
+  font-size: clamp(2.8rem, 11vw, 4.8rem);
+}
+
+/* Wide screens: three cards in a fan, a little apart; the chosen one comes to the front and keeps its size */
+.shot-dare {
+  width: 36%;
+}
+
+.shot-dare:nth-child(1) { --x: -112%; --y: 8px; --r: -5deg; }
+.shot-dare:nth-child(2) { --x: 0%; --y: -6px; --r: 0deg; }
+.shot-dare:nth-child(3) { --x: 112%; --y: 8px; --r: 5deg; }
+
+.shot-dare.is-revealed {
+  width: 36%;
+  --x: 0%;
+  --y: -6px;
+  --r: 0deg;
+  z-index: 6;
+}
+
+.shot-dare-text {
+  font-size: 12cqw;
+}
+
+/* Phones: the cards form a triangle, like a hand offering them, with every emoji showing */
+@media (max-width: 719px) {
+  .shot-dare-row {
+    height: 290px;
+  }
+
+  .shot-dare {
+    top: 50%;
+    width: 46%;
+    transform: translate(-50%, -50%) translateX(var(--x, 0%)) translateY(var(--y, 0px)) rotate(var(--r, 0deg));
+  }
+
+  .shot-dare:nth-child(1) { --x: -78%; --y: 14px; --r: -12deg; z-index: 2; }
+  .shot-dare:nth-child(2) { --x: 0%; --y: -22px; --r: 0deg; z-index: 3; }
+  .shot-dare:nth-child(3) { --x: 78%; --y: 14px; --r: 12deg; z-index: 2; }
+
+  .shot-dare.is-focus:not(.is-revealed) {
+    transform: translate(-50%, -50%) translateX(var(--x, 0%)) translateY(calc(var(--y, 0px) - 10px)) rotate(var(--r, 0deg));
+  }
+
+  .shot-dare.is-revealed {
+    width: 46%;
+    --x: 0%;
+    --y: 0px;
+    --r: 0deg;
+    z-index: 6;
+  }
+}
+
+/* Keys shown on the buttons */
+.dare-pill .next-arrow kbd {
+  margin-left: 0;
+}
+
+/* ===== Revisions 10: intro lines stay put, Indeed colour, simple dare stack, larger wide cards ===== */
+
+/* Intro sentences: each line is kept whole, and the size follows the card, so the line breaks stay where they are */
+.card-back-emblem > .card-blurb {
+  white-space: nowrap;
+  font-size: clamp(0.85rem, 5cqi, 1.2rem);
+}
+
+.deck-text .mode-desc {
+  white-space: nowrap;
+  font-size: clamp(0.85rem, 5cqi, 1.25rem);
+}
+
+/* Indeed: 85% white, with its Space badge close beside it */
+.next-arrow.indeed-key {
+  color: rgba(255, 255, 255, 0.85);
+  gap: 3px;
+}
+
+.next-arrow.indeed-key kbd {
+  margin-left: 0;
+}
+
+/* Wide screens: the dares are larger and closer to the viewer. Each card keeps the selector's proportion. */
+@media (min-width: 720px) {
+  .shot-dares {
+    width: min(780px, calc(100vw - 24px));
+  }
+
+  .shot-dare-row {
+    height: clamp(380px, 60dvh, 520px);
+  }
+
+  .shot-dare {
+    width: 34%;
+  }
+}
+
+/* Phones: the three cards stack simply, one above the next. The one picked rises and the others blur. */
+@media (max-width: 719px) {
+  .shot-dare-row {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    height: auto;
+  }
+
+  .shot-dare {
+    position: relative;
+    left: auto;
+    top: auto;
+    width: 100%;
+    height: 120px;
+    aspect-ratio: auto;
+    container-type: size;
+    z-index: 1;
+  }
+
+  .shot-dare.is-focus:not(.is-revealed) {
+    z-index: 4;
+  }
+
+  .shot-dare.is-revealed {
+    z-index: 6;
+  }
+
+  .shot-dare-text {
+    font-size: min(12cqw, 15cqh);
+  }
+
+  .dare-back-emoji {
+    font-size: min(70cqh, 66cqw);
+  }
+}
+
+/* ===== Revisions 11: widescreen key cues, first-card pill, Shots & Dares spacing, picker ===== */
+
+/* Widescreen (1024px and wider): the key cues appear. Narrower screens do not show them. */
+.key-cue,
+.kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 30px;
+  height: 30px;
+  padding: 0 8px;
+  margin-right: 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-soft);
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  vertical-align: middle;
+}
+
+.key-cue {
+  display: none;
+}
+
+.classic-keys {
+  display: none;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: clamp(16px, 3.5dvh, 30px);
+  z-index: 12;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 clamp(20px, 3vw, 44px);
+  pointer-events: none;
+}
+
+.classic-random,
+.classic-keys-right {
+  pointer-events: auto;
+}
+
+.classic-random {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px 6px 6px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 999px;
+  background: rgba(18, 21, 32, 0.72);
+  color: var(--text-soft);
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.classic-random .kbd {
+  margin-right: 8px;
+}
+
+.classic-keys-right {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 999px;
+  background: rgba(18, 21, 32, 0.72);
+  color: var(--text-soft);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.classic-keys-right .kbd {
+  margin-right: 0;
+  min-width: 30px;
+}
+
+@media (min-width: 1024px) {
+  body:not(.mode-most-likely):not(.mode-shot-dare) .classic-keys {
+    display: flex;
+  }
+
+  .key-cue {
+    display: inline-flex;
+  }
+}
+
+/* Who's Most Likely: Indeed is hidden on the first card */
+.next-pill.is-first #pill-indeed {
+  display: none;
+}
+
+/* Shots & Dares buttons: the same letter spacing as the intro's PLAY, and room for the key cue */
+.shot-action {
+  letter-spacing: 0.2em;
+}
+
+/* Wide screens: three cards in a fan, a little overlapping; the picked card grows by 150% in place */
+@media (min-width: 720px) {
+  .shot-dare-row {
+    height: clamp(420px, 62dvh, 560px);
+  }
+
+  .shot-dare:nth-child(1) { --x: -92%; }
+  .shot-dare:nth-child(3) { --x: 92%; }
+
+  .shot-dare.is-revealed {
+    transform: translate(-50%, -50%) scale(1.5);
+    z-index: 6;
+  }
+}
+
+/* Phones: the three cards are padded and tilted at random; the picked one moves to the centre and grows 150% */
+@media (max-width: 719px) {
+  .shot-dare-row {
+    display: block;
+    height: 474px;
+  }
+
+  .shot-dare {
+    position: absolute;
+    left: 50%;
+    top: calc(var(--n, 0) * 162px);
+    width: 70%;
+    height: 150px;
+    aspect-ratio: auto;
+    container-type: size;
+    transform: translateX(-50%) rotate(var(--tilt, 0deg));
+  }
+
+  .shot-dare:nth-child(1) { --n: 0; }
+  .shot-dare:nth-child(2) { --n: 1; }
+  .shot-dare:nth-child(3) { --n: 2; }
+
+  .shot-dare.is-focus:not(.is-revealed) {
+    transform: translateX(-50%) translateY(-8px) rotate(var(--tilt, 0deg));
+    z-index: 4;
+  }
+
+  .shot-dare.is-revealed {
+    top: 50%;
+    transform: translate(-50%, -50%) scale(1.5);
+    z-index: 6;
+  }
+}
+
+/* ===== Revisions 12: dare cards centred and tilted on phones ===== */
+@media (max-width: 719px) {
+  .shot-dare-row {
+    position: relative;
+    display: block;
+    height: 474px;
+  }
+
+  /* Each card is centred on the row, then tilted at its own random angle, as if laid on a table */
+  .shot-dare {
+    position: absolute;
+    left: 50%;
+    top: calc(var(--n, 0) * 162px);
+    width: 70%;
+    height: 150px;
+    aspect-ratio: auto;
+    container-type: size;
+    transform: translateX(-50%) rotate(var(--tilt, 0deg));
+    z-index: 1;
+  }
+
+  .shot-dare.is-focus:not(.is-revealed) {
+    transform: translateX(-50%) translateY(-8px) rotate(var(--tilt, 0deg));
+    z-index: 4;
+  }
+
+  /* The picked card comes to the centre of the row and grows by 150%, keeping its proportions */
+  .shot-dare.is-revealed {
+    top: 50%;
+    transform: translate(-50%, -50%) scale(1.5);
+    z-index: 6;
+  }
+}
+
+/* ===== Revisions 13: key cues before labels, aligned buttons, pick again ===== */
+
+/* Key cues: before the label, in capitals, widescreen only (1024px and wider) */
+.next-arrow .key-cue,
+.next-arrow kbd.key-cue,
+.deck-play .key-cue,
+.shot-action .key-cue,
+.key-cue {
+  display: none;
+  margin: 0 10px 0 0;
+  padding: 0 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.7rem;
+  opacity: 0.9;
+}
+
+@media (min-width: 1024px) {
+  .next-arrow .key-cue,
+  .next-arrow kbd.key-cue,
+  .deck-play .key-cue,
+  .shot-action .key-cue,
+  .key-cue {
+    display: inline-flex;
+  }
+}
+
+/* Buttons: label and key cue share one centre line */
+.next-arrow,
+.shot-action,
+.deck-play,
+.classic-random,
+.dare-again {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.shot-action,
+.deck-play {
+  display: flex;
+}
+
+.shot-action .key-cue,
+.deck-play .key-cue {
+  margin-right: 12px;
+}
+
+.dare-pill .next-arrow {
+  display: flex;
+}
+
+/* Pick a dare: the picked card's button to choose again */
+.shot-dare .dare-again {
+  display: none;
+  position: absolute;
+  left: 50%;
+  bottom: 12px;
+  z-index: 3;
+  transform: translateX(-50%);
+  align-items: center;
+  justify-content: center;
+  padding: 7px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  background: rgba(18, 21, 32, 0.85);
+  color: #ffffff;
+  font: inherit;
+  font-size: clamp(0.55rem, 3.4cqw, 0.8rem);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.shot-dare.is-revealed .dare-again {
+  display: inline-flex;
+}
+
+.dare-again .again-long {
+  display: inline;
+}
+
+.dare-again .again-short {
+  display: none;
+}
+
+@media (max-width: 719px) {
+  .dare-again .again-long {
+    display: none;
+  }
+
+  .dare-again .again-short {
+    display: inline;
+  }
+}
+
+.shot-dare .shot-dare-front {
+  position: absolute;
 }
