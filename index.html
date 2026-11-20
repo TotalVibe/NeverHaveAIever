@@ -27,7 +27,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Baumans&family=Dancing+Script:wght@700&family=Elsie+Swash+Caps:wght@400;900&family=Great+Vibes&display=swap" rel="stylesheet">
   <meta name="description" content="A party game for hilarious confessions, wild stories, and unforgettable nights.">
-  <link rel="stylesheet" href="style.css?v=103">
+  <link rel="stylesheet" href="style.css?v=106">
 </head>
 <body>
 
@@ -115,32 +115,40 @@
           <button class="shot-dare" type="button" aria-label="Dare card 1">
             <span class="shot-dare-inner">
               <span class="dare-frame" aria-hidden="true"></span>
-              <span class="shot-dare-back" aria-hidden="true">?</span>
+              <span class="shot-dare-back" aria-hidden="true"><span class="dare-back-emoji"></span></span>
               <span class="shot-dare-front"><span class="dare-frame" aria-hidden="true"></span><span class="dare-watermark" aria-hidden="true">🥴</span><span class="shot-dare-text"></span></span>
             </span>
           </button>
           <button class="shot-dare" type="button" aria-label="Dare card 2">
             <span class="shot-dare-inner">
               <span class="dare-frame" aria-hidden="true"></span>
-              <span class="shot-dare-back" aria-hidden="true">?</span>
+              <span class="shot-dare-back" aria-hidden="true"><span class="dare-back-emoji"></span></span>
               <span class="shot-dare-front"><span class="dare-frame" aria-hidden="true"></span><span class="dare-watermark" aria-hidden="true">🥴</span><span class="shot-dare-text"></span></span>
             </span>
           </button>
           <button class="shot-dare" type="button" aria-label="Dare card 3">
             <span class="shot-dare-inner">
               <span class="dare-frame" aria-hidden="true"></span>
-              <span class="shot-dare-back" aria-hidden="true">?</span>
+              <span class="shot-dare-back" aria-hidden="true"><span class="dare-back-emoji"></span></span>
               <span class="shot-dare-front"><span class="dare-frame" aria-hidden="true"></span><span class="dare-watermark" aria-hidden="true">🥴</span><span class="shot-dare-text"></span></span>
             </span>
           </button>
         </div>
       </div>
-      <div class="shot-controls">
+    </div>
+
+    <!-- Shots & Dares: CUSTOMIZE and START, pinned to the bottom of the screen -->
+    <div class="shot-controls">
         <div class="shot-actions" id="shot-actions">
-          <button class="shot-customise" id="shot-customise" type="button">Customize</button>
+          <button class="customise-btn shot-customise" id="shot-customise" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 2.8 13.9 9l6.3 2-6.3 2-1.9 6.2L10.1 13 3.8 11l6.3-2L12 2.8Z" />
+              <path d="m19 14 .9 2.4 2.3.8-2.3.8L19 20.5l-.8-2.5-2.4-.8 2.4-.8.8-2.4Z" />
+            </svg>
+            <span>CUSTOMIZE</span>
+          </button>
           <button class="btn-primary shot-action" id="shot-action" type="button">START</button>
         </div>
-      </div>
     </div>
 
     <!-- Who most likely: minimal arrows at the bottom right, same as a swipe left or right -->
@@ -329,7 +337,6 @@
             <span class="deck-text">
               <span class="mode-name">Classic</span>
               <span class="mode-desc">Questions from four categories, one card at a time.</span>
-              <span class="mode-how">Swipe or tap a category to move on. Turn the intensity up as the night goes.</span>
             </span>
           </div>
         </div>
@@ -339,9 +346,8 @@
             <span class="deck-frame" aria-hidden="true"></span>
             <span class="deck-emoji" aria-hidden="true">🎯</span>
             <span class="deck-text">
-              <span class="mode-name">Who most likely</span>
+              <span class="mode-name">Who Most<br>Likely</span>
               <span class="mode-desc">Point at your friends and see who fits best.</span>
-              <span class="mode-how">Read the card out loud, everyone points at who fits, then swipe or press space to go on.</span>
             </span>
           </div>
         </div>
@@ -351,9 +357,8 @@
             <span class="deck-frame" aria-hidden="true"></span>
             <span class="deck-emoji" aria-hidden="true">🍶</span>
             <span class="deck-text">
-              <span class="mode-name">Shots &amp; Dares</span>
-              <span class="mode-desc">Sentences keep coming. The first to drink 5 shots picks a dare.</span>
-              <span class="mode-how">Take a shot when a sentence fits you. Tap SOMEONE DID IT ALL at 5 shots, then pick one of three dares.</span>
+              <span class="mode-name">Shots &amp;<br>Dares</span>
+              <span class="mode-desc">Take a shot when it fits, and the one who reaches 5 shots chooses their fate.</span>
             </span>
           </div>
         </div>
@@ -426,6 +431,6 @@
     </div>
   </div>
 
-  <script type="module" src="app.js?v=62"></script>
+  <script type="module" src="app.js?v=64"></script>
 </body>
 </html>

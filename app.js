@@ -1,13 +1,13 @@
-import { CATEGORIES, QUESTIONS, SPICY_QUESTION_LEVELS, SHOT_DARES } from './questions.js?v=10';
+import { CATEGORIES, QUESTIONS, SPICY_QUESTION_LEVELS, SHOT_DARES, DARE_CATEGORIES } from './questions.js?v=11';
 import { sounds } from './sound.js?v=4';
 import { ConfettiEngine } from './confetti.js';
 
 // Pacing for classic and who-most-likely cards, in milliseconds. Raise these to slow the deck down.
 const GAME_PACE = {
-  exitMs: 700,       // the card flies off
-  slideMs: 650,      // the next card slides into the middle
-  flipDelayMs: 320,  // pause after the next card lands before it turns over
-  cooldownMs: 800    // after the flip, the next swipe waits this long
+  exitMs: 520,       // the card flies off
+  slideMs: 460,      // the next card slides into the middle
+  flipDelayMs: 100,  // the next card turns over
+  cooldownMs: 0      // no extra wait: swipes can follow quickly
 };
 const MOST_LIKELY_CATEGORY = {
   id: 'most-likely',
@@ -54,7 +54,7 @@ const DONE_IT_REACTION_IMAGES = {
 };
 // Fluent Emoji 3D artwork (MIT License, Microsoft Corporation; see THIRD_PARTY_LICENSES.md).
 // Emoji without a file here stay as text.
-const FLUENT_CODES = new Set(['1F319', '1F346', '1F351', '1F354', '1F355', '1F370', '1F374', '1F37A', '1F37B', '1F3A4', '1F3A5', '1F3A7', '1F3AA', '1F3AB', '1F3B2', '1F3B9', '1F3CA', '1F3D3', '1F3E0', '1F3EB', '1F446', '1F446_1F3FB', '1F446_1F3FC', '1F446_1F3FD', '1F446_1F3FE', '1F446_1F3FF', '1F44B', '1F451', '1F457', '1F45A', '1F45E', '1F465', '1F468', '1F47B', '1F480', '1F483', '1F48A', '1F48B', '1F48E', '1F494', '1F4A5', '1F4A8', '1F4A9', '1F4AC', '1F4B3', '1F4B8', '1F4BB', '1F4BC', '1F4DA', '1F4DD', '1F4DE', '1F4E2', '1F4E7', '1F4F1', '1F4F2', '1F504', '1F50D', '1F511', '1F51E', '1F525', '1F57A', '1F607', '1F608', '1F60E', '1F610', '1F633', '1F634', '1F648', '1F64B', '1F695', '1F6A6', '1F6A8', '1F6AA', '1F6AB', '1F6BB', '1F6CC', '1F918', '1F925', '1F927', '1F92A', '1F92F', '1F938', '1F943', '1F94A', '1F964', '1F973', '1F984', '1F9A0', '1F9B6', '1F9B7', '1F9E5', '1F9E9', '1F9ED', '1F9F9', '1FA9E', '1FAA2', '1FAAA', '2615']);
+const FLUENT_CODES = new Set(['1F319', '1F346', '1F351', '1F354', '1F355', '1F370', '1F374', '1F37A', '1F37B', '1F3A4', '1F3A5', '1F3A7', '1F3AA', '1F3AB', '1F3B2', '1F3B9', '1F3CA', '1F3D3', '1F3E0', '1F3EB', '1F446', '1F446_1F3FB', '1F446_1F3FC', '1F446_1F3FD', '1F446_1F3FE', '1F446_1F3FF', '1F44B', '1F451', '1F457', '1F45A', '1F45E', '1F465', '1F468', '1F47B', '1F480', '1F483', '1F48A', '1F48B', '1F48E', '1F494', '1F4A5', '1F4A8', '1F4A9', '1F4AC', '1F4B3', '1F4B8', '1F4BB', '1F4BC', '1F4DA', '1F4DD', '1F4DE', '1F4E2', '1F4E7', '1F4F1', '1F4F2', '1F504', '1F50D', '1F511', '1F51E', '1F525', '1F57A', '1F607', '1F608', '1F60E', '1F610', '1F633', '1F634', '1F648', '1F64B', '1F695', '1F6A6', '1F6A8', '1F6AA', '1F6AB', '1F6BB', '1F6CC', '1F918', '1F925', '1F927', '1F92A', '1F92F', '1F938', '1F943', '1F94A', '1F964', '1F973', '1F974', '1F984', '1F9A0', '1F9B6', '1F9B7', '1F9E5', '1F9E9', '1F9ED', '1F9F9', '1FA9E', '1FAA2', '1FAAA', '2615']);
 const SKIN_TONE_HEX = new Set(['1F3FB', '1F3FC', '1F3FD', '1F3FE', '1F3FF']);
 
 // Turns emoji text into markup, using artwork where a file exists.
@@ -122,6 +122,8 @@ class NeverHaveIEverApp {
     this.dareBag = [];
     this.restartWithShuffle = false;
     this.afterCheers = null;
+    this.dareFocus = 1;
+    this.currentDare = null;
 
     // State
     this.activeCardCategory = 'spicy';
@@ -282,7 +284,7 @@ class NeverHaveIEverApp {
     return sources.flatMap(([category, list]) => list.map((item) => {
       const text = typeof item === 'string' ? item : item.text;
       const emoji = typeof item === 'string' ? undefined : item.emoji;
-      return { text: toMostLikely(text), emoji: emoji ?? this.getCategoryEmoji(category), tagName: this.getCardCategoryName(category) };
+      return { text: toMostLikely(text), emoji: emoji ?? this.getCategoryEmoji(category), tagName: this.getCardCategoryName(category), source: category };
     }));
   }
 
@@ -303,9 +305,9 @@ class NeverHaveIEverApp {
 
     // Normalize: allow per-question { text, emoji } objects (cringe) or plain strings (other categories)
     if (chosenQuestion && typeof chosenQuestion === 'object') {
-      return { text: chosenQuestion.text, emoji: chosenQuestion.emoji, tagName: chosenQuestion.tagName };
+      return { text: chosenQuestion.text, emoji: chosenQuestion.emoji, tagName: chosenQuestion.tagName, source: chosenQuestion.source };
     }
-    return { text: chosenQuestion, emoji: undefined, tagName: undefined };
+    return { text: chosenQuestion, emoji: undefined, tagName: undefined, source: undefined };
   }
 
   // Back button (Android and browsers): closes an open pop-up, otherwise undoes the last card.
@@ -357,6 +359,9 @@ class NeverHaveIEverApp {
     if (howToPlayCustomise) {
       this.addBorderSparkles(howToPlayCustomise, { inset: 3, count: 6, sizeMin: 5, sizeRange: 3, durMin: 7, durRange: 4 });
     }
+    document.querySelectorAll('.shot-customise').forEach((el) => {
+      this.addBorderSparkles(el, { inset: 3, count: 6, sizeMin: 5, sizeRange: 3, durMin: 7, durRange: 4 });
+    });
     this.targetIntroTimer = setTimeout(() => this.revealTargetButtons(), 2000);
     this.updateAmbientGlow(this.activeCardCategory);
     this.bindIdleHintEvents();
@@ -523,9 +528,9 @@ class NeverHaveIEverApp {
 
     clearTimeout(this.idleHintTimer);
     this.activeCard.classList.remove('hint-visible');
-    const reactionKey = this.activeCard.dataset.category === 'spicy'
-      ? this.spicyLevel
-      : this.activeCard.dataset.category;
+    // The cheers follow the category the sentence came from (Who most likely draws from every deck)
+    const source = this.activeCard.dataset.sourceCategory || this.activeCard.dataset.category;
+    const reactionKey = source === 'spicy' ? this.spicyLevel : source;
     this.startCheers(reactionKey);
   }
 
@@ -662,6 +667,7 @@ class NeverHaveIEverApp {
       text: this.activeCard.dataset.fullText,
       emoji: this.activeCard.dataset.cardEmoji,
       tagName: this.activeCard.dataset.tagName,
+      sourceCategory: this.activeCard.dataset.sourceCategory,
       exitDirection: this.activeCard.dataset.exitDirection,
       faceDown: this.activeCard.classList.contains('face-down'),
       doneIt: this.activeCard.dataset.doneIt === 'true'
@@ -975,7 +981,7 @@ class NeverHaveIEverApp {
   emblemFooterMarkup() {
     if (this.gameMode === 'shot-dare') {
       return `<div class="shot-arch" aria-hidden="true">${SHOT_GLASS_SVG.repeat(5)}</div>
-              <p class="shot-blurb">Take a shot when a sentence fits you. Whoever reaches 5 shots picks a dare.</p>`;
+              <p class="shot-blurb">Take a shot when it fits, and the one who reaches 5 shots chooses their fate.</p>`;
     }
     return '<div class="emblem-sub">Swipe to Reveal</div>';
   }
@@ -999,6 +1005,7 @@ class NeverHaveIEverApp {
     const cardEmoji = data.emoji ?? question.emoji ?? this.getCategoryEmoji(data.category);
     card.dataset.cardEmoji = cardEmoji;
     card.dataset.tagName = question.tagName ?? data.tagName ?? '';
+    card.dataset.sourceCategory = question.source ?? data.sourceCategory ?? data.category;
     card.style.setProperty('--card-emoji', cardEmoji);
 
     const cleanQuestion = question.text.replace(/^Never have I ever /i, '');
@@ -1334,6 +1341,7 @@ class NeverHaveIEverApp {
       text: this.activeCard.dataset.fullText,
       emoji: this.activeCard.dataset.cardEmoji,
       tagName: this.activeCard.dataset.tagName,
+      sourceCategory: this.activeCard.dataset.sourceCategory,
       exitDirection: this.activeCard.dataset.exitDirection,
       faceDown: this.activeCard.classList.contains('face-down'),
       doneIt: this.activeCard.dataset.doneIt === 'true'
@@ -1398,6 +1406,8 @@ class NeverHaveIEverApp {
       nextCard.dataset.fullText = newQuestion.text;
       const nextCardEmoji = newQuestion.emoji ?? this.getCategoryEmoji(nextCategory);
       nextCard.dataset.cardEmoji = nextCardEmoji;
+      nextCard.dataset.tagName = newQuestion.tagName ?? '';
+      nextCard.dataset.sourceCategory = newQuestion.source ?? nextCategory;
       nextCard.style.setProperty('--card-emoji', nextCardEmoji);
       nextCard.style.setProperty('--active-card-color', cat.color);
       nextCard.style.setProperty('--active-card-glow', cat.glow);
@@ -1726,12 +1736,23 @@ class NeverHaveIEverApp {
   showShotDares() {
     // One dare is drawn for the round. The three cards are for show: whichever is picked reveals it.
     const dare = this.drawDare();
+    this.currentDare = dare;
+    const category = DARE_CATEGORIES[dare.category] ?? DARE_CATEGORIES.silly;
     this.shotDareCards.forEach((card) => {
       card.classList.remove('is-revealed', 'is-dimmed');
       card.disabled = false;
-      card.querySelector('.shot-dare-text').textContent = dare;
+      card.querySelector('.shot-dare-text').textContent = dare.text;
+      card.querySelector('.dare-back-emoji').innerHTML = emojiMarkup(category.emoji);
     });
     this.setShotPhase('dare');
+    this.setDareFocus(1);
+  }
+
+  // Moves the highlight between the three dare cards (arrow keys, or a swipe on phones)
+  setDareFocus(index) {
+    const count = this.shotDareCards.length;
+    this.dareFocus = (index + count) % count;
+    this.shotDareCards.forEach((card, i) => card.classList.toggle('is-focus', i === this.dareFocus));
   }
 
   chooseShotDare(card) {
@@ -2046,6 +2067,22 @@ class NeverHaveIEverApp {
       this.soundToggleBtn.click();
     });
     window.addEventListener('resize', () => this.positionDeckTrack());
+    // Phones: swipe sideways on the decks to change the selection
+    const deckTrack = this.modeModal.querySelector('.deck-list');
+    let deckStartX = null;
+    deckTrack.addEventListener('pointerdown', (e) => { deckStartX = e.clientX; });
+    deckTrack.addEventListener('pointercancel', () => { deckStartX = null; });
+    deckTrack.addEventListener('pointerup', (e) => {
+      if (deckStartX === null) return;
+      const dx = e.clientX - deckStartX;
+      deckStartX = null;
+      if (Math.abs(dx) < 40) return;
+      const index = DECK_ORDER.indexOf(this.pendingMode);
+      const next = Math.min(DECK_ORDER.length - 1, Math.max(0, index + (dx < 0 ? 1 : -1)));
+      this.pendingMode = DECK_ORDER[next];
+      this.syncModeOptions();
+      sounds.playClick();
+    });
     this.modeModal.querySelector('.deck-play').addEventListener('click', () => {
       sounds.init();
       sounds.playClick();
@@ -2068,6 +2105,20 @@ class NeverHaveIEverApp {
     this.shotAction.addEventListener('click', () => this.shotPrimaryAction());
     this.shotDareCards.forEach((card) => {
       card.addEventListener('click', () => this.chooseShotDare(card));
+    });
+    // Swipe sideways across the dares to move the highlight
+    const dareRow = this.shotDares.querySelector('.shot-dare-row');
+    let dareStartX = null;
+    dareRow.addEventListener('pointerdown', (e) => { dareStartX = e.clientX; });
+    dareRow.addEventListener('pointercancel', () => { dareStartX = null; });
+    dareRow.addEventListener('pointerup', (e) => {
+      if (dareStartX === null || this.shotPhase !== 'dare') {
+        dareStartX = null;
+        return;
+      }
+      const dx = e.clientX - dareStartX;
+      dareStartX = null;
+      if (Math.abs(dx) >= 40) this.setDareFocus(this.dareFocus + (dx < 0 ? 1 : -1));
     });
 
     // Customise: intensity slider and names, audience choices, and the backdrop
@@ -2234,6 +2285,16 @@ class NeverHaveIEverApp {
       }
 
       if (this.gameMode === 'shot-dare') {
+        if (this.shotPhase === 'dare') {
+          if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+            e.preventDefault();
+            this.setDareFocus(this.dareFocus + (e.key === 'ArrowRight' ? 1 : -1));
+          } else if (e.key === ' ' || e.key === 'Enter') {
+            e.preventDefault();
+            this.chooseShotDare(this.shotDareCards[this.dareFocus]);
+          }
+          return;
+        }
         if (e.key === ' ' || e.key === 'Enter') {
           e.preventDefault();
           this.shotPrimaryAction();
