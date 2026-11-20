@@ -5268,7 +5268,7 @@ body.unhinged-screen-shake {
 }
 
 .deck-tile {
-  height: clamp(230px, 40dvh, 340px);
+  height: clamp(240px, 42dvh, 350px);
   margin-bottom: clamp(20px, 4dvh, 56px);
 }
 
@@ -5278,7 +5278,7 @@ body.unhinged-screen-shake {
 }
 
 .deck-emoji {
-  font-size: clamp(2.4rem, 7.4dvh, 6rem);
+  font-size: clamp(3.5rem, 11.5dvh, 6.4rem);
 }
 
 .deck-text .mode-name {
@@ -5339,5 +5339,31 @@ body.unhinged-screen-shake {
 @media (max-width: 719px) {
   .mode-shot-dare .shot-wrap {
     transform: translateY(-100px);
+  }
+}
+
+/* ===== Screen Fade to Black Transition Curtain ===== */
+.screen-fade-curtain {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  background-color: #06070c;
+  z-index: 99999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: opacity;
+}
+
+.screen-fade-curtain.is-faded {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .screen-fade-curtain {
+    transition-duration: 0.05s;
   }
 }

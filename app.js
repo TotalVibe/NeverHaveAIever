@@ -138,6 +138,7 @@ class NeverHaveIEverApp {
     this.pendingMode = 'classic';
     this.setupStep = false;
     this.setupDone = false;
+    this.isScreenFading = false;
     this.shotPhase = 'idle';
     this.shotTimers = [];
     this.dareBag = [];
@@ -329,30 +330,76 @@ class NeverHaveIEverApp {
     return { text: chosenQuestion, emoji: undefined, tagName: undefined, source: undefined };
   }
 
-  // Back button (Android and browsers): closes an open pop-up, otherwise undoes the last card.
-  // Once there is nothing left to undo, back leaves the app as usual.
+  // Back button (Android and mobile browsers): closes pop-ups, returns to home screen from games.
   setupBackButton() {
-    const arm = () => history.pushState({ backGuard: true }, '');
-    arm();
+    try {
+      history.replaceState({ screen: 'home' }, '');
+    } catch (_) {}
+
     window.addEventListener('popstate', () => {
       if (this.ageGateActive) return; // on the age question, back leaves the app
-      if (this.modeModal.classList.contains('active')) return; // so does the mode screen
-      const openClose = document.querySelector('.modal-overlay.active .modal-close');
-      if (openClose) {
-        openClose.click();
-        arm();
+      if (this.modeModal.classList.contains('active')) return; // on home screen, back leaves the app
+
+      // If in the optional first-time setup popup, return to the deck screen
+      if (this.setupStep && this.customiseModal.classList.contains('active')) {
+        this.setupStep = false;
+        this.customiseModal.classList.remove('active', 'is-setup');
+        this.returnFlippedPanel({ animate: false });
+        this.openModeSelect();
         return;
       }
-      // Shot dare has no cards to undo
-      if (this.gameMode === 'shot-dare') {
-        arm();
+
+      // If an overlay popup is open (customise from in-game, info modal, etc.), close it first
+      const openModal = document.querySelector('.modal-overlay.active:not(#mode-modal)');
+      if (openModal) {
+        const closeBtn = openModal.querySelector('.modal-close');
+        if (closeBtn) closeBtn.click();
+        else openModal.classList.remove('active');
+        try {
+          history.pushState({ screen: 'game', mode: this.gameMode }, '');
+        } catch (_) {}
         return;
       }
-      if (this.cardHistory.length > 0) {
-        if (!this.isAnimating && !this.isCelebrating) this.undoLastCard();
-        arm();
-      }
+
+      // When inside any game, pressing BACK returns to the home screen
+      this.goHome();
     });
+  }
+
+  // Soft and quick fade-to-black screen transition
+  fadeTransition(action, onComplete) {
+    if (this.isScreenFading) {
+      if (typeof action === 'function') action();
+      if (typeof onComplete === 'function') onComplete();
+      return;
+    }
+    const curtain = document.getElementById('screen-fade-curtain');
+    if (!curtain) {
+      if (typeof action === 'function') action();
+      if (typeof onComplete === 'function') onComplete();
+      return;
+    }
+
+    this.isScreenFading = true;
+    curtain.classList.add('is-faded');
+
+    // Peak black reached (180ms)
+    setTimeout(() => {
+      try {
+        if (typeof action === 'function') action();
+      } catch (err) {
+        console.error(err);
+      }
+
+      // Soft dissolve out from black (200ms)
+      requestAnimationFrame(() => {
+        curtain.classList.remove('is-faded');
+        setTimeout(() => {
+          this.isScreenFading = false;
+          if (typeof onComplete === 'function') onComplete();
+        }, 220);
+      });
+    }, 180);
   }
 
   init() {
@@ -843,10 +890,15 @@ class NeverHaveIEverApp {
       </div>`;
     front.querySelector('.age-gate-yes').addEventListener('click', () => {
       this.saveAgeConfirmed();
-      this.ageGateActive = false;
       sounds.init();
-      // Next: pick a game. Its start shuffles the deck, so the right cards get dealt
-      this.openModeSelect();
+      sounds.playClick();
+      this.fadeTransition(() => {
+        this.ageGateActive = false;
+        const ageCard = this.stackContainer.querySelector('.age-gate-card');
+        if (ageCard) ageCard.remove();
+        // Next: pick a game. Its start shuffles the deck, so the right cards get dealt
+        this.openModeSelect();
+      });
     });
 
     front.querySelector('.age-gate-no').addEventListener('click', () => {
@@ -1577,7 +1629,10 @@ class NeverHaveIEverApp {
   // Home: back to the deck screen. Choosing a deck brings the customise step again.
   goHome() {
     if (this.isCelebrating) return;
-    this.openModeSelect();
+    if (this.modeModal.classList.contains('active')) return;
+    this.fadeTransition(() => {
+      this.openModeSelect();
+    });
   }
 
   // Restart: the same game from the beginning, without the customise step
@@ -1612,6 +1667,11 @@ class NeverHaveIEverApp {
     this.modeModal.classList.add('active');
     this.positionDeckTrack();
     this.modeModal.querySelector('.mode-option[aria-pressed="true"]')?.focus({ preventScroll: true });
+    try {
+      if (history.state?.screen === 'game') {
+        history.replaceState({ screen: 'home' }, '');
+      }
+    } catch (_) {}
   }
 
   syncModeOptions() {
@@ -1637,14 +1697,19 @@ class NeverHaveIEverApp {
 
   // Deck chosen: the customise pop-up comes next as an optional step
   chooseMode() {
-    this.modeModal.classList.remove('active');
     // The customise step is asked once; after that, choosing a game goes straight in
     if (this.setupDone) {
-      this.startGame(this.pendingMode);
+      this.fadeTransition(() => {
+        this.modeModal.classList.remove('active');
+        this.startGame(this.pendingMode);
+      });
       return;
     }
-    this.setupStep = true;
-    this.openCustomiseModal({ from: 'setup' });
+    this.fadeTransition(() => {
+      this.modeModal.classList.remove('active');
+      this.setupStep = true;
+      this.openCustomiseModal({ from: 'setup' });
+    });
   }
 
   // Ends the optional setup, whether the player saved or skipped it, and starts the chosen game
@@ -1653,7 +1718,9 @@ class NeverHaveIEverApp {
     this.setupDone = true;
     this.customiseModal.classList.remove('active', 'is-setup');
     this.returnFlippedPanel({ animate: false });
-    this.startGame(this.pendingMode);
+    this.fadeTransition(() => {
+      this.startGame(this.pendingMode);
+    });
   }
 
   // Who's Most Likely: the first card has only Undo and Next; Indeed appears once a card has been passed
@@ -1684,6 +1751,12 @@ class NeverHaveIEverApp {
     this.setLevelUpTargetMode(false);
     Object.values(this.usedQuestions).forEach(used => used.clear());
     this.activeCardCategory = mode === 'most-likely' ? 'most-likely' : 'spicy';
+
+    try {
+      if (!history.state || history.state.screen !== 'game') {
+        history.pushState({ screen: 'game', mode }, '');
+      }
+    } catch (_) {}
 
     if (mode === 'shot-dare') {
       this.setAmbientGlow('rgba(255, 45, 117, 0.45)');
@@ -2120,13 +2193,40 @@ class NeverHaveIEverApp {
       closeCustomiseModal();
     });
 
-    // Deck screen: tap a deck to select it; PLAY in the footer starts the setup
+    // Deck screen: tap to preview, double click or double tap to select and enter
+    let lastDeckTapTime = 0;
+    let lastDeckTapMode = null;
+
     this.modeModal.querySelectorAll('.mode-option').forEach((option) => {
-      option.addEventListener('click', () => {
+      const selectDeck = (isDouble) => {
         this.pendingMode = option.dataset.mode;
         this.syncModeOptions();
         sounds.init();
         sounds.playClick();
+        if (isDouble) {
+          this.chooseMode();
+        }
+      };
+
+      option.addEventListener('click', () => {
+        const now = Date.now();
+        const mode = option.dataset.mode;
+        const isDouble = (now - lastDeckTapTime < 450) && (lastDeckTapMode === mode);
+        if (isDouble) {
+          lastDeckTapTime = 0;
+          lastDeckTapMode = null;
+          selectDeck(true);
+        } else {
+          lastDeckTapTime = now;
+          lastDeckTapMode = mode;
+          selectDeck(false);
+        }
+      });
+
+      option.addEventListener('dblclick', (e) => {
+        e.preventDefault();
+        if (!this.modeModal.classList.contains('active')) return;
+        selectDeck(true);
       });
     });
     document.getElementById('deck-info-btn').addEventListener('click', () => {
