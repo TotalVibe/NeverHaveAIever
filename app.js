@@ -23,8 +23,28 @@ const GAME_MODE_LABELS = {
 };
 // Shot dare: how long each sentence stays on screen before the next one appears
 const SHOT_SENTENCE_MS = 6000;
+// The Space key cue shown on the widescreen buttons
+const KEY_CUE = '<kbd class="key-cue">SPACE</kbd>';
 // Order of the deck screen, left to right
 const DECK_ORDER = ['classic', 'most-likely', 'shot-dare'];
+// Each deck's colour: the deck screen glows in the colour of the selected deck
+const DECK_COLORS = { classic: '#9b5de5', 'most-likely': '#ffd43b', 'shot-dare': '#ff2d75' };
+// How-to-play text for each context: the deck screen, or the game being played
+const INFO_TEXT = {
+  tap: {
+    deck: 'Swipe sideways across the decks, or tap one. PLAY starts the game.',
+    classic: 'Press an emoji button, or drag the card toward one.',
+    'most-likely': 'Swipe the card in any direction to go on. Use the arrows and Indeed at the bottom.',
+    'shot-dare': 'Tap the buttons below the card. Pick a dare by tapping or swiping the three cards.'
+  },
+  keys: {
+    deck: '← → choose a game, Enter or Space to play.',
+    classic: 'Arrow keys (↑ Spicy, ← Cringe, → Party, ↓ Wholesome), Spacebar to shuffle, Z to undo.',
+    'most-likely': '→ goes on, ← undoes, Space is Indeed. ↑ and ↓ do nothing.',
+    'shot-dare': 'Enter or Space presses the button, ← → picks a dare, Enter or Space reveals it.'
+  }
+};
+
 // Five small white shot glasses for the Shots & Dares card back
 const SHOT_GLASS_SVG = '<svg viewBox="0 0 24 24"><path d="M5 4h14l-2 17H7z" /><path d="M6.3 9.5h11.4" /></svg>';
 
@@ -54,7 +74,7 @@ const DONE_IT_REACTION_IMAGES = {
 };
 // Fluent Emoji 3D artwork (MIT License, Microsoft Corporation; see THIRD_PARTY_LICENSES.md).
 // Emoji without a file here stay as text.
-const FLUENT_CODES = new Set(['1F319', '1F346', '1F351', '1F354', '1F355', '1F370', '1F374', '1F37A', '1F37B', '1F3A4', '1F3A5', '1F3A7', '1F3AA', '1F3AB', '1F3B2', '1F3B9', '1F3CA', '1F3D3', '1F3E0', '1F3EB', '1F446', '1F446_1F3FB', '1F446_1F3FC', '1F446_1F3FD', '1F446_1F3FE', '1F446_1F3FF', '1F44B', '1F451', '1F457', '1F45A', '1F45E', '1F465', '1F468', '1F47B', '1F480', '1F483', '1F48A', '1F48B', '1F48E', '1F494', '1F4A5', '1F4A8', '1F4A9', '1F4AC', '1F4B3', '1F4B8', '1F4BB', '1F4BC', '1F4DA', '1F4DD', '1F4DE', '1F4E2', '1F4E7', '1F4F1', '1F4F2', '1F504', '1F50D', '1F511', '1F51E', '1F525', '1F57A', '1F607', '1F608', '1F60E', '1F610', '1F633', '1F634', '1F648', '1F64B', '1F695', '1F6A6', '1F6A8', '1F6AA', '1F6AB', '1F6BB', '1F6CC', '1F918', '1F925', '1F927', '1F92A', '1F92F', '1F938', '1F943', '1F94A', '1F964', '1F973', '1F974', '1F984', '1F9A0', '1F9B6', '1F9B7', '1F9E5', '1F9E9', '1F9ED', '1F9F9', '1FA9E', '1FAA2', '1FAAA', '2615']);
+const FLUENT_CODES = new Set(['1F319', '1F346', '1F351', '1F354', '1F355', '1F370', '1F374', '1F37A', '1F37B', '1F3A4', '1F3A5', '1F3A7', '1F3AA', '1F3AB', '1F3B2', '1F3B9', '1F3CA', '1F3D3', '1F3E0', '1F3EB', '1F446', '1F446_1F3FB', '1F446_1F3FC', '1F446_1F3FD', '1F446_1F3FE', '1F446_1F3FF', '1F44B', '1F451', '1F457', '1F45A', '1F45E', '1F465', '1F468', '1F47B', '1F480', '1F483', '1F48A', '1F48B', '1F48E', '1F494', '1F4A5', '1F4A8', '1F4A9', '1F4AC', '1F4B3', '1F4B8', '1F4BB', '1F4BC', '1F4DA', '1F4DD', '1F4DE', '1F4E2', '1F4E7', '1F4F1', '1F4F2', '1F504', '1F50D', '1F511', '1F51E', '1F525', '1F57A', '1F607', '1F608', '1F60E', '1F610', '1F633', '1F634', '1F648', '1F64B', '1F695', '1F6A6', '1F6A8', '1F6AA', '1F6AB', '1F6BB', '1F6CC', '1F918', '1F925', '1F927', '1F92A', '1F92F', '1F938', '1F943', '1F94A', '1F964', '1F973', '1F974', '1F376', '1F3AF', '1F984', '1F9A0', '1F9B6', '1F9B7', '1F9E5', '1F9E9', '1F9ED', '1F9F9', '1FA9E', '1FAA2', '1FAAA', '2615']);
 const SKIN_TONE_HEX = new Set(['1F3FB', '1F3FC', '1F3FD', '1F3FE', '1F3FF']);
 
 // Turns emoji text into markup, using artwork where a file exists.
@@ -117,6 +137,7 @@ class NeverHaveIEverApp {
     this.gameMode = 'classic';
     this.pendingMode = 'classic';
     this.setupStep = false;
+    this.setupDone = false;
     this.shotPhase = 'idle';
     this.shotTimers = [];
     this.dareBag = [];
@@ -173,8 +194,10 @@ class NeverHaveIEverApp {
     this.shotDares = document.getElementById('shot-dares');
     this.shotDareCards = [...this.shotDares.querySelectorAll('.shot-dare')];
     this.shotAction = document.getElementById('shot-action');
+    this.nextPill = document.getElementById('next-pill');
     this.shotCustomise = document.getElementById('shot-customise');
     this.shotActions = document.getElementById('shot-actions');
+    this.darePill = document.getElementById('dare-pill');
 
     this.init();
   }
@@ -261,13 +284,9 @@ class NeverHaveIEverApp {
     const [glow, glowSoft] = markerGlows[level];
     thumb.style.setProperty('--marker-glow', glow);
     thumb.style.setProperty('--marker-glow-soft', glowSoft);
-    // Centre the thumb over the selected level's name, measured from the page
-    const selectedOption = this.customiseModal.querySelectorAll('.customise-level-option')[selectedIndex];
-    const wrapBox = slider.parentElement.getBoundingClientRect();
-    const optionBox = selectedOption?.getBoundingClientRect();
-    if (optionBox) {
-      thumb.style.left = `${optionBox.left + optionBox.width / 2 - wrapBox.left}px`;
-    }
+    // Centre the thumb over the level's name. The three names sit in equal columns, so this is
+    // worked out from the layout (no measuring), and it is right the moment the pop-up appears.
+    thumb.style.left = `calc(8px + (100% - 16px) * ${2 * selectedIndex + 1} / 6)`;
     this.customiseModal.querySelectorAll('.customise-level-option').forEach((option, index) => {
       option.classList.toggle('is-current', index === selectedIndex);
     });
@@ -973,15 +992,23 @@ class NeverHaveIEverApp {
 
   // Card backs: the title and the footer depend on the game
   emblemTitleMarkup() {
-    const lines = { 'most-likely': ['Who Most', 'Likely'], 'shot-dare': ['Shots &amp;', 'Dares'] }[this.gameMode]
+    const lines = { 'most-likely': ["Who's Most", 'Likely'], 'shot-dare': ['Shots &amp;', 'Dares'] }[this.gameMode]
       ?? ['Never Have', 'Ai Ever'];
     return lines.map(line => `<span class="cursive-line">${line}</span>`).join('');
   }
 
+  // The short description on the card back, between the title and the Customize button
+  blurbMarkup() {
+    const text = {
+      'most-likely': 'Majority selects who drinks<br>by pointing at them.',
+      'shot-dare': 'The group sets the shot goal.<br>Reach it, and the dare begins.'
+    }[this.gameMode] ?? 'Drink if <strong>you\'ve</strong> done it,<br>perfect icebreaker game.';
+    return `<p class="card-blurb">${text}</p>`;
+  }
+
   emblemFooterMarkup() {
     if (this.gameMode === 'shot-dare') {
-      return `<div class="shot-arch" aria-hidden="true">${SHOT_GLASS_SVG.repeat(5)}</div>
-              <p class="shot-blurb">Take a shot when it fits, and the one who reaches 5 shots chooses their fate.</p>`;
+      return `<div class="shot-arch" aria-hidden="true">${SHOT_GLASS_SVG.repeat(5)}</div>`;
     }
     return '<div class="emblem-sub">Swipe to Reveal</div>';
   }
@@ -1039,7 +1066,7 @@ class NeverHaveIEverApp {
           </div>
           <div class="card-hint">
             <span class="card-hint-text">${data.category === 'most-likely'
-              ? '<span class="hint-full">Swipe to go on</span><span class="hint-short">Swipe</span>'
+              ? '<span class="hint-full">Swipe or arrow key to go on</span><span class="hint-short">Swipe or ←→</span>'
               : '<span class="hint-full">Drag card or tap emoji</span><span class="hint-short">Drag or tap</span>'}</span>
             <button class="done-it-btn" type="button" aria-label="Celebrate that you have done it">${this.gameMode === 'most-likely' ? 'INDEED' : 'DONE IT!'}</button>
           </div>
@@ -1059,6 +1086,7 @@ class NeverHaveIEverApp {
               <div class="emblem-title">
                 ${this.emblemTitleMarkup()}
               </div>
+              ${this.blurbMarkup()}
               <button class="customise-btn" type="button" aria-label="Customize cards with AI">
                 <svg viewBox="0 0 24 24" aria-hidden="true">
                   <path d="M12 2.8 13.9 9l6.3 2-6.3 2-1.9 6.2L10.1 13 3.8 11l6.3-2L12 2.8Z" />
@@ -1348,6 +1376,7 @@ class NeverHaveIEverApp {
     });
     if (this.cardHistory.length > 15) this.cardHistory.shift();
 
+    this.syncMostLikelyPill();
     sounds.playCategorySound(direction);
     if ('vibrate' in navigator) {
       try { navigator.vibrate([20, 30, 20]); } catch (e) {}
@@ -1503,6 +1532,7 @@ class NeverHaveIEverApp {
     this.activeCardCategory = this.gameMode === 'most-likely' ? 'most-likely' : 'spicy';
     this.cardCount = 1;
     this.renderInitialDeck();
+    this.syncMostLikelyPill();
     this.updateAmbientGlow(this.activeCardCategory);
     this.resetIdleHint();
   }
@@ -1560,6 +1590,17 @@ class NeverHaveIEverApp {
     this.reshuffleGame();
   }
 
+  // How to play, written for the screen it was opened from
+  openInfo(context) {
+    const info = this.infoModal;
+    info.querySelector('#info-tap-text').textContent = INFO_TEXT.tap[context];
+    info.querySelector('#info-keys-text').textContent = INFO_TEXT.keys[context];
+    info.querySelectorAll('.info-cat[data-ctx]').forEach((row) => {
+      row.hidden = !row.dataset.ctx.split(' ').includes(context);
+    });
+    info.classList.add('active');
+  }
+
   // ----- Game decks -----
 
   openModeSelect() {
@@ -1577,6 +1618,7 @@ class NeverHaveIEverApp {
     this.modeModal.querySelectorAll('.mode-option').forEach((option) => {
       option.setAttribute('aria-pressed', String(option.dataset.mode === this.pendingMode));
     });
+    this.modeModal.style.setProperty('--deck-glow', DECK_COLORS[this.pendingMode]);
     this.positionDeckTrack();
   }
 
@@ -1596,6 +1638,11 @@ class NeverHaveIEverApp {
   // Deck chosen: the customise pop-up comes next as an optional step
   chooseMode() {
     this.modeModal.classList.remove('active');
+    // The customise step is asked once; after that, choosing a game goes straight in
+    if (this.setupDone) {
+      this.startGame(this.pendingMode);
+      return;
+    }
     this.setupStep = true;
     this.openCustomiseModal({ from: 'setup' });
   }
@@ -1603,9 +1650,22 @@ class NeverHaveIEverApp {
   // Ends the optional setup, whether the player saved or skipped it, and starts the chosen game
   finishSetup() {
     this.setupStep = false;
+    this.setupDone = true;
     this.customiseModal.classList.remove('active', 'is-setup');
     this.returnFlippedPanel({ animate: false });
     this.startGame(this.pendingMode);
+  }
+
+  // Who's Most Likely: the first card has only Undo and Next; Indeed appears once a card has been passed
+  syncMostLikelyPill() {
+    this.nextPill.classList.toggle('is-first', this.gameMode === 'most-likely' && this.cardHistory.length === 0);
+  }
+
+  // Ambient glow in a given colour (the Shots & Dares pink)
+  setAmbientGlow(colour) {
+    if (this.ambientGlow) {
+      this.ambientGlow.style.background = `radial-gradient(circle, ${colour} 0%, rgba(10, 11, 16, 0.4) 60%, transparent 75%)`;
+    }
   }
 
   setModeClasses() {
@@ -1626,9 +1686,11 @@ class NeverHaveIEverApp {
     this.activeCardCategory = mode === 'most-likely' ? 'most-likely' : 'spicy';
 
     if (mode === 'shot-dare') {
+      this.setAmbientGlow('rgba(255, 45, 117, 0.45)');
       this.showShotIntro();
       return;
     }
+    this.syncMostLikelyPill();
     this.reshuffleGame();
   }
 
@@ -1650,11 +1712,12 @@ class NeverHaveIEverApp {
     this.shotSlot.hidden = showingDares;
     this.shotDares.hidden = !showingDares;
     // The intro uses START on the card; the action button below handles the rest
-    const labels = { intro: 'START', playing: 'SOMEONE DID IT ALL', revealed: 'PLAY AGAIN' };
+    const labels = { intro: 'START', playing: 'SOMEONE LOST!', revealed: 'PLAY AGAIN' };
     this.shotAction.hidden = !labels[phase];
-    this.shotAction.textContent = labels[phase] ?? '';
+    this.shotAction.innerHTML = labels[phase] ? `${KEY_CUE}${labels[phase]}` : '';
     this.shotCustomise.hidden = phase !== 'intro';
     this.shotActions.classList.toggle('is-split', phase === 'intro');
+    this.darePill.hidden = phase !== 'dare';
   }
 
   // The card with its deck layers behind, built the same way as the classic cards
@@ -1737,15 +1800,20 @@ class NeverHaveIEverApp {
     // One dare is drawn for the round. The three cards are for show: whichever is picked reveals it.
     const dare = this.drawDare();
     this.currentDare = dare;
-    const category = DARE_CATEGORIES[dare.category] ?? DARE_CATEGORIES.silly;
-    this.shotDareCards.forEach((card) => {
+    // Three different categories: the drawn dare's category plus two others, in a random order
+    const others = Object.keys(DARE_CATEGORIES).filter((key) => key !== dare.category);
+    others.sort(() => Math.random() - 0.5);
+    const choices = [dare.category, others[0], others[1]].sort(() => Math.random() - 0.5);
+    this.shotDareCards.forEach((card, index) => {
+      const category = DARE_CATEGORIES[choices[index]];
       card.classList.remove('is-revealed', 'is-dimmed');
-      card.disabled = false;
       card.querySelector('.shot-dare-text').textContent = dare.text;
       card.querySelector('.dare-back-emoji').innerHTML = emojiMarkup(category.emoji);
+      card.style.setProperty('--tilt', `${(Math.random() * 8 - 4).toFixed(1)}deg`);
     });
     this.setShotPhase('dare');
     this.setDareFocus(1);
+    this.setAmbientGlow('rgba(255, 45, 117, 0.45)');
   }
 
   // Moves the highlight between the three dare cards (arrow keys, or a swipe on phones)
@@ -1759,13 +1827,18 @@ class NeverHaveIEverApp {
     if (this.shotPhase !== 'dare') return;
     card.classList.add('is-revealed');
     this.shotDareCards.forEach((other) => {
-      if (other === card) return;
-      other.classList.add('is-dimmed');
-      other.disabled = true;
+      if (other !== card) other.classList.add('is-dimmed');
     });
-    card.disabled = true;
     this.setShotPhase('revealed');
     sounds.playSnapBack();
+  }
+
+  // "Take 1 shot to choose again": the card turns back and the selection is open again
+  pickAgain() {
+    if (this.shotPhase !== 'revealed') return;
+    this.shotDareCards.forEach((card) => card.classList.remove('is-revealed', 'is-dimmed'));
+    this.setShotPhase('dare');
+    this.setDareFocus(this.dareFocus);
   }
 
   // The action button, and Enter or Space, go forward through the shot dare round
@@ -1790,6 +1863,7 @@ class NeverHaveIEverApp {
     }
 
     this.cardHistory.pop();
+    this.syncMostLikelyPill();
     const restoredCard = prevCardData.cardType === 'level-up'
       ? this.createLevelUpCardElement(prevCardData)
       : this.createCardElement(prevCardData, 'current', prevCardData.faceDown);
@@ -1967,8 +2041,7 @@ class NeverHaveIEverApp {
       }
       this.flipModalIn();
       this.customiseModal.querySelector('.customise-modal-close').focus();
-      // The pop-up is still turning in: measure the level thumb again once it has settled
-      setTimeout(() => this.updateSpicyLevelPreview(this.spicyLevel), 760);
+      this.updateSpicyLevelPreview(this.spicyLevel);
     };
     this.openCustomiseModal = openCustomiseModal;
 
@@ -2061,7 +2134,7 @@ class NeverHaveIEverApp {
     });
     document.getElementById('deck-info-btn').addEventListener('click', () => {
       sounds.playClick();
-      this.infoModal.classList.add('active');
+      this.openInfo('deck');
     });
     document.querySelector('.deck-sound-btn').addEventListener('click', () => {
       this.soundToggleBtn.click();
@@ -2090,12 +2163,21 @@ class NeverHaveIEverApp {
     });
 
     // Who most likely: the arrows move on, the same as a swipe left or right
-    document.querySelectorAll('.next-arrow').forEach((arrow) => {
+    document.querySelectorAll('#next-pill .next-arrow[data-dir]').forEach((arrow) => {
       arrow.addEventListener('click', () => {
         if (arrow.dataset.dir === 'left') this.undoLastCard();
         else this.handleTargetTap('right');
       });
     });
+    // Classic on widescreen: the Random card key, same as pressing Space
+    document.getElementById('classic-random').addEventListener('click', () => {
+      const dirs = ['top', 'left', 'right', 'bottom'];
+      const direction = dirs[Math.floor(Math.random() * dirs.length)];
+      this.popKeyboardTargetArrow(direction);
+      this.handleTargetTap(direction);
+    });
+    // Indeed in the bottom pill: the same cheers as the card's own button (Space does the same)
+    document.getElementById('pill-indeed').addEventListener('click', () => this.celebrateDoneIt());
 
     // Shot dare: START and CUSTOMIZE sit below the card; the dare cards are below that
     this.shotCustomise.addEventListener('click', () => {
@@ -2103,6 +2185,17 @@ class NeverHaveIEverApp {
       openCustomiseModal({ from: 'shot' });
     });
     this.shotAction.addEventListener('click', () => this.shotPrimaryAction());
+    // The dare picker: previous, pick, next
+    document.getElementById('dare-prev').addEventListener('click', () => this.setDareFocus(this.dareFocus - 1));
+    document.getElementById('dare-next').addEventListener('click', () => this.setDareFocus(this.dareFocus + 1));
+    document.getElementById('dare-pick').addEventListener('click', () => this.chooseShotDare(this.shotDareCards[this.dareFocus]));
+    this.shotDareCards.forEach((card) => {
+      card.querySelector('.dare-again').addEventListener('click', (e) => {
+        e.stopPropagation();
+        sounds.playClick();
+        this.pickAgain();
+      });
+    });
     this.shotDareCards.forEach((card) => {
       card.addEventListener('click', () => this.chooseShotDare(card));
     });
@@ -2203,7 +2296,7 @@ class NeverHaveIEverApp {
     const infoLetsPlayBtn = document.getElementById('info-lets-play-btn');
     infoBtn.addEventListener('click', () => {
       sounds.playClick();
-      this.infoModal.classList.add('active');
+      this.openInfo(this.gameMode);
     });
     infoCustomiseBtn.addEventListener('click', () => {
       sounds.playClick();
@@ -2249,8 +2342,15 @@ class NeverHaveIEverApp {
 
   bindKeyboard() {
     window.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && this.customiseModal.classList.contains('active')) {
-        this.closeCustomiseModal();
+      // Escape closes the top pop-up first, then goes Home (the deck screen) from anywhere
+      if (e.key === 'Escape') {
+        if (this.customiseModal.classList.contains('active')) {
+          this.closeCustomiseModal();
+        } else if (this.infoModal.classList.contains('active')) {
+          this.infoModal.classList.remove('active');
+        } else if (!this.modeModal.classList.contains('active') && !this.ageGateActive) {
+          this.goHome();
+        }
         return;
       }
       if (this.modeModal.classList.contains('active')) {
@@ -2279,16 +2379,19 @@ class NeverHaveIEverApp {
         }
         if (e.key === ' ') {
           e.preventDefault();
-          this.handleTargetTap('right');
+          // On the first card, Space starts the game; after that it is Indeed
+          if (this.cardHistory.length === 0) this.handleTargetTap('right');
+          else this.celebrateDoneIt();
           return;
         }
       }
 
       if (this.gameMode === 'shot-dare') {
         if (this.shotPhase === 'dare') {
-          if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+          // Left and up go back, right and down go on
+          if (['ArrowLeft', 'ArrowUp', 'ArrowRight', 'ArrowDown'].includes(e.key)) {
             e.preventDefault();
-            this.setDareFocus(this.dareFocus + (e.key === 'ArrowRight' ? 1 : -1));
+            this.setDareFocus(this.dareFocus + (e.key === 'ArrowRight' || e.key === 'ArrowDown' ? 1 : -1));
           } else if (e.key === ' ' || e.key === 'Enter') {
             e.preventDefault();
             this.chooseShotDare(this.shotDareCards[this.dareFocus]);
