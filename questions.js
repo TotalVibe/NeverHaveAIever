@@ -570,12 +570,14 @@ export const QUESTIONS = {
 // Dare categories: each dare belongs to one, and its emoji shows on the card back
 export const DARE_CATEGORIES = {
   dance: { name: 'Dance', emoji: '💃' },
-  perform: { name: 'Perform', emoji: '🎤' },
+  perform: { name: 'Perform', emoji: '🎭' },
   silly: { name: 'Silly', emoji: '🤪' },
   sport: { name: 'Sport', emoji: '🤸' },
   social: { name: 'Social', emoji: '💬' },
   style: { name: 'Style', emoji: '👑' },
-  mind: { name: 'Mind', emoji: '🤯' }
+  mind: { name: 'Mind', emoji: '🤯' },
+  flirt: { name: 'Flirt', emoji: '💋' },
+  money: { name: 'Money', emoji: '💸' }
 };
 
 // Shot dare time: one dare is drawn per round. The three cards on screen are for show only,
@@ -600,5 +602,17 @@ export const SHOT_DARES = [
   { text: "Let the group give you a new nickname for the rest of the night.", category: 'social' },
   { text: "Do an impression of a famous person and let the group guess who.", category: 'perform' },
   { text: "Take a sip while doing your best robot dance.", category: 'dance' },
-  { text: "Speak only in questions until your next turn.", category: 'mind' }
+  { text: "Speak only in questions until your next turn.", category: 'mind' },
+  { text: "Give the person on your left a quick kiss on the lips, if they agree.", category: 'flirt' },
+  { text: "Blow a kiss to the person across from you, then act like nothing happened.", category: 'flirt' },
+  { text: "Whisper a compliment to the person on your right that no one else can hear.", category: 'flirt' },
+  { text: "Hand your phone to the person on your left, and let them scroll your photos for 20 seconds.", category: 'social' },
+  { text: "Unlock your phone and show the group your most recent photo.", category: 'social' },
+  { text: "Empty your wallet onto the table and let the group guess the total. The closest buys the next round.", category: 'money' },
+  { text: "Let the group pick one item from your wallet and tell its story.", category: 'money' },
+  { text: "Open your banking app and show the group your balance, then choose someone to buy the next round.", category: 'money' },
+  { text: "Tell the group a harmless secret you are still keeping.", category: 'social' },
+  { text: "Whisper a made-up confession in the ear of the person on your right. They must point at who they think it is about.", category: 'social' },
+  { text: "Whisper your most embarrassing moment to the person on your left, and they tell the group in their own words.", category: 'social' },
+  { text: "Whisper something in the ear of the person across from you, and everyone else must guess what it was.", category: 'social' }
 ];

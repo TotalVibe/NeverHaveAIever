@@ -4849,3 +4849,473 @@ body.unhinged-screen-shake {
 .shot-dare .shot-dare-front {
   position: absolute;
 }
+
+/* ===== Revisions 14: key cues at the left edge, labels centred across the button ===== */
+
+/* Only the buttons that carry a key cue get the reserved space; the cue sits at the left edge */
+.shot-action,
+.deck-play,
+.indeed-key,
+#dare-pick {
+  position: relative;
+}
+
+@media (min-width: 1024px) {
+  .shot-action:has(.key-cue),
+  .deck-play:has(.key-cue),
+  .indeed-key:has(.key-cue),
+  #dare-pick:has(.key-cue) {
+    padding-left: 56px;
+    padding-right: 56px;
+  }
+}
+
+.key-cue {
+  position: absolute;
+  left: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  margin: 0;
+}
+
+/* Play: the label scales with the screen */
+.deck-play {
+  font-size: clamp(1rem, 3.4vw, 1.4rem);
+}
+
+/* Pick again: room around the text and from the card's edges */
+.shot-dare .dare-again {
+  bottom: 18px;
+  max-width: calc(100% - 36px);
+  padding: 10px 18px;
+}
+
+.shot-dare-front {
+  padding: 16px 14px 64px;
+}
+
+/* ===== Revisions 15: intro PLAY, Indeed, shot card spacing, buttons and pick again ===== */
+
+/* Shots & Dares intro card: the five glasses sit lower, away from the top edge */
+.shot-arch {
+  top: clamp(28px, 8%, 56px);
+}
+
+/* Shots & Dares intro card: the title is centred in the card; the description sits at the bottom */
+.mode-shot-dare .card-back-emblem {
+  grid-template-rows: 1fr auto 1fr;
+}
+
+.mode-shot-dare .card-back .card-blurb {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(18px, 5.5vh, 40px);
+  transform: translateX(-50%);
+  grid-row: auto;
+  width: 84%;
+  margin: 0;
+}
+
+/* SOMEONE LOST! and PLAY AGAIN: narrower, centred */
+.shot-actions:not(.is-split) .shot-action {
+  flex: 0 0 62%;
+  margin: 0 auto;
+}
+
+/* Shots & Dares dare text: a little smaller */
+.shot-dare-text {
+  font-size: 10cqw;
+}
+
+/* Pick again: on the right, with the shot glass */
+.shot-dare .dare-again {
+  left: auto;
+  right: 14px;
+  transform: none;
+  gap: 8px;
+}
+
+.dare-again svg {
+  width: 14px;
+  height: 14px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+/* Indeed and Pick: room for the Space cue without making the buttons wide */
+@media (min-width: 1024px) {
+  .indeed-key:has(.key-cue),
+  #dare-pick:has(.key-cue) {
+    padding-left: 46px;
+    padding-right: 46px;
+  }
+}
+
+/* Intro PLAY: a responsive label. On widescreen the SPACE cue sits at its left and the label to its right. */
+.deck-play {
+  font-size: clamp(0.9rem, 2.4vw, 1.15rem);
+}
+
+@media (min-width: 1024px) {
+  .deck-play:has(.key-cue) {
+    justify-content: flex-start;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .deck-play .key-cue {
+    position: static;
+    transform: none;
+    margin: 0 14px 0 0;
+  }
+}
+
+/* ===== Revisions 16: softer glow on the intro sparkles ===== */
+.deck-screen .crest-diamond {
+  filter: drop-shadow(0 0 8px color-mix(in srgb, var(--deck-glow) 40%, transparent));
+}
+
+.deck-screen .deck-hero-title .card-sparkle {
+  filter: drop-shadow(0 0 2px color-mix(in srgb, var(--deck-glow) 38%, transparent))
+    drop-shadow(0 0 6px color-mix(in srgb, var(--deck-glow) 22%, transparent));
+}
+
+/* ===== Revisions 17: START on widescreen sits to the right, with the Space cue on its left ===== */
+@media (min-width: 1024px) {
+  .shot-actions.is-split .shot-action:has(.key-cue) {
+    justify-content: flex-end;
+    padding-left: 56px;
+    padding-right: 22px;
+  }
+}
+
+/* ===== Revisions 18: the label centres in the empty space beside the Space cue (widescreen) ===== */
+@media (min-width: 1024px) {
+  .shot-action:has(.key-cue),
+  .deck-play:has(.key-cue),
+  .indeed-key:has(.key-cue),
+  #dare-pick:has(.key-cue) {
+    justify-content: center;
+    padding-left: 56px;
+    padding-right: 8px;
+  }
+
+  .indeed-key:has(.key-cue),
+  #dare-pick:has(.key-cue) {
+    padding-left: 50px;
+  }
+
+  .shot-actions.is-split .shot-action:has(.key-cue) {
+    justify-content: center;
+    padding-left: 56px;
+    padding-right: 8px;
+  }
+
+  .deck-play .key-cue,
+  .shot-action .key-cue {
+    position: absolute;
+    left: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+    margin: 0;
+  }
+}
+
+/* Labels scale with the screen */
+.shot-action {
+  font-size: clamp(0.8rem, 2.2vw, 1rem);
+}
+
+/* ===== Revisions 19: the intro PLAY button is wider on widescreen ===== */
+@media (min-width: 1024px) {
+  .deck-play {
+    width: min(100%, 760px);
+  }
+}
+
+/* ===== Revisions 20: the Space cue is part of the button's layout (no overlap); the label fills the rest and centres ===== */
+@media (min-width: 1024px) {
+  .shot-action:has(.key-cue),
+  .deck-play:has(.key-cue),
+  .indeed-key:has(.key-cue),
+  #dare-pick:has(.key-cue) {
+    display: flex;
+    align-items: center;
+    padding-left: 6px;
+    padding-right: 8px;
+  }
+
+  .shot-action .key-cue,
+  .deck-play .key-cue,
+  .indeed-key .key-cue,
+  #dare-pick .key-cue {
+    position: static;
+    transform: none;
+    flex: 0 0 auto;
+    margin: 0;
+  }
+
+  .shot-action .btn-label,
+  .deck-play span,
+  .indeed-key span,
+  #dare-pick span {
+    flex: 1 1 auto;
+    text-align: center;
+  }
+}
+
+/* ===== Revisions 21: a much wider intro PLAY button on widescreen ===== */
+@media (min-width: 1024px) {
+  .deck-play {
+    width: min(94vw, 1100px);
+  }
+}
+
+/* ===== Revisions 22: SELECT button sized between the two earlier widths ===== */
+@media (min-width: 1024px) {
+  .deck-play {
+    width: min(64vw, 920px);
+  }
+}
+
+/* ===== Revisions 23: SELECT button, a little narrower than the last size ===== */
+@media (min-width: 1024px) {
+  .deck-play {
+    width: min(58vw, 840px);
+  }
+}
+
+/* ===== Revisions 24: SELECT button, much narrower ===== */
+@media (min-width: 1024px) {
+  .deck-play {
+    width: min(44vw, 620px);
+  }
+}
+
+/* ===== Revisions 25: SELECT button, between the last two sizes ===== */
+@media (min-width: 1024px) {
+  .deck-play {
+    width: min(51vw, 730px);
+  }
+}
+
+/* ===== Revisions 26: SELECT button sized to its content (SPACE pill and word), with extra padding ===== */
+@media (min-width: 1024px) {
+  .deck-play:has(.key-cue) {
+    width: max-content;
+    padding: 18px 44px 18px 22px;
+  }
+}
+
+/* ===== Revisions 27: SELECT button: side padding only, and more space between the pill and the word ===== */
+@media (min-width: 1024px) {
+  .deck-play:has(.key-cue) {
+    width: max-content;
+    min-height: 58px;
+    padding-top: 0;
+    padding-bottom: 0;
+    padding-left: 30px;
+    padding-right: 60px;
+    gap: 30px;
+  }
+}
+
+/* ===== Revisions 28: the SPACE pill sits at the button's left edge ===== */
+@media (min-width: 1024px) {
+  .deck-play:has(.key-cue) {
+    padding-left: 10px;
+  }
+}
+
+/* ===== Revisions 29: Indeed's Space cue sits close to its word; START's cue sits at the left edge ===== */
+@media (min-width: 1024px) {
+  .indeed-key:has(.key-cue) {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding-left: 6px;
+    padding-right: 14px;
+  }
+
+  .indeed-key:has(.key-cue) > span {
+    flex: 0 0 auto;
+  }
+
+  .shot-actions.is-split .shot-action:has(.key-cue) {
+    display: flex;
+    align-items: center;
+    justify-content: normal;
+    padding-left: 6px;
+    padding-right: 8px;
+  }
+
+  .shot-actions .shot-action .key-cue {
+    position: static;
+    transform: none;
+    margin: 0;
+  }
+}
+
+/* ===== Revisions 30: Indeed's cue and word together; Shots & Dares controls lifted on widescreen ===== */
+@media (min-width: 1024px) {
+  .next-pill .indeed-key {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 0 14px 0 8px;
+    width: auto;
+  }
+
+  .next-pill .indeed-key .key-cue {
+    position: static;
+    transform: none;
+    margin: 0;
+  }
+
+  .next-pill .indeed-key > span {
+    flex: 0 0 auto;
+    text-align: left;
+  }
+
+  /* Customize, START, SOMEONE LOST!, PLAY AGAIN and the dare picker sit clear of the bottom edge */
+  .shot-controls {
+    bottom: clamp(56px, 10dvh, 104px);
+  }
+}
+
+/* ===== Revisions 31: a shorter SELECT button on widescreen ===== */
+@media (min-width: 1024px) {
+  .deck-play:has(.key-cue) {
+    min-height: 44px;
+    height: 44px;
+  }
+}
+
+/* ===== Revisions 32: SOMEONE LOST! and PLAY AGAIN wider ===== */
+.shot-actions:not(.is-split) .shot-action {
+  flex: 0 0 78%;
+}
+
+/* ===== Revisions 33: the pick-again button, smaller overall ===== */
+.shot-dare .dare-again {
+  padding: 5px 9px;
+  gap: 5px;
+  font-size: clamp(0.45rem, 2.6cqw, 0.62rem);
+  letter-spacing: 0.08em;
+}
+
+.dare-again svg {
+  width: 11px;
+  height: 11px;
+}
+
+/* ===== Revisions 34: pick-again sits nearer the card's bottom edge ===== */
+.shot-dare .dare-again {
+  bottom: 8px;
+}
+
+/* ===== Revisions 35: pick-again's gap from the bottom follows the card's corner radius ===== */
+.shot-dare .dare-again {
+  bottom: calc(var(--radius-card) - 8px);
+}
+
+/* ===== Revisions 36: pick-again moves 3px lower ===== */
+.shot-dare .dare-again {
+  bottom: calc(var(--radius-card) - 11px);
+}
+
+/* ===== Revisions 37: dare sentences never hyphenate ===== */
+.shot-dare-text {
+  hyphens: none;
+  -webkit-hyphens: none;
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
+/* ===== Revisions 38: the intro fits short and narrow windows: sizes follow the window height ===== */
+.deck-screen {
+  justify-content: safe center;
+}
+
+.deck-inner {
+  gap: clamp(6px, 1.8dvh, 22px);
+  padding: clamp(10px, 2.5dvh, 30px) clamp(12px, 4vw, 28px);
+}
+
+.deck-hero-title {
+  font-size: clamp(2rem, min(14vw, 9dvh), 6.5rem);
+}
+
+.deck-hero {
+  margin-bottom: clamp(4px, 1.2dvh, 14px);
+}
+
+.deck-crest {
+  width: clamp(22px, 4dvh, 44px);
+  height: clamp(22px, 4dvh, 44px);
+}
+
+.deck-caption {
+  margin-top: clamp(6px, 1.8dvh, 22px);
+}
+
+.deck-list {
+  margin-top: clamp(8px, 2.2dvh, 30px);
+}
+
+.deck-tile {
+  height: clamp(180px, 36dvh, 320px);
+  margin-bottom: clamp(20px, 4dvh, 56px);
+}
+
+.deck-option {
+  padding: clamp(10px, 3dvh, 40px) 16px clamp(8px, 2.4dvh, 30px);
+  gap: clamp(4px, 1.4dvh, 16px);
+}
+
+.deck-emoji {
+  font-size: clamp(2rem, 6.2dvh, 5rem);
+}
+
+.deck-text .mode-name {
+  font-size: clamp(1.4rem, 4dvh, 2.3rem);
+}
+
+.deck-footer {
+  padding: clamp(8px, 2dvh, 24px) 16px clamp(12px, 3.5dvh, 40px);
+}
+
+@media (min-width: 720px) {
+  .deck-tile {
+    height: clamp(230px, 52dvh, 380px);
+  }
+
+  .deck-emoji {
+    font-size: clamp(2.2rem, 7dvh, 5.4rem);
+  }
+}
+
+/* ===== Revisions 39: Indeed's pill button is hidden on phones; the card's own INDEED button stays ===== */
+@media (max-width: 719px) {
+  .next-pill .indeed-key {
+    display: none;
+  }
+}
+
+/* ===== Revisions 40: SELECT is the same height as START on Shots & Dares ===== */
+@media (min-width: 1024px) {
+  .deck-play:has(.key-cue) {
+    min-height: 46px;
+    height: 46px;
+  }
+}
+
+/* ===== Revisions 41: SELECT is 46px tall on phones too, matching START ===== */
+.deck-play {
+  min-height: 46px;
+  height: 46px;
+}
