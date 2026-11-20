@@ -1,4 +1,4 @@
-import { CATEGORIES, QUESTIONS, SPICY_QUESTION_LEVELS, SHOT_DARES, DARE_CATEGORIES } from './questions.js?v=11';
+import { CATEGORIES, QUESTIONS, SPICY_QUESTION_LEVELS, SHOT_DARES, DARE_CATEGORIES } from './questions.js?v=14';
 import { sounds } from './sound.js?v=4';
 import { ConfettiEngine } from './confetti.js';
 
@@ -32,13 +32,13 @@ const DECK_COLORS = { classic: '#9b5de5', 'most-likely': '#ffd43b', 'shot-dare':
 // How-to-play text for each context: the deck screen, or the game being played
 const INFO_TEXT = {
   tap: {
-    deck: 'Swipe sideways across the decks, or tap one. PLAY starts the game.',
+    deck: 'Swipe sideways across the decks, or tap one. SELECT starts the game.',
     classic: 'Press an emoji button, or drag the card toward one.',
     'most-likely': 'Swipe the card in any direction to go on. Use the arrows and Indeed at the bottom.',
     'shot-dare': 'Tap the buttons below the card. Pick a dare by tapping or swiping the three cards.'
   },
   keys: {
-    deck: '← → choose a game, Enter or Space to play.',
+    deck: '← → choose a game, Space to play.',
     classic: 'Arrow keys (↑ Spicy, ← Cringe, → Party, ↓ Wholesome), Spacebar to shuffle, Z to undo.',
     'most-likely': '→ goes on, ← undoes, Space is Indeed. ↑ and ↓ do nothing.',
     'shot-dare': 'Enter or Space presses the button, ← → picks a dare, Enter or Space reveals it.'
@@ -74,7 +74,7 @@ const DONE_IT_REACTION_IMAGES = {
 };
 // Fluent Emoji 3D artwork (MIT License, Microsoft Corporation; see THIRD_PARTY_LICENSES.md).
 // Emoji without a file here stay as text.
-const FLUENT_CODES = new Set(['1F319', '1F346', '1F351', '1F354', '1F355', '1F370', '1F374', '1F37A', '1F37B', '1F3A4', '1F3A5', '1F3A7', '1F3AA', '1F3AB', '1F3B2', '1F3B9', '1F3CA', '1F3D3', '1F3E0', '1F3EB', '1F446', '1F446_1F3FB', '1F446_1F3FC', '1F446_1F3FD', '1F446_1F3FE', '1F446_1F3FF', '1F44B', '1F451', '1F457', '1F45A', '1F45E', '1F465', '1F468', '1F47B', '1F480', '1F483', '1F48A', '1F48B', '1F48E', '1F494', '1F4A5', '1F4A8', '1F4A9', '1F4AC', '1F4B3', '1F4B8', '1F4BB', '1F4BC', '1F4DA', '1F4DD', '1F4DE', '1F4E2', '1F4E7', '1F4F1', '1F4F2', '1F504', '1F50D', '1F511', '1F51E', '1F525', '1F57A', '1F607', '1F608', '1F60E', '1F610', '1F633', '1F634', '1F648', '1F64B', '1F695', '1F6A6', '1F6A8', '1F6AA', '1F6AB', '1F6BB', '1F6CC', '1F918', '1F925', '1F927', '1F92A', '1F92F', '1F938', '1F943', '1F94A', '1F964', '1F973', '1F974', '1F376', '1F3AF', '1F984', '1F9A0', '1F9B6', '1F9B7', '1F9E5', '1F9E9', '1F9ED', '1F9F9', '1FA9E', '1FAA2', '1FAAA', '2615']);
+const FLUENT_CODES = new Set(['1F319', '1F346', '1F351', '1F354', '1F355', '1F370', '1F374', '1F37A', '1F37B', '1F3A4', '1F3A5', '1F3A7', '1F3AA', '1F3AB', '1F3B2', '1F3B9', '1F3CA', '1F3D3', '1F3E0', '1F3EB', '1F446', '1F446_1F3FB', '1F446_1F3FC', '1F446_1F3FD', '1F446_1F3FE', '1F446_1F3FF', '1F44B', '1F451', '1F457', '1F45A', '1F45E', '1F465', '1F468', '1F47B', '1F480', '1F483', '1F48A', '1F48B', '1F48E', '1F494', '1F4A5', '1F4A8', '1F4A9', '1F4AC', '1F4B3', '1F4B8', '1F4BB', '1F4BC', '1F4DA', '1F4DD', '1F4DE', '1F4E2', '1F4E7', '1F4F1', '1F4F2', '1F504', '1F50D', '1F511', '1F51E', '1F525', '1F57A', '1F607', '1F608', '1F60E', '1F610', '1F633', '1F634', '1F648', '1F64B', '1F695', '1F6A6', '1F6A8', '1F6AA', '1F6AB', '1F6BB', '1F6CC', '1F918', '1F925', '1F927', '1F92A', '1F92F', '1F938', '1F943', '1F94A', '1F964', '1F973', '1F974', '1F376', '1F3AF', '1F3AD', '1F984', '1F9A0', '1F9B6', '1F9B7', '1F9E5', '1F9E9', '1F9ED', '1F9F9', '1FA9E', '1FAA2', '1FAAA', '2615']);
 const SKIN_TONE_HEX = new Set(['1F3FB', '1F3FC', '1F3FD', '1F3FE', '1F3FF']);
 
 // Turns emoji text into markup, using artwork where a file exists.
@@ -1714,7 +1714,7 @@ class NeverHaveIEverApp {
     // The intro uses START on the card; the action button below handles the rest
     const labels = { intro: 'START', playing: 'SOMEONE LOST!', revealed: 'PLAY AGAIN' };
     this.shotAction.hidden = !labels[phase];
-    this.shotAction.innerHTML = labels[phase] ? `${KEY_CUE}${labels[phase]}` : '';
+    this.shotAction.innerHTML = labels[phase] ? `${KEY_CUE}<span class="btn-label">${labels[phase]}</span>` : '';
     this.shotCustomise.hidden = phase !== 'intro';
     this.shotActions.classList.toggle('is-split', phase === 'intro');
     this.darePill.hidden = phase !== 'dare';
@@ -1797,18 +1797,15 @@ class NeverHaveIEverApp {
   }
 
   showShotDares() {
-    // One dare is drawn for the round. The three cards are for show: whichever is picked reveals it.
-    const dare = this.drawDare();
-    this.currentDare = dare;
-    // Three different categories: the drawn dare's category plus two others, in a random order
-    const others = Object.keys(DARE_CATEGORIES).filter((key) => key !== dare.category);
-    others.sort(() => Math.random() - 0.5);
-    const choices = [dare.category, others[0], others[1]].sort(() => Math.random() - 0.5);
+    // Three different categories, and a different dare from each. Picking a card reveals its own dare.
+    const categories = Object.keys(DARE_CATEGORIES).sort(() => Math.random() - 0.5).slice(0, 3);
     this.shotDareCards.forEach((card, index) => {
-      const category = DARE_CATEGORIES[choices[index]];
+      const key = categories[index];
+      const pool = SHOT_DARES.filter((dare) => dare.category === key);
+      const dare = pool[Math.floor(Math.random() * pool.length)];
       card.classList.remove('is-revealed', 'is-dimmed');
       card.querySelector('.shot-dare-text').textContent = dare.text;
-      card.querySelector('.dare-back-emoji').innerHTML = emojiMarkup(category.emoji);
+      card.querySelector('.dare-back-emoji').innerHTML = emojiMarkup(DARE_CATEGORIES[key].emoji);
       card.style.setProperty('--tilt', `${(Math.random() * 8 - 4).toFixed(1)}deg`);
     });
     this.setShotPhase('dare');
