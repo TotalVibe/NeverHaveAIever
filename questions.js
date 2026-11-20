@@ -564,3 +564,28 @@ export const QUESTIONS = {
 "gave a genuine compliment to a stranger that made their day."
   ]
 };
+
+// Shot dare time: one dare is drawn per round. The three cards on screen are for show only,
+// so every pick reveals the same drawn dare. Edit freely.
+export const SHOT_DARES = [
+  "Dance with a glass balanced on your head for 20 seconds.",
+  "Do your best impression of the group's most annoying friend.",
+  "Let the group pick a song and lip-sync the whole chorus.",
+  "Talk in a silly accent until your next turn.",
+  "Call a random contact and sing them happy birthday.",
+  "Do 10 squats while reciting the alphabet.",
+  "Let the group read your last text message out loud.",
+  "Wear someone else's jacket for the rest of the round.",
+  "Describe the person on your left using only three words.",
+  "Do a runway walk to the kitchen and back.",
+  "Hold a plank until the next player finishes their turn.",
+  "Balance a spoon on your nose for 15 seconds.",
+  "Tell the group the most unflattering fact you know about yourself.",
+  "Do an animal impression and let the others guess which animal.",
+  "Swap one piece of clothing with the person on your right until your next turn.",
+  "Read the last compliment you received out loud, in a movie-trailer voice.",
+  "Let the group give you a new nickname for the rest of the night.",
+  "Do an impression of a famous person and let the group guess who.",
+  "Take a sip while doing your best robot dance.",
+  "Speak only in questions until your next turn."
+];
