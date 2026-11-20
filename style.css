@@ -2791,3 +2791,1166 @@ body.unhinged-screen-shake {
     display: inline;
   }
 }
+
+/* ===== Game modes ===== */
+
+/* Who most likely: no categories, so the direction stamps are hidden */
+.mode-most-likely .swipe-stamp {
+  display: none;
+}
+
+/* Shots & Dares: the card is only a sentence, so swipe stamps, hints and Done It are hidden */
+.mode-shot-dare .swipe-stamp,
+.mode-shot-dare .done-it-btn,
+.mode-shot-dare .card-hint {
+  display: none;
+}
+
+/* Undo lives in the bottom pill for these games, so the header one is hidden */
+.mode-most-likely #undo-btn,
+.mode-shot-dare #undo-btn {
+  display: none;
+}
+
+.mode-most-likely .target-btn,
+.mode-shot-dare .target-btn {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* Header: Home and a smaller Restart, both round */
+.header-nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.app-header .header-nav .restart-btn {
+  width: 34px;
+  height: 34px;
+}
+
+.app-header .header-nav .restart-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* ----- Deck screen ----- */
+
+/* Full screen: purple glow, with the same pattern lines as the pop-ups */
+.deck-screen {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  background: #0a0b10;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.deck-bg {
+  background-color: #0c0d16;
+  background-image:
+    radial-gradient(circle at 50% 42%, rgba(155, 93, 229, 0.42) 0%, rgba(10, 11, 16, 0.4) 55%, transparent 75%),
+    repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.04) 0px, rgba(255, 255, 255, 0.04) 1.5px, transparent 1.5px, transparent 14px),
+    repeating-linear-gradient(-45deg, rgba(255, 255, 255, 0.04) 0px, rgba(255, 255, 255, 0.04) 1.5px, transparent 1.5px, transparent 14px);
+}
+
+.deck-inner {
+  position: relative;
+  z-index: 1;
+  margin: auto;
+  width: 100%;
+  max-width: 960px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(14px, 3dvh, 26px);
+  padding: clamp(20px, 4dvh, 40px) clamp(14px, 4vw, 28px);
+}
+
+.deck-hero-title {
+  margin: 0;
+  font-size: clamp(3rem, min(19vw, 15dvh), 9rem);
+  line-height: 1;
+  text-align: center;
+  transform: rotate(-2deg);
+}
+
+.deck-caption {
+  margin: 0;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.deck-list {
+  width: 100%;
+  display: grid;
+  gap: 16px;
+  justify-items: center;
+}
+
+/* Each deck: a fixed card on a pile of cards (the classic pile). Size never changes. */
+.deck-tile {
+  position: relative;
+  width: 100%;
+  height: 150px;
+}
+
+.deck-option {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+  overflow: hidden;
+  border-radius: var(--radius-card);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  background: #111420;
+  color: var(--text-main);
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  --deck-color: #9b5de5;
+}
+
+.deck-option[data-mode="most-likely"] {
+  --deck-color: #ffd43b;
+}
+
+.deck-option[data-mode="shot-dare"] {
+  --deck-color: #ff2d75;
+}
+
+.deck-option-bg {
+  background-color: #111420;
+  background-image:
+    radial-gradient(circle at 50% 35%, color-mix(in srgb, var(--deck-color) 34%, transparent) 0%, transparent 70%),
+    repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.04) 0px, rgba(255, 255, 255, 0.04) 1.5px, transparent 1.5px, transparent 14px),
+    repeating-linear-gradient(-45deg, rgba(255, 255, 255, 0.04) 0px, rgba(255, 255, 255, 0.04) 1.5px, transparent 1.5px, transparent 14px);
+}
+
+/* The distinctive colour glows on hover and when selected */
+.deck-option:hover,
+.deck-option[aria-pressed="true"] {
+  border-color: var(--deck-color);
+  box-shadow: 0 0 0 1px var(--deck-color), 0 0 30px -6px var(--deck-color);
+}
+
+.deck-emoji {
+  position: relative;
+  flex-shrink: 0;
+  font-size: 2.2rem;
+  line-height: 1;
+}
+
+.deck-text {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  flex: 1;
+}
+
+/* Description and how-to are always laid out, and fade in on hover or selection, so nothing jumps */
+.deck-text .mode-desc,
+.deck-text .mode-how {
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.deck-option:hover .mode-desc,
+.deck-option:hover .mode-how,
+.deck-option[aria-pressed="true"] .mode-desc,
+.deck-option[aria-pressed="true"] .mode-how {
+  opacity: 1;
+}
+
+.mode-name {
+  font-weight: 700;
+  font-size: 1.02rem;
+  color: var(--text-main);
+}
+
+.mode-desc {
+  font-size: 0.8rem;
+  color: var(--text-soft);
+  line-height: 1.4;
+}
+
+.mode-how {
+  font-size: 0.74rem;
+  color: var(--text-dim);
+  line-height: 1.4;
+}
+
+/* PLAY sits at the bottom of the screen, outside the decks */
+.deck-footer {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  padding: 8px 20px clamp(18px, 3.5dvh, 30px);
+}
+
+.deck-play {
+  width: min(100%, 360px);
+}
+
+/* Wide screens: three decks side by side, each a portrait card */
+@media (min-width: 720px) {
+  .deck-list {
+    grid-template-columns: repeat(3, 240px);
+    justify-content: center;
+    gap: 26px;
+  }
+
+  .deck-tile {
+    height: 330px;
+  }
+
+  .deck-option {
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    padding: 22px;
+  }
+
+  .deck-emoji {
+    font-size: 3.4rem;
+  }
+
+  .deck-text {
+    align-items: center;
+  }
+}
+
+.mode-option:focus-visible,
+.customise-skip-btn:focus-visible,
+.next-arrow:focus-visible,
+.shot-action:focus-visible,
+.shot-start:focus-visible,
+.shot-dare:focus-visible,
+.deck-play:focus-visible,
+.icon-btn:focus-visible {
+  outline: 2px solid #c4b5fd;
+  outline-offset: 2px;
+}
+
+/* Customise during setup: a Skip option under Save */
+.customise-skip-btn {
+  display: none;
+  width: 100%;
+  margin-top: 10px;
+  padding: 8px;
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+#customise-modal.is-setup .customise-skip-btn {
+  display: block;
+}
+
+/* ----- Who most likely ----- */
+
+/* UNDO and NEXT, centred along the bottom of the screen */
+.next-pill {
+  display: none;
+  position: absolute;
+  left: 50%;
+  bottom: clamp(8px, 2vh, 16px);
+  transform: translateX(-50%);
+  z-index: 12;
+  align-items: center;
+  gap: 4px;
+  padding: 4px;
+  border-radius: 999px;
+  background: rgba(18, 21, 32, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+
+.mode-most-likely .next-pill {
+  display: inline-flex;
+}
+
+.next-arrow {
+  height: 36px;
+  padding: 0 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text-main);
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.next-arrow:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.next-arrow svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* ----- Shots & Dares ----- */
+
+.shot-wrap {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  width: min(clamp(275px, 42vw, 380px), calc(100vw - 24px));
+  flex-shrink: 0;
+  margin: clamp(16px, 2.5vh, 28px) auto 0;
+  transform: translateY(-42px);
+}
+
+.mode-shot-dare .shot-wrap {
+  display: flex;
+}
+
+.mode-shot-dare .card-stack {
+  display: none;
+}
+
+.shot-wrap [hidden] {
+  display: none !important;
+}
+
+.shot-slot {
+  position: relative;
+  width: 100%;
+  height: clamp(330px, 54dvh, 480px);
+  /* Card contents size themselves in proportion to the card, as in the deck */
+  container-type: inline-size;
+}
+
+/* Countdown: the card's border fills around from the top-left corner, one lap per sentence */
+@property --shot-p {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 0%;
+}
+
+.shot-border {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  padding: 3px;
+  border-radius: var(--radius-card);
+  pointer-events: none;
+  background: conic-gradient(from -45deg, #ff8fb5 var(--shot-p), transparent 0);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  animation: shot-border-run var(--shot-ms, 6000ms) linear forwards;
+}
+
+@keyframes shot-border-run {
+  from { --shot-p: 0%; }
+  to { --shot-p: 100%; }
+}
+
+/* Intro card back: five shot glasses in an arch above the crest, then the blurb and START */
+.shot-arch {
+  position: absolute;
+  top: clamp(14px, 4.5%, 30px);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.shot-arch svg {
+  width: 17px;
+  height: 17px;
+  fill: none;
+  stroke: #ffffff;
+  stroke-width: 1.8;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.shot-arch svg:nth-child(1) { transform: translateY(10px) rotate(-16deg); }
+.shot-arch svg:nth-child(2) { transform: translateY(3px) rotate(-8deg); }
+.shot-arch svg:nth-child(3) { transform: none; }
+.shot-arch svg:nth-child(4) { transform: translateY(3px) rotate(8deg); }
+.shot-arch svg:nth-child(5) { transform: translateY(10px) rotate(16deg); }
+
+.shot-blurb {
+  position: absolute;
+  left: 50%;
+  bottom: calc(clamp(14px, 3.4vh, 28px) + 54px);
+  transform: translateX(-50%);
+  width: 84%;
+  margin: 0;
+  font-family: inherit;
+  font-size: 0.74rem;
+  line-height: 1.4;
+  color: var(--text-soft);
+  text-align: center;
+  text-shadow: none;
+}
+
+.shot-start,
+.shot-start:hover,
+.shot-start:active {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(14px, 3.4vh, 28px);
+  transform: translateX(-50%);
+  opacity: 1;
+  width: auto;
+  padding: 10px 28px;
+  font-size: 0.9rem;
+  letter-spacing: 0.1em;
+  white-space: nowrap;
+  box-shadow: none;
+}
+
+/* The action below the card sits above the card's shadow */
+.shot-controls {
+  position: relative;
+  z-index: 20;
+  width: 100%;
+  margin-top: 40px;
+}
+
+.shot-action {
+  width: 100%;
+}
+
+/* Pick a dare: no panel, just three cards with the card decoration */
+.shot-dares {
+  box-sizing: border-box;
+  width: 100%;
+  height: clamp(330px, 54dvh, 480px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 0;
+  background: none;
+  border: none;
+  box-shadow: none;
+}
+
+.shot-dares-title {
+  margin: 0;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--text-soft);
+}
+
+.shot-dare-row {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.shot-dare {
+  height: clamp(190px, 38dvh, 260px);
+  padding: 0;
+  background: none;
+  border: none;
+  perspective: 800px;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+}
+
+.shot-dare:disabled {
+  cursor: default;
+}
+
+.shot-dare.is-dimmed {
+  opacity: 0.35;
+}
+
+.shot-dare-inner {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.6s cubic-bezier(0.2, 0.85, 0.25, 1);
+}
+
+.shot-dare.is-revealed .shot-dare-inner {
+  transform: rotateY(180deg);
+}
+
+.shot-dare-back,
+.shot-dare-front {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-card);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  background-color: #111420;
+  background-image:
+    radial-gradient(circle at 50% 40%, rgba(255, 45, 117, 0.18) 0%, transparent 70%),
+    repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.04) 0px, rgba(255, 255, 255, 0.04) 1.5px, transparent 1.5px, transparent 14px),
+    repeating-linear-gradient(-45deg, rgba(255, 255, 255, 0.04) 0px, rgba(255, 255, 255, 0.04) 1.5px, transparent 1.5px, transparent 14px);
+}
+
+.shot-dare-back {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.shot-dare-front {
+  transform: rotateY(180deg);
+  padding: 14px 12px;
+  border-color: rgba(255, 45, 117, 0.7);
+  box-shadow: 0 0 22px -6px rgba(255, 45, 117, 0.6);
+}
+
+.shot-dare-text {
+  font-size: clamp(0.7rem, 2.4vw, 0.84rem);
+  line-height: 1.35;
+  color: var(--text-main);
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+/* ===== Revisions: deck slider, deck top buttons, customise actions, Shots & Dares layout ===== */
+
+.deck-screen {
+  overflow-x: hidden;
+}
+
+/* Below the info pop-up (z 100), so How to play opens over the deck screen */
+#mode-modal.deck-screen {
+  z-index: 90;
+}
+
+.deck-topbar {
+  position: absolute;
+  top: clamp(12px, 2.4dvh, 22px);
+  right: clamp(12px, 3vw, 24px);
+  z-index: 3;
+  display: flex;
+  gap: 8px;
+}
+
+.deck-topbar .icon-btn {
+  width: 40px;
+  height: 40px;
+}
+
+.deck-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(6px, 1.4dvh, 12px);
+}
+
+.deck-crest {
+  width: clamp(30px, 5.5dvh, 44px);
+  height: clamp(30px, 5.5dvh, 44px);
+}
+
+.deck-caption {
+  color: #ffffff;
+}
+
+/* Phones: the decks slide. The chosen one is centred, the next one peeks in from the right edge. */
+.deck-list {
+  position: relative;
+  display: flex;
+  gap: 14px;
+  width: 100%;
+  justify-content: flex-start;
+  transition: transform 0.45s cubic-bezier(0.2, 0.85, 0.25, 1);
+  will-change: transform;
+}
+
+.deck-tile {
+  flex: 0 0 66vw;
+  width: 66vw;
+  height: 340px;
+}
+
+/* Each deck is a portrait card: emoji above a name in the theme font */
+.deck-option {
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  padding: 22px 18px;
+}
+
+.deck-text {
+  align-items: center;
+}
+
+.deck-emoji {
+  font-size: 2.8rem;
+}
+
+.deck-text .mode-name {
+  font-family: 'Great Vibes', 'Alex Brush', 'Dancing Script', cursive;
+  font-size: 2.2rem;
+  font-weight: 400;
+  line-height: 1.05;
+  color: #ffffff;
+  text-shadow: 0 0 14px rgba(255, 255, 255, 0.25);
+}
+
+/* Wide screens: three decks side by side, no slider */
+@media (min-width: 720px) {
+  .deck-list {
+    display: grid;
+    grid-template-columns: repeat(3, 240px);
+    justify-content: center;
+    gap: 26px;
+    transform: none !important;
+    transition: none;
+  }
+
+  .deck-tile {
+    flex: none;
+    width: auto;
+    height: 330px;
+  }
+
+  .deck-text .mode-name {
+    font-size: 2rem;
+  }
+}
+
+/* Customise: Skip takes 30% of the row, Save and play the rest. Skip is always there. */
+.customise-actions {
+  display: flex;
+  gap: 10px;
+  align-items: stretch;
+  margin-top: 12px;
+}
+
+.customise-actions .customise-skip-btn {
+  display: flex;
+  flex: 0 0 30%;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  min-height: 46px;
+  margin: 0;
+  padding: 0 8px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-soft);
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.customise-actions .customise-modal-done {
+  flex: 1 1 70%;
+  width: auto;
+  margin: 0;
+}
+
+/* Shots & Dares: the card keeps the arch and the description; the buttons sit below it */
+.mode-shot-dare .card-back .customise-btn {
+  display: none;
+}
+
+.shot-blurb {
+  bottom: clamp(18px, 5.5vh, 40px);
+  width: 86%;
+  font-size: 0.84rem;
+}
+
+.shot-controls {
+  margin-top: 44px;
+}
+
+.shot-actions {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+}
+
+.shot-actions .shot-action {
+  flex: 1 1 100%;
+  width: auto;
+}
+
+.shot-actions.is-split .shot-action {
+  flex: 1 1 60%;
+}
+
+
+/* Pick a dare: wider than the card, so the three cards have room */
+.shot-dares {
+  width: min(560px, calc(100vw - 24px));
+}
+
+.shot-dare {
+  height: clamp(200px, 42dvh, 290px);
+}
+
+.shot-dare-text {
+  font-size: clamp(0.78rem, 3vw, 0.96rem);
+}
+
+/* ===== Revisions 2: deck frames and glow, bigger text, dare cards, Save and Skip row ===== */
+
+/* Classic pop-up framing: an outer border and an inner frame inside it */
+.deck-option {
+  border: 2px solid rgba(255, 255, 255, 0.28);
+}
+
+.deck-frame {
+  position: absolute;
+  inset: 9px;
+  z-index: 0;
+  border: 1.5px solid rgba(255, 255, 255, 0.18);
+  border-radius: calc(var(--radius-card) - 9px);
+  pointer-events: none;
+}
+
+.deck-option > * {
+  position: relative;
+}
+
+.deck-option > .vector-pattern,
+.deck-option > .deck-frame {
+  position: absolute;
+}
+
+/* Rotating glow in the deck's colour, shown on hover and when selected */
+@property --deck-angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+.deck-option::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  border-radius: inherit;
+  padding: 2px;
+  background: conic-gradient(from var(--deck-angle), transparent 0deg, transparent 230deg, var(--deck-color) 300deg, transparent 360deg);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.deck-option:hover::before,
+.deck-option[aria-pressed="true"]::before {
+  opacity: 1;
+  animation: deck-spin 6s linear infinite;
+}
+
+@keyframes deck-spin {
+  to { --deck-angle: 360deg; }
+}
+
+/* Descriptions always show, larger and brighter */
+.deck-text .mode-desc,
+.deck-text .mode-how {
+  opacity: 1;
+}
+
+.deck-text .mode-desc {
+  font-size: 1rem;
+  color: #f4f6fb;
+}
+
+.deck-text .mode-how {
+  font-size: 0.9rem;
+  color: #dfe5ef;
+}
+
+.deck-text .mode-name {
+  color: #ffffff;
+}
+
+.deck-emoji {
+  font-size: 3.6rem;
+  filter: brightness(1.18) saturate(1.1);
+}
+
+@media (min-width: 720px) {
+  .deck-emoji {
+    font-size: 4.2rem;
+  }
+}
+
+/* Pick a dare: stacked on phones, with the card back decoration and large text */
+@media (max-width: 719px) {
+  .shot-dare-row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+  }
+
+  .shot-dare {
+    height: 104px;
+  }
+}
+
+.dare-frame {
+  position: absolute;
+  inset: 7px;
+  z-index: 0;
+  border: 1.5px solid rgba(255, 255, 255, 0.16);
+  border-radius: calc(var(--radius-card) - 9px);
+  pointer-events: none;
+}
+
+.shot-dare-back > *,
+.shot-dare-front > * {
+  position: relative;
+}
+
+.shot-dare-back > .dare-frame,
+.shot-dare-front > .dare-frame,
+.shot-dare-front > .dare-watermark {
+  position: absolute;
+}
+
+.dare-watermark {
+  right: -4px;
+  bottom: -14px;
+  z-index: 0;
+  font-size: clamp(4rem, 14dvh, 6rem);
+  line-height: 1;
+  opacity: 0.16;
+  transform: rotate(-12deg);
+  pointer-events: none;
+}
+
+.shot-dare-text {
+  position: relative;
+  z-index: 1;
+  font-size: clamp(0.95rem, 3.6vw, 1.15rem);
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.shot-dare-back {
+  font-size: 2rem;
+}
+
+/* Save and Skip share the row by percentage; labels never spill out on narrow screens */
+.customise-actions .customise-skip-btn {
+  text-transform: none;
+  min-width: 0;
+  font-size: clamp(0.8rem, 3.4vw, 0.95rem);
+  letter-spacing: 0;
+  white-space: nowrap;
+}
+
+.customise-actions .customise-modal-done {
+  min-width: 0;
+  gap: 6px;
+  padding: 10px 8px;
+  font-size: clamp(0.7rem, 3.2vw, 0.9rem);
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+/* ===== Revisions 3: deck balance, frames, rotating edge, Shots & Dares fan and bottom controls ===== */
+
+/* Main title: a little smaller */
+.deck-hero-title {
+  font-size: clamp(2.5rem, min(15vw, 12dvh), 6.5rem);
+}
+
+/* Deck cards: more air above the emoji, content balanced inside the card */
+.deck-tile {
+  height: clamp(270px, 42dvh, 320px);
+}
+
+.deck-option {
+  justify-content: center;
+  gap: clamp(10px, 2.2dvh, 18px);
+  padding: clamp(30px, 6dvh, 44px) 20px clamp(22px, 4dvh, 30px);
+}
+
+.deck-emoji {
+  font-size: 4rem;
+}
+
+.deck-text .mode-name {
+  font-size: 2.3rem;
+}
+
+.deck-text .mode-desc {
+  max-width: 24ch;
+  font-size: 1.05rem;
+  line-height: 1.45;
+}
+
+/* Inner frame: dark and translucent, like the classic back card */
+.deck-frame {
+  background: rgba(6, 7, 12, 0.55);
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
+/* Static border stays neutral, so the colour that moves around it is visible */
+.deck-option,
+.deck-option:hover,
+.deck-option[aria-pressed="true"] {
+  border-color: rgba(255, 255, 255, 0.22);
+}
+
+.deck-option:hover,
+.deck-option[aria-pressed="true"] {
+  box-shadow: 0 0 0 1px var(--deck-color), 0 0 30px -6px var(--deck-color);
+}
+
+/* Rotating edge: sits on the inside of the border, with the same corner radius, and carries a bright highlight */
+.deck-option::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  border-radius: calc(var(--radius-card) - 2px);
+  padding: 3px;
+  background: conic-gradient(
+    from var(--deck-angle),
+    transparent 0deg 200deg,
+    var(--deck-color) 250deg,
+    #ffffff 290deg,
+    var(--deck-color) 330deg,
+    transparent 360deg
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+/* Dare cards: dark inner frame, and the drunk face peeks in from the left */
+.dare-frame {
+  background: rgba(6, 7, 12, 0.55);
+}
+
+.dare-watermark {
+  left: -8px;
+  right: auto;
+  top: 50%;
+  bottom: auto;
+  transform: translateY(-50%) rotate(-10deg);
+  font-size: clamp(4.5rem, 16dvh, 6.5rem);
+  opacity: 0.22;
+}
+
+/* Pick a dare: three cards fanned slightly; the one picked flips and comes to the front */
+.shot-dare-row {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: clamp(240px, 44dvh, 320px);
+}
+
+.shot-dare {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 44%;
+  height: clamp(190px, 38dvh, 250px);
+  margin: 0;
+  z-index: 1;
+  transform: translate(-50%, -50%) translateX(var(--x, 0%)) translateY(var(--y, 0px)) rotate(var(--r, 0deg));
+  transition: transform 0.55s cubic-bezier(0.2, 0.85, 0.25, 1), width 0.55s cubic-bezier(0.2, 0.85, 0.25, 1), opacity 0.3s ease;
+}
+
+.shot-dare:nth-child(1) { --r: -7deg; --x: -58%; --y: 6px; }
+.shot-dare:nth-child(2) { --r: 2deg; --x: 0%; --y: -4px; }
+.shot-dare:nth-child(3) { --r: 8deg; --x: 58%; --y: 8px; }
+
+.shot-dare.is-revealed {
+  width: 74%;
+  height: clamp(230px, 44dvh, 290px);
+  --r: 0deg;
+  --x: 0%;
+  --y: 0px;
+  z-index: 5;
+}
+
+.shot-dare.is-dimmed {
+  opacity: 0.4;
+}
+
+.shot-dare-text {
+  font-size: clamp(1rem, 4vw, 1.2rem);
+}
+
+/* CUSTOMIZE and START: pinned to the bottom of the screen, clear of the card */
+.shot-controls {
+  display: none;
+  position: absolute;
+  left: 50%;
+  bottom: clamp(16px, 3.5dvh, 30px);
+  transform: translateX(-50%);
+  z-index: 20;
+  width: min(clamp(275px, 42vw, 380px), calc(100vw - 24px));
+  margin: 0;
+}
+
+.mode-shot-dare .shot-controls {
+  display: block;
+}
+
+.shot-controls [hidden] {
+  display: none !important;
+}
+
+.shot-customise,
+.shot-action {
+  height: 46px;
+  border-radius: 14px;
+}
+
+.shot-customise {
+  position: relative;
+  flex: 0 0 40%;
+  margin: 0;
+  padding: 0 10px;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.shot-customise svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* ===== Revisions 4: swipeable decks, title alignment, rotating edge on the border, dare selector ===== */
+
+/* Decks swipe sideways on phones; the page still scrolls up and down */
+.deck-list {
+  touch-action: pan-y;
+}
+
+/* Every deck name reserves two lines, so the descriptions line up (Classic has one line) */
+.deck-text .mode-name {
+  min-height: 2.1em;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+/* The deck's own edge: the classic pop-up has no overflow clip, so the glow can sit on the border */
+.deck-option {
+  overflow: visible;
+}
+
+.deck-option-bg {
+  border-radius: calc(var(--radius-card) - 2px);
+}
+
+/* Rotating edge: exactly over the 2px border, same outer corner radius */
+.deck-option::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  z-index: 3;
+  border-radius: var(--radius-card);
+  padding: 2px;
+  background: conic-gradient(
+    from var(--deck-angle),
+    transparent 0deg 200deg,
+    var(--deck-color) 250deg,
+    #ffffff 290deg,
+    var(--deck-color) 330deg,
+    transparent 360deg
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+/* PLAY: a little wider, with space below and clear of the decks */
+.deck-footer {
+  padding: 24px 20px clamp(28px, 6dvh, 56px);
+}
+
+.deck-play {
+  width: min(100%, 420px);
+}
+
+/* Pick a dare: dares are chosen by highlight (arrow keys, swipe, or tap) */
+.shot-dare-text {
+  font-family: 'Baumans', var(--font-sans), cursive;
+  font-size: clamp(1.1rem, 4.4vw, 1.4rem);
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.dare-watermark {
+  opacity: 0.16;
+}
+
+.dare-back-emoji {
+  display: inline-block;
+  font-size: 2.6rem;
+  line-height: 1;
+}
+
+/* A darker band just inside the outer border, then the inner frame */
+.shot-dare-back,
+.shot-dare-front {
+  box-shadow: inset 0 0 0 5px rgba(0, 0, 0, 0.45);
+}
+
+.shot-dare.is-focus:not(.is-revealed) {
+  transform: translate(-50%, -50%) translateX(var(--x, 0%)) translateY(calc(var(--y, 0px) - 10px)) rotate(var(--r, 0deg));
+}
+
+.shot-dare.is-focus:not(.is-revealed) .shot-dare-back {
+  box-shadow: inset 0 0 0 5px rgba(0, 0, 0, 0.45), 0 0 22px -4px rgba(255, 45, 117, 0.75);
+}

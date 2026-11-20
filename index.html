@@ -27,7 +27,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Baumans&family=Dancing+Script:wght@700&family=Elsie+Swash+Caps:wght@400;900&family=Great+Vibes&display=swap" rel="stylesheet">
   <meta name="description" content="A party game for hilarious confessions, wild stories, and unforgettable nights.">
-  <link rel="stylesheet" href="style.css?v=94">
+  <link rel="stylesheet" href="style.css?v=106">
 </head>
 <body>
 
@@ -45,12 +45,18 @@
   <!-- Top Navigation Bar -->
  <!-- Top Navigation Bar -->
   <header class="app-header">
-    <button class="icon-btn reshuffle-btn" id="reshuffle-btn" type="button" title="Restart deck" aria-label="Restart deck">
-      <svg viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M20 11a8 8 0 0 0-14.9-4M5 3v4h4M4 13a8 8 0 0 0 14.9 4M19 21v-4h-4" />
-      </svg>
-      <span>Restart</span>
-    </button>
+    <div class="header-nav">
+      <button class="icon-btn home-btn" id="home-btn" type="button" title="Home: choose a game" aria-label="Home: choose a game">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M4 11 12 4l8 7M6 10v9h4v-5h4v5h4v-9" />
+        </svg>
+      </button>
+      <button class="icon-btn restart-btn" id="reshuffle-btn" type="button" title="Restart game" aria-label="Restart game">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M20 11a8 8 0 0 0-14.9-4M5 3v4h4M4 13a8 8 0 0 0 14.9 4M19 21v-4h-4" />
+        </svg>
+      </button>
+    </div>
 
     <div class="header-actions">
       <div id="toast" role="status" aria-live="polite"></div>
@@ -97,6 +103,64 @@
     <!-- CENTER: Tinder-Style Interactive Card Deck -->
     <div class="card-stack" id="card-stack">
       <!-- Cards rendered and animated dynamically via app.js -->
+    </div>
+
+    <!-- Shot dare time: intro, timed sentences, then the dare choice -->
+    <div class="shot-wrap" id="shot-wrap">
+      <div class="shot-slot" id="shot-slot">
+      </div>
+      <div class="shot-dares" id="shot-dares" hidden>
+        <p class="shot-dares-title">Pick a dare</p>
+        <div class="shot-dare-row">
+          <button class="shot-dare" type="button" aria-label="Dare card 1">
+            <span class="shot-dare-inner">
+              <span class="dare-frame" aria-hidden="true"></span>
+              <span class="shot-dare-back" aria-hidden="true"><span class="dare-back-emoji"></span></span>
+              <span class="shot-dare-front"><span class="dare-frame" aria-hidden="true"></span><span class="dare-watermark" aria-hidden="true">🥴</span><span class="shot-dare-text"></span></span>
+            </span>
+          </button>
+          <button class="shot-dare" type="button" aria-label="Dare card 2">
+            <span class="shot-dare-inner">
+              <span class="dare-frame" aria-hidden="true"></span>
+              <span class="shot-dare-back" aria-hidden="true"><span class="dare-back-emoji"></span></span>
+              <span class="shot-dare-front"><span class="dare-frame" aria-hidden="true"></span><span class="dare-watermark" aria-hidden="true">🥴</span><span class="shot-dare-text"></span></span>
+            </span>
+          </button>
+          <button class="shot-dare" type="button" aria-label="Dare card 3">
+            <span class="shot-dare-inner">
+              <span class="dare-frame" aria-hidden="true"></span>
+              <span class="shot-dare-back" aria-hidden="true"><span class="dare-back-emoji"></span></span>
+              <span class="shot-dare-front"><span class="dare-frame" aria-hidden="true"></span><span class="dare-watermark" aria-hidden="true">🥴</span><span class="shot-dare-text"></span></span>
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Shots & Dares: CUSTOMIZE and START, pinned to the bottom of the screen -->
+    <div class="shot-controls">
+        <div class="shot-actions" id="shot-actions">
+          <button class="customise-btn shot-customise" id="shot-customise" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 2.8 13.9 9l6.3 2-6.3 2-1.9 6.2L10.1 13 3.8 11l6.3-2L12 2.8Z" />
+              <path d="m19 14 .9 2.4 2.3.8-2.3.8L19 20.5l-.8-2.5-2.4-.8 2.4-.8.8-2.4Z" />
+            </svg>
+            <span>CUSTOMIZE</span>
+          </button>
+          <button class="btn-primary shot-action" id="shot-action" type="button">START</button>
+        </div>
+    </div>
+
+    <!-- Who most likely: minimal arrows at the bottom right, same as a swipe left or right -->
+    <div class="next-pill" id="next-pill" role="group" aria-label="Move through the cards">
+      <button class="next-arrow" type="button" data-dir="left" aria-label="Undo">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6" /></svg>
+        <span>Undo</span>
+      </button>
+      <button class="next-arrow" type="button" data-dir="right" aria-label="Next card">
+        <span>Next</span>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg>
+      </button>
     </div>
 
     <!-- RIGHT TARGET: 🥳 Party & Chaos -->
@@ -241,6 +305,70 @@
     </div>
   </div>
 
+  <!-- Deck screen: choose a game (after the age question, and from Home). Arrow keys pick, PLAY starts. -->
+  <div class="modal-overlay deck-screen" id="mode-modal" role="dialog" aria-modal="true" aria-labelledby="deck-title">
+    <div class="vector-pattern deck-bg" aria-hidden="true"></div>
+    <div class="deck-topbar">
+      <button class="icon-btn deck-sound-btn" id="deck-sound-btn" type="button" title="Toggle Sound (M)" aria-label="Toggle Sound"></button>
+      <button class="icon-btn" id="deck-info-btn" type="button" title="How to play" aria-label="How to play">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9.3 8.5a2.8 2.8 0 1 1 4.5 2.2c-1.2.9-1.8 1.4-1.8 3M12 17.5v.1" /></svg>
+      </button>
+    </div>
+    <div class="deck-inner">
+      <div class="deck-hero">
+        <div class="crest-diamond deck-crest" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 2.8 13.9 9l6.3 2-6.3 2-1.9 6.2L10.1 13 3.8 11l6.3-2L12 2.8Z" />
+            <path d="m19 14 .9 2.4 2.3.8-2.3.8L19 20.5l-.8-2.5-2.4-.8 2.4-.8.8-2.4Z" />
+          </svg>
+        </div>
+        <div class="emblem-title deck-hero-title" id="deck-title">
+          <span class="cursive-line">Never Have</span>
+          <span class="cursive-line">Ai Ever</span>
+        </div>
+      </div>
+      <p class="deck-caption">Choose your game</p>
+      <div class="deck-list" role="group" aria-label="Game decks">
+        <div class="deck-tile">
+          <div class="mode-option deck-option" role="button" tabindex="0" data-mode="classic" aria-pressed="true">
+            <span class="vector-pattern deck-option-bg" aria-hidden="true"></span>
+            <span class="deck-frame" aria-hidden="true"></span>
+            <span class="deck-emoji" aria-hidden="true">🍻</span>
+            <span class="deck-text">
+              <span class="mode-name">Classic</span>
+              <span class="mode-desc">Questions from four categories, one card at a time.</span>
+            </span>
+          </div>
+        </div>
+        <div class="deck-tile">
+          <div class="mode-option deck-option" role="button" tabindex="0" data-mode="most-likely" aria-pressed="false">
+            <span class="vector-pattern deck-option-bg" aria-hidden="true"></span>
+            <span class="deck-frame" aria-hidden="true"></span>
+            <span class="deck-emoji" aria-hidden="true">🎯</span>
+            <span class="deck-text">
+              <span class="mode-name">Who Most<br>Likely</span>
+              <span class="mode-desc">Point at your friends and see who fits best.</span>
+            </span>
+          </div>
+        </div>
+        <div class="deck-tile">
+          <div class="mode-option deck-option" role="button" tabindex="0" data-mode="shot-dare" aria-pressed="false">
+            <span class="vector-pattern deck-option-bg" aria-hidden="true"></span>
+            <span class="deck-frame" aria-hidden="true"></span>
+            <span class="deck-emoji" aria-hidden="true">🍶</span>
+            <span class="deck-text">
+              <span class="mode-name">Shots &amp;<br>Dares</span>
+              <span class="mode-desc">Take a shot when it fits, and the one who reaches 5 shots chooses their fate.</span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="deck-footer">
+      <button class="btn-primary deck-play" id="mode-start-btn" type="button">PLAY</button>
+    </div>
+  </div>
+
   <div class="modal-overlay" id="customise-modal" role="dialog" aria-modal="true" aria-labelledby="customise-modal-title">
     <div class="modal-content customise-modal-content info-reverse">
       <div class="vector-pattern" aria-hidden="true"></div>
@@ -289,21 +417,20 @@
       <textarea class="customise-group-description" id="customise-group-description" rows="2" maxlength="70" placeholder=""></textarea>
       <p class="customise-preview-note">Your group description is never saved or sent anywhere.</p>
       </div>
-      <button class="btn-primary customise-modal-done" type="button">
+      <div class="customise-actions">
+        <button class="customise-skip-btn" type="button">Skip</button>
+        <button class="btn-primary customise-modal-done" type="button">
         <svg class="customise-save-sparkle" viewBox="0 0 24 24" aria-hidden="true">
           <path d="M12 2.8 13.9 9l6.3 2-6.3 2-1.9 6.2L10.1 13 3.8 11l6.3-2L12 2.8Z" />
           <path d="m19 14 .9 2.4 2.3.8-2.3.8L19 20.5l-.8-2.5-2.4-.8 2.4-.8.8-2.4Z" />
         </svg>
         <span>SAVE AND PLAY</span>
-        <span class="customise-ad-badge">
-          <svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 1.75a.75.75 0 0 1 1.12-.65l6.1 3.52a1.6 1.6 0 0 1 0 2.76l-6.1 3.52A.75.75 0 0 1 3 10.25z" /></svg>
-          <span>AD</span>
-        </span>
       </button>
+      </div>
       </div>
     </div>
   </div>
 
-  <script type="module" src="app.js?v=55"></script>
+  <script type="module" src="app.js?v=64"></script>
 </body>
 </html>

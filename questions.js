@@ -564,3 +564,41 @@ export const QUESTIONS = {
 "gave a genuine compliment to a stranger that made their day."
   ]
 };
+
+// Shot dare time: one dare is drawn per round. The three cards on screen are for show only,
+// so every pick reveals the same drawn dare. Edit freely.
+// Dare categories: each dare belongs to one, and its emoji shows on the card back
+export const DARE_CATEGORIES = {
+  dance: { name: 'Dance', emoji: '💃' },
+  perform: { name: 'Perform', emoji: '🎤' },
+  silly: { name: 'Silly', emoji: '🤪' },
+  sport: { name: 'Sport', emoji: '🤸' },
+  social: { name: 'Social', emoji: '💬' },
+  style: { name: 'Style', emoji: '👑' },
+  mind: { name: 'Mind', emoji: '🤯' }
+};
+
+// Shot dare time: one dare is drawn per round. The three cards on screen are for show only,
+// so every pick reveals the same drawn dare. Edit freely; category must be a key above.
+export const SHOT_DARES = [
+  { text: "Dance with a glass balanced on your head for 20 seconds.", category: 'dance' },
+  { text: "Do your best impression of the group's most annoying friend.", category: 'perform' },
+  { text: "Let the group pick a song and lip-sync the whole chorus.", category: 'perform' },
+  { text: "Talk in a silly accent until your next turn.", category: 'silly' },
+  { text: "Call a random contact and sing them happy birthday.", category: 'social' },
+  { text: "Do 10 squats while reciting the alphabet.", category: 'sport' },
+  { text: "Let the group read your last text message out loud.", category: 'social' },
+  { text: "Wear someone else's jacket for the rest of the round.", category: 'style' },
+  { text: "Describe the person on your left using only three words.", category: 'social' },
+  { text: "Do a runway walk to the kitchen and back.", category: 'style' },
+  { text: "Hold a plank until the next player finishes their turn.", category: 'sport' },
+  { text: "Balance a spoon on your nose for 15 seconds.", category: 'silly' },
+  { text: "Tell the group the most unflattering fact you know about yourself.", category: 'social' },
+  { text: "Do an animal impression and let the others guess which animal.", category: 'silly' },
+  { text: "Swap one piece of clothing with the person on your right until your next turn.", category: 'style' },
+  { text: "Read the last compliment you received out loud, in a movie-trailer voice.", category: 'perform' },
+  { text: "Let the group give you a new nickname for the rest of the night.", category: 'social' },
+  { text: "Do an impression of a famous person and let the group guess who.", category: 'perform' },
+  { text: "Take a sip while doing your best robot dance.", category: 'dance' },
+  { text: "Speak only in questions until your next turn.", category: 'mind' }
+];
