@@ -845,8 +845,13 @@ body.unhinged-screen-shake {
   white-space: nowrap;
 }
 
-.game-card:not(.intro-card) .customise-btn {
-  display: none;
+.game-card:not(.intro-card) .customise-btn,
+.game-card:not(.intro-card) .card-blurb {
+  display: none !important;
+}
+
+.game-card:not(.intro-card) .card-back-emblem {
+  grid-template-rows: 1fr auto 1fr;
 }
 
 .game-card.current.level-up-card:not(.face-down) .level-up-choice-hint span:first-child {
@@ -933,7 +938,7 @@ body.unhinged-screen-shake {
   text-transform: uppercase;
   letter-spacing: 1.5px;
   color: var(--active-card-color, #ff2d75);
-  margin-bottom: clamp(10px, 2vh, 18px);
+  margin-bottom: clamp(12px, 2.4vh, 20px);
   opacity: 0.95;
   transition: color 0.3s ease;
 }
@@ -942,7 +947,7 @@ body.unhinged-screen-shake {
   font-family: 'Baumans', var(--font-sans), cursive;
   font-size: clamp(1.3rem, 4.6vw, 1.7rem);
   font-weight: 700;
-  line-height: 1.42;
+  line-height: 1.68;
   color: #ffffff;
   text-wrap: balance;
 }
@@ -2446,9 +2451,23 @@ body.unhinged-screen-shake {
 
 /* Desktop / laptop browsers: scale the game up so it fills the window at 100% zoom.
    Placed after the mobile rules so it wins on large screens; mobile is unchanged. */
+@media (min-width: 768px) {
+  .app-header {
+    max-width: none;
+    width: 100%;
+    box-sizing: border-box;
+    padding-left: clamp(16px, 3vw, 32px);
+    padding-right: clamp(16px, 3vw, 32px);
+  }
+}
+
 @media (min-width: 768px) and (min-height: 760px) {
   .app-header {
-    max-width: 920px;
+    max-width: none;
+    width: 100%;
+    box-sizing: border-box;
+    padding-left: clamp(16px, 3vw, 32px);
+    padding-right: clamp(16px, 3vw, 32px);
   }
   .game-arena {
     max-width: min(96vw, 1040px);
@@ -4324,7 +4343,7 @@ body.unhinged-screen-shake {
 
 .shot-dare-text {
   font-size: 12.5cqw;
-  line-height: 1.12;
+  line-height: 1.35;
   font-weight: 700;
   hyphens: auto;
   overflow-wrap: anywhere;
@@ -4587,14 +4606,16 @@ body.unhinged-screen-shake {
 
 .classic-keys {
   display: none;
-  position: absolute;
+  position: fixed;
   left: 0;
   right: 0;
   bottom: clamp(16px, 3.5dvh, 30px);
-  z-index: 12;
+  z-index: 25;
   align-items: center;
   justify-content: space-between;
-  padding: 0 clamp(20px, 3vw, 44px);
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0 clamp(16px, 3vw, 32px);
   pointer-events: none;
 }
 
@@ -4644,14 +4665,33 @@ body.unhinged-screen-shake {
   min-width: 30px;
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 768px) {
+  .app-header {
+    max-width: none;
+    width: 100%;
+    box-sizing: border-box;
+    padding: clamp(12px, 2.4dvh, 22px) clamp(16px, 3vw, 32px);
+  }
+
   body:not(.mode-most-likely):not(.mode-shot-dare) .classic-keys {
     display: flex;
   }
+}
 
+@media (min-width: 1024px) {
   .key-cue {
     display: inline-flex;
   }
+}
+
+/* Hide classic keys whenever modal / overlay or age gate is active */
+body.screen-deck .classic-keys,
+body.screen-age-gate .classic-keys,
+body:has(#mode-modal.active) .classic-keys,
+body:has(#info-modal.active) .classic-keys,
+body:has(#customise-modal.active) .classic-keys,
+body:has(.age-gate-card) .classic-keys {
+  display: none !important;
 }
 
 /* Who's Most Likely: Indeed is hidden on the first card */
@@ -4679,42 +4719,13 @@ body.unhinged-screen-shake {
   }
 }
 
-/* Phones: the three cards are padded and tilted at random; the picked one moves to the centre and grows 150% */
+/* Phones: dare cards centred and tilted; UI selector hidden, no hover/focus jump, keeping all controls */
 @media (max-width: 719px) {
-  .shot-dare-row {
-    display: block;
-    height: 474px;
+  /* Hide the UI selector pill on mobile (cards are chosen by direct tap) */
+  .shot-controls .dare-pill {
+    display: none !important;
   }
 
-  .shot-dare {
-    position: absolute;
-    left: 50%;
-    top: calc(var(--n, 0) * 162px);
-    width: 70%;
-    height: 150px;
-    aspect-ratio: auto;
-    container-type: size;
-    transform: translateX(-50%) rotate(var(--tilt, 0deg));
-  }
-
-  .shot-dare:nth-child(1) { --n: 0; }
-  .shot-dare:nth-child(2) { --n: 1; }
-  .shot-dare:nth-child(3) { --n: 2; }
-
-  .shot-dare.is-focus:not(.is-revealed) {
-    transform: translateX(-50%) translateY(-8px) rotate(var(--tilt, 0deg));
-    z-index: 4;
-  }
-
-  .shot-dare.is-revealed {
-    top: 50%;
-    transform: translate(-50%, -50%) scale(1.5);
-    z-index: 6;
-  }
-}
-
-/* ===== Revisions 12: dare cards centred and tilted on phones ===== */
-@media (max-width: 719px) {
   .shot-dare-row {
     position: relative;
     display: block;
@@ -4732,11 +4743,30 @@ body.unhinged-screen-shake {
     container-type: size;
     transform: translateX(-50%) rotate(var(--tilt, 0deg));
     z-index: 1;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
   }
 
+  .shot-dare:nth-child(1) { --n: 0; }
+  .shot-dare:nth-child(2) { --n: 1; }
+  .shot-dare:nth-child(3) { --n: 2; }
+
+  /* Disable hover effect and focus outline on mobile touch */
+  .shot-dare:hover,
+  .shot-dare:active,
+  .shot-dare:focus,
+  .shot-dare:focus-visible {
+    outline: none !important;
+  }
+
+  /* No pre-selected focus lift or glowing box-shadow on mobile */
   .shot-dare.is-focus:not(.is-revealed) {
-    transform: translateX(-50%) translateY(-8px) rotate(var(--tilt, 0deg));
-    z-index: 4;
+    transform: translateX(-50%) rotate(var(--tilt, 0deg));
+    z-index: 1;
+  }
+
+  .shot-dare.is-focus:not(.is-revealed) .shot-dare-back {
+    box-shadow: inset 0 0 0 5px rgba(0, 0, 0, 0.45);
   }
 
   /* The picked card comes to the centre of the row and grows by 150%, keeping its proportions */
@@ -4925,6 +4955,7 @@ body.unhinged-screen-shake {
 /* Shots & Dares dare text: a little smaller */
 .shot-dare-text {
   font-size: 10cqw;
+  line-height: 1.35;
 }
 
 /* Pick again: on the right, with the shot glass */

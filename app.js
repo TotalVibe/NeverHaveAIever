@@ -875,6 +875,7 @@ class NeverHaveIEverApp {
   // The first card asks the question inside its decorated back, so it keeps the same pattern and frame
   showAgeGate(card) {
     this.ageGateActive = true;
+    document.body.classList.add('screen-age-gate');
     const front = card.querySelector('.card-back-frame');
     front.innerHTML = `
       <div class="age-gate-front">
@@ -894,6 +895,7 @@ class NeverHaveIEverApp {
       sounds.playClick();
       this.fadeTransition(() => {
         this.ageGateActive = false;
+        document.body.classList.remove('screen-age-gate');
         const ageCard = this.stackContainer.querySelector('.age-gate-card');
         if (ageCard) ageCard.remove();
         // Next: pick a game. Its start shuffles the deck, so the right cards get dealt
@@ -1049,12 +1051,13 @@ class NeverHaveIEverApp {
     return lines.map(line => `<span class="cursive-line">${line}</span>`).join('');
   }
 
-  // The short description on the card back, between the title and the Customize button
-  blurbMarkup() {
+  // The short description on the card back, between the title and the Customize button (shown only on intro card)
+  blurbMarkup(isIntro = false) {
+    if (!isIntro) return '';
     const text = {
-      'most-likely': 'Majority selects who drinks<br>by pointing at them.',
+      'most-likely': 'The majority selects who<br>drinks by pointing at them.',
       'shot-dare': 'The group sets the shot goal.<br>Reach it, and the dare begins.'
-    }[this.gameMode] ?? 'Drink if <strong>you\'ve</strong> done it,<br>perfect icebreaker game.';
+    }[this.gameMode] ?? 'Drink if <strong>you\'ve</strong> done it,<br>the perfect icebreaker game.';
     return `<p class="card-blurb">${text}</p>`;
   }
 
@@ -1138,7 +1141,7 @@ class NeverHaveIEverApp {
               <div class="emblem-title">
                 ${this.emblemTitleMarkup()}
               </div>
-              ${this.blurbMarkup()}
+              ${this.blurbMarkup(Boolean(data.showCustomise))}
               <button class="customise-btn" type="button" aria-label="Customize cards with AI">
                 <svg viewBox="0 0 24 24" aria-hidden="true">
                   <path d="M12 2.8 13.9 9l6.3 2-6.3 2-1.9 6.2L10.1 13 3.8 11l6.3-2L12 2.8Z" />
@@ -1664,6 +1667,8 @@ class NeverHaveIEverApp {
     this.pendingMode = this.gameMode;
     this.syncModeOptions();
     this.ageGateActive = false;
+    document.body.classList.remove('screen-age-gate');
+    document.body.classList.add('screen-deck');
     this.modeModal.classList.add('active');
     this.positionDeckTrack();
     this.modeModal.querySelector('.mode-option[aria-pressed="true"]')?.focus({ preventScroll: true });
@@ -1736,11 +1741,13 @@ class NeverHaveIEverApp {
   }
 
   setModeClasses() {
+    document.body.classList.toggle('mode-classic', this.gameMode === 'classic');
     document.body.classList.toggle('mode-most-likely', this.gameMode === 'most-likely');
     document.body.classList.toggle('mode-shot-dare', this.gameMode === 'shot-dare');
   }
 
   startGame(mode) {
+    document.body.classList.remove('screen-deck');
     this.gameMode = mode;
     this.setModeClasses();
     this.cardHistory = [];
@@ -1764,7 +1771,10 @@ class NeverHaveIEverApp {
       return;
     }
     this.syncMostLikelyPill();
-    this.reshuffleGame();
+    this.stackContainer.classList.remove('shuffling', 'reshuffle-arriving');
+    this.isAnimating = false;
+    this.restartGame();
+    this.revealTargetButtons();
   }
 
   // ----- Shot dare time -----
