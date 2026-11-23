@@ -91,10 +91,10 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 90vw;
-  max-width: 650px;
-  height: 90vw;
-  max-height: 650px;
+  width: 90vmin;
+  max-width: 1200px;
+  height: 90vmin;
+  max-height: 1200px;
   border-radius: 50%;
   background: radial-gradient(circle, rgba(255, 45, 117, 0.16) 0%, rgba(32, 201, 151, 0.08) 50%, transparent 75%);
   filter: blur(85px);
@@ -152,8 +152,9 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  /* Expands generously on widescreen up to 960px while staying flexible on mobile */
-  max-width: min(96vw, 960px);
+  /* Fills phones; on widescreen it widens with the viewport height so the side targets
+     stay generously spaced around the card on monitors and TVs */
+  max-width: min(96vw, calc(100dvh * 1.35));
   width: 100%;
   margin: 0 auto;
   padding: clamp(8px, 1.8vh, 16px) clamp(8px, 2vw, 24px);
@@ -267,14 +268,15 @@ body {
 }
 
 .target-btn .emoji {
-  font-size: clamp(2.25rem, 6.8vw, 3.05rem);
+  /* Fluid with the window: grows boldly on monitors and TVs, mobile untouched */
+  font-size: clamp(2.25rem, min(6.8vw, 5.2vh), 6rem);
   line-height: 1;
   transition: transform 0.2s ease;
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
 }
 
 .target-btn .label {
-  font-size: clamp(0.72rem, 2vw, 0.84rem);
+  font-size: clamp(0.72rem, 2vw, 1.6rem);
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -284,7 +286,7 @@ body {
 }
 
 .target-btn .arrow-indicator {
-  font-size: 0.65rem;
+  font-size: clamp(0.65rem, 1.5vh, 1.25rem);
   opacity: 0.6;
   color: var(--text-dim);
   transition: all 0.2s ease;
@@ -344,9 +346,9 @@ body {
   left: clamp(0px, 1.2vw, 18px);
   top: calc(50% - 24px);
   transform: translateY(-50%);
-  width: clamp(52px, 8vw, 70px);
-  height: clamp(90px, 14vh, 104px);
-  padding: 16px 4px;
+  width: clamp(52px, min(8vw, 13vh), 180px);
+  height: clamp(90px, 14vh, 320px);
+  padding: clamp(16px, 2.4vh, 56px) 4px;
   border-right: 2px solid rgba(255, 146, 43, 0.72);
   gap: 8px;
 }
@@ -368,9 +370,9 @@ body {
   right: clamp(0px, 1.2vw, 18px);
   top: calc(50% - 24px);
   transform: translateY(-50%);
-  width: clamp(52px, 8vw, 70px);
-  height: clamp(90px, 14vh, 104px);
-  padding: 16px 4px;
+  width: clamp(52px, min(8vw, 13vh), 180px);
+  height: clamp(90px, 14vh, 320px);
+  padding: clamp(16px, 2.4vh, 56px) 4px;
   border-left: 2px solid rgba(32, 201, 151, 0.72);
   gap: 8px;
 }
@@ -1016,7 +1018,7 @@ body {
 .info-reverse-title {
   font-family: 'Great Vibes', 'Alex Brush', 'Dancing Script', cursive;
   font-weight: 400;
-  font-size: clamp(2.2rem, 8vw, 2.8rem);
+  font-size: clamp(2.2rem, 8vw, 4.2rem);
   line-height: 1.05;
   color: #ffffff;
   text-shadow: 0 0 20px rgba(255, 255, 255, 0.5), 0 2px 10px rgba(0, 0, 0, 0.9);
@@ -1291,7 +1293,7 @@ body {
 
 @media (min-width: 768px) and (min-height: 760px) {
 .game-arena {
-    max-width: min(96vw, 1040px);
+    max-width: min(96vw, calc(100dvh * 1.35));
   }
 }
 
@@ -1326,20 +1328,20 @@ body {
 
 @media (min-width: 768px) and (min-height: 760px) {
 .target-btn .emoji {
-    font-size: clamp(2.08rem, 3.2vw, 2.64rem);
+    font-size: clamp(2.08rem, min(3.2vw, 4.6vh), 5.6rem);
   }
 }
 
 @media (min-width: 768px) and (min-height: 760px) {
 .target-btn .label {
-    font-size: clamp(0.8rem, 1.1vw, 0.92rem);
+    font-size: clamp(0.8rem, 1.1vw, 1.5rem);
   }
 }
 
 @media (min-width: 768px) and (min-height: 760px) {
 .target-btn.target-left,
   .target-btn.target-right {
-    width: 76px;
+    width: clamp(76px, 9vw, 190px);
   }
 }
 
@@ -1374,7 +1376,7 @@ body {
   grid-row: 2;
   margin: 0;
   font-family: 'Great Vibes', 'Alex Brush', 'Dancing Script', cursive;
-  font-size: clamp(1.8rem, 7vw, 2.6rem);
+  font-size: clamp(1.8rem, 10cqi, 4.6rem);
   font-weight: 400;
   line-height: 1.1;
   color: #fff;

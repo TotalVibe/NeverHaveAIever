@@ -2414,9 +2414,10 @@ body:has(.age-gate-card) .classic-keys {
 }
 
 @media (min-width: 1024px) {
-/* Customize, START, SOMEONE LOST!, PLAY AGAIN and the dare picker sit clear of the bottom edge */
+/* Customize, START, SOMEONE LOST!, PLAY AGAIN and the dare picker sit on the bottom edge,
+   the same clearance as the classic keys — never hovering over the cards */
 .shot-controls {
-    bottom: clamp(56px, 10dvh, 104px);
+    bottom: clamp(16px, 3.5dvh, 80px);
   }
 }
 
@@ -2486,7 +2487,8 @@ body:has(.age-gate-card) .classic-keys {
 }
 
 .deck-hero-title {
-  font-size: clamp(2rem, min(14vw, 9dvh), 6.5rem);
+  /* The title supports; the card piles are the hero of the home screen */
+  font-size: clamp(2rem, min(14vw, 7.5dvh), 7rem);
 }
 
 .deck-hero {
@@ -2612,7 +2614,8 @@ body:has(.age-gate-card) .classic-keys {
 
 @media (min-width: 1024px) {
 .deck-screen .deck-hero-title {
-    font-size: clamp(4rem, min(11vw, 13dvh), 10.5rem);
+    /* Step back so the piles dominate widescreen: ~15dvh for two lines, never more */
+    font-size: clamp(3rem, min(6.5vw, 7dvh), 9rem);
   }
 }
 
@@ -2676,4 +2679,182 @@ body:has(.age-gate-card) .classic-keys {
     transform: translateY(-42px);
   }
 }
+
+/* ===== Revisions 52: fluid large-screen & TV scaling for the deck screen and the mode piles ===== */
+
+/*
+ * Cards, piles and game text follow the viewport's smaller side (vmin) or their own
+ * container (cqi) instead of hard px caps, so 1080p/4K monitors and TVs get a bold,
+ * screen-filling game while phones (390px) resolve to the exact same values as before.
+ */
+
+@media (min-width: 720px) {
+.deck-list {
+    /* Tracker matches the tile width below (max(170px, min(58vmin, 34dvh, 29vw))) */
+    grid-template-columns: repeat(3, minmax(0, max(170px, min(58vmin, 34dvh, 29vw))));
+    gap: clamp(14px, 2.4vmin, 40px);
+  }
+}
+
+@media (min-width: 720px) {
+.deck-tile {
+    /* True portrait card ratio (0.756 w/h). Width is capped by the left-over vertical
+       space (34dvh -> ~44dvh tall) and by the row fitting the screen (29vw), so title,
+       piles and SELECT always share one screen and SELECT never leaves the window */
+    width: max(170px, min(58vmin, 34dvh, 29vw));
+    height: auto;
+    aspect-ratio: 0.756;
+  }
+}
+
+@media (min-width: 720px) {
+.deck-inner {
+    /* Exactly wide enough for the deck row (3 x min(58vmin, 34dvh, 29vw) + 2 gaps), so
+       the tracks never shrink and the cards never overlap on 4K screens */
+    max-width: min(92vw, calc(102dvh + 5vmin + 24px));
+  }
+}
+
+.deck-caption {
+  font-size: clamp(0.78rem, 1.6vmin, 1.5rem);
+}
+
+@media (min-width: 720px) {
+.deck-emoji {
+    /* Scales with the card (40% of its width), never the window */
+    font-size: min(40cqi, 20dvh);
+  }
+}
+
+@media (min-width: 720px) {
+.deck-text .mode-name {
+    font-size: clamp(1.9rem, 13cqi, 6rem);
+  }
+}
+
+@media (min-width: 720px) {
+.deck-text .mode-desc {
+    font-size: clamp(0.95rem, 6.4cqi, 2.2rem);
+  }
+}
+
+.deck-text .mode-how {
+  font-size: clamp(0.74rem, 5.6cqi, 1.9rem);
+}
+
+/* Who most likely & Shots & Dares: piles grow with the window like the classic card */
+
+@media (min-width: 720px) {
+.mode-most-likely .card-stack,
+.mode-shot-dare .shot-wrap {
+    width: min(clamp(320px, 66vmin, 1050px), calc(100vw - 24px));
+  }
+}
+
+@media (min-width: 720px) {
+.mode-most-likely .card-stack,
+  .mode-shot-dare .shot-slot,
+  .mode-shot-dare .shot-dares {
+    height: min(clamp(400px, 86vmin, 1360px), 80dvh);
+  }
+}
+
+@media (min-width: 720px) {
+.mode-shot-dare .shot-controls {
+    width: min(clamp(320px, 66vmin, 1050px), calc(100vw - 24px));
+  }
+}
+
+/* Pick a dare: the fan widens with the screen; cards scale via their container */
+
+@media (min-width: 720px) {
+.shot-dares {
+    width: min(clamp(780px, 96vmin, 1500px), calc(100vw - 24px));
+  }
+}
+
+@media (min-width: 720px) {
+.shot-dares-title {
+    font-size: clamp(2.8rem, 14vmin, 8rem);
+  }
+}
+
+/* Key cues: scale with the window; em keeps the badge proportional to its own text */
+
+.key-cue,
+.kbd {
+  font-size: clamp(0.78rem, 1.5vmin, 1.4rem);
+  min-width: max(30px, 2.4em);
+  height: max(30px, 2.2em);
+}
+
+.classic-random,
+.classic-keys-right {
+  font-size: clamp(0.8rem, 1.5vmin, 1.4rem);
+}
+
+/* Game buttons (SELECT, START, SOMEONE LOST!, PLAY AGAIN) grow on big screens */
+
+.shot-action,
+.deck-play,
+.shot-customise {
+  font-size: clamp(0.8rem, min(2.2vw, 2.6vh), 2rem);
+}
+
+.deck-play,
+.shot-customise,
+.shot-action {
+  height: clamp(46px, 5.6dvh, 90px);
+}
+
+@media (min-width: 1024px) {
+.deck-play:has(.key-cue) {
+    min-height: clamp(46px, 5.6dvh, 90px);
+    height: clamp(46px, 5.6dvh, 90px);
+  }
+}
+
+/* Card-back description: proportional to the card */
+
+.card-back-emblem > .card-blurb {
+  font-size: clamp(0.85rem, 5cqi, 2.2rem);
+}
+
+/* Who most likely: the hint that follows the prompt */
+
+.mode-most-likely .card-hint-text {
+  font-size: clamp(0.7rem, 4.4cqi, 2rem);
+}
+
+/* Bottom pills (Undo / Indeed / Next, and the dare picker) scale too */
+
+.next-arrow {
+  height: clamp(36px, 4.6dvh, 74px);
+  font-size: clamp(0.78rem, min(2vw, 2.2vh), 1.7rem);
+  padding: 0 clamp(14px, 1.6vw, 34px);
+}
+
+@media (min-width: 720px) {
+.dare-pill .next-arrow {
+    height: clamp(44px, 5.6dvh, 90px);
+    font-size: clamp(0.85rem, min(2.2vw, 2.6vh), 1.9rem);
+  }
+}
+
+/* Bottom-edge clearances breathe on tall/4K screens */
+
+.next-pill {
+  bottom: clamp(8px, 2.5dvh, 60px);
+}
+
+@media (min-width: 1024px) {
+.shot-controls {
+    bottom: clamp(56px, 10dvh, 220px);
+  }
+}
+
+.classic-keys {
+  bottom: clamp(16px, 3.5dvh, 80px);
+}
+
 

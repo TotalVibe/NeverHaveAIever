@@ -166,7 +166,7 @@ body.unhinged-screen-shake {
 
 .card-front {
   background: var(--bg-card);
-  padding: clamp(18px, 3vh, 26px) clamp(16px, 4vw, 24px);
+  padding: clamp(18px, 4.6cqi, 80px) clamp(16px, 4.8cqi, 90px);
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -193,7 +193,7 @@ body.unhinged-screen-shake {
 }
 
 .prompt-prefix {
-  font-size: clamp(0.82rem, 2.5vw, 1rem);
+  font-size: clamp(0.82rem, 3.8cqi, 1.8rem);
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 1.5px;
@@ -203,9 +203,13 @@ body.unhinged-screen-shake {
   transition: color 0.3s ease;
 }
 
+/* Sized to the card, so the kicker grows with it on big screens */
+
 .prompt-text {
   font-family: 'Baumans', var(--font-sans), cursive;
-  font-size: clamp(1.3rem, 4.6vw, 1.7rem);
+  /* ~15% of the card width, so prompts fill the card on phones and grow with it on
+     big screens (cqi follows the card's own width, not the window) */
+  font-size: clamp(1.3rem, 7.5cqi, 4.6rem);
   font-weight: 700;
   line-height: 1.68;
   color: #ffffff;
@@ -224,7 +228,7 @@ body.unhinged-screen-shake {
   gap: 0;
   color: var(--text-muted);
   /* Sized to the card, and kept on one line */
-  font-size: clamp(0.45rem, 3.6cqi, 0.84rem);
+  font-size: clamp(0.45rem, 3.6cqi, 1.4rem);
   font-weight: 600;
   letter-spacing: 0;
   line-height: 1.3;
@@ -236,13 +240,13 @@ body.unhinged-screen-shake {
 
 .done-it-btn {
   flex: 0 0 auto;
-  padding: 9px 14px;
+  padding: clamp(9px, 1.7cqi, 24px) clamp(14px, 2.4cqi, 32px);
   border: 1px solid color-mix(in srgb, var(--active-card-color, #ff2d75) 65%, transparent);
   border-radius: var(--radius-pill);
   background: rgba(255, 255, 255, 0.1);
   color: #fff;
   font: inherit;
-  font-size: 0.74rem;
+  font-size: clamp(0.74rem, 3.2cqi, 1.5rem);
   font-weight: 800;
   letter-spacing: 0.55px;
   line-height: 1;
@@ -271,7 +275,7 @@ body.unhinged-screen-shake {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 18px;
+  padding: clamp(18px, 3.4cqi, 56px);
   position: relative;
   overflow: hidden;
 }
@@ -288,7 +292,7 @@ body.unhinged-screen-shake {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 20px 16px;
+  padding: clamp(20px, 3.8cqi, 64px) clamp(16px, 3cqi, 52px);
   background: radial-gradient(circle at 50% 50%, rgba(25, 29, 44, 0.65) 0%, rgba(13, 16, 26, 0.88) 100%);
 }
 
@@ -297,7 +301,7 @@ body.unhinged-screen-shake {
 .emblem-title {
   font-family: 'Great Vibes', 'Alex Brush', 'Dancing Script', cursive;
   grid-row: 2;
-  font-size: clamp(1.4rem, 15cqi, 3.6rem);
+  font-size: clamp(1.4rem, 15cqi, 7rem);
   font-weight: 400;
   line-height: 1.05;
   color: #ffffff;
@@ -320,7 +324,7 @@ body.unhinged-screen-shake {
   display: flex;
   justify-content: center;
   font-family: var(--font-sans);
-  font-size: clamp(0.55rem, 3.6cqi, 0.68rem);
+  font-size: clamp(0.55rem, 3.6cqi, 1.1rem);
   font-weight: 700;
   white-space: nowrap;
   letter-spacing: 2.2px;
@@ -336,8 +340,8 @@ body.unhinged-screen-shake {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: clamp(24px, 4.6vh, 36px);
-  height: clamp(24px, 4.6vh, 36px);
+  width: clamp(24px, 4.6vh, 90px);
+  height: clamp(24px, 4.6vh, 90px);
   color: #d7c8ff;
 }
 
@@ -347,13 +351,13 @@ body.unhinged-screen-shake {
   justify-content: center;
   gap: 8px;
   margin-top: 16px;
-  padding: clamp(7px, 4cqi, 12px) clamp(12px, 6.5cqi, 20px);
+  padding: clamp(7px, 4cqi, 26px) clamp(12px, 6.5cqi, 40px);
   border: 1px solid rgba(198, 173, 255, 0.48);
   border-radius: var(--radius-pill);
   background: rgba(130, 96, 190, 0.18);
   color: #e4d7ff;
   font-family: var(--font-sans);
-  font-size: clamp(0.6rem, 4.3cqi, 0.9rem);
+  font-size: clamp(0.6rem, 4.3cqi, 1.5rem);
   font-weight: 800;
   letter-spacing: 1.1px;
   line-height: 1;
@@ -748,20 +752,22 @@ body.unhinged-screen-shake {
 
 @media (min-width: 768px) and (min-height: 760px) {
 .card-stack {
-    width: clamp(340px, 40vw, 480px);
-    height: clamp(420px, 64dvh, 600px);
+    /* Fluid portrait card: driven by the viewport's smaller side (vmin), so it fills
+       1080p/4K monitors and TVs boldly without ever exceeding its proportional bounds */
+    width: min(clamp(340px, 62vmin, 1000px), calc(100vw - 24px));
+    height: min(clamp(420px, 82vmin, 1360px), 78dvh);
   }
 }
 
 @media (min-width: 768px) and (min-height: 760px) {
 .card-front {
-    padding: 26px 28px;
+    padding: clamp(26px, 4.6cqi, 80px) clamp(28px, 4.8cqi, 90px);
   }
 }
 
 @media (min-width: 768px) and (min-height: 760px) {
 .prompt-text {
-    font-size: clamp(1.5rem, 2.9vw, 2rem);
+    font-size: clamp(1.5rem, 7.5cqi, 4.6rem);
   }
 }
 
