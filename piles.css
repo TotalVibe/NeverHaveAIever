@@ -2663,3 +2663,15 @@ body:has(.age-gate-card) .classic-keys {
   }
 }
 
+/* ===== Revisions 51: on mobile, the most-likely and shots&dares piles sit near the middle ===== */
+
+/* The lifts (-70px / -100px) were tuned for desktop. On phones these two modes hide the
+   target buttons, so the pile floats high with dead space above the bottom controls. */
+
+@media (max-width: 719px) {
+.mode-most-likely .card-stack,
+.mode-shot-dare .shot-wrap {
+    transform: translateY(-14px);
+  }
+}
+
