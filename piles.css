@@ -1934,15 +1934,15 @@ body:has(.age-gate-card) .classic-keys {
   display: none !important;
 }
 
-/* Who's Most Likely: the Next pill shows its SPACE cue only on the first card,
-   because from the second card on Space means Indeed (which lives on the card) */
+/* Who's Most Likely: Next answers to Space (and →), so its SPACE cue
+   shows on every card */
 
 #pill-next .key-cue {
   display: none;
 }
 
 @media (min-width: 1024px) {
-  #next-pill.is-first #pill-next .key-cue {
+  #pill-next .key-cue {
     display: inline-flex;
   }
 }

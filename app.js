@@ -1128,7 +1128,7 @@ class NeverHaveIEverApp {
               ? '<span class="hint-full">Swipe or arrow key to go on</span><span class="hint-short">Swipe or ←→</span>'
               : '<span class="hint-full">Drag card or tap emoji</span><span class="hint-short">Drag or tap</span>'}</span>
             <button class="done-it-btn" type="button" aria-label="Celebrate that you have done it">
-              <kbd class="key-cue">${this.gameMode === 'most-likely' ? 'SPACE' : 'ENTER'}</kbd>${this.gameMode === 'most-likely' ? 'INDEED' : 'DONE IT!'}
+              <kbd class="key-cue">ENTER</kbd>${this.gameMode === 'most-likely' ? 'INDEED' : 'DONE IT!'}
             </button>
           </div>
         </div>
@@ -2547,9 +2547,9 @@ class NeverHaveIEverApp {
         }
         if (e.key === ' ') {
           e.preventDefault();
-          // On the first card, Space starts the game; after that it is Indeed
-          if (this.cardHistory.length === 0) this.handleTargetTap('right');
-          else this.celebrateDoneIt();
+          // Space is Next (like →); Indeed is on the card via Enter
+          if (this.activeCard?.dataset.cardType === 'level-up') return;
+          this.handleTargetTap('right');
           return;
         }
       }
