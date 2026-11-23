@@ -1671,7 +1671,8 @@
 }
 
 .shot-controls .dare-pill .next-arrow {
-  flex: 1 1 0;
+  /* Content-sized arrows in a compact, centred pill (not stretched flex: 1) */
+  flex: 0 0 auto;
   justify-content: center;
   height: 44px;
   font-size: 0.85rem;

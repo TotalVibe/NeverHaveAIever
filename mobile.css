@@ -1018,7 +1018,9 @@ body.unhinged-screen-shake {
   }
 }
 
-/* Dare picker: the pill at the bottom, the same style as Who most likely */
+/* Dare picker: the pill at the bottom, the same style as Who most likely.
+   Compact: sized by its content and centred, not stretched across the bar
+   (mobile hides it entirely; cards are chosen by direct tap) */
 
 .shot-controls .dare-pill {
   position: relative;
@@ -1026,8 +1028,9 @@ body.unhinged-screen-shake {
   bottom: auto;
   transform: none;
   display: flex;
-  width: 100%;
-  justify-content: space-between;
+  width: max-content;
+  margin: 0 auto;
+  justify-content: center;
   padding: 6px;
 }
 
