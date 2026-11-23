@@ -30,7 +30,7 @@
   <!-- Styles split by component; mobile.css loads last so responsive overrides win -->
   <link rel="stylesheet" href="base.css?v=152">
   <link rel="stylesheet" href="cards.css?v=152">
-  <link rel="stylesheet" href="piles.css?v=167">
+  <link rel="stylesheet" href="piles.css?v=168">
   <link rel="stylesheet" href="mobile.css?v=155">
 </head>
 <body class="game-waiting">
@@ -161,16 +161,15 @@
         </div>
     </div>
 
-    <!-- Who most likely: minimal arrows at the bottom right, same as a swipe left or right -->
+    <!-- Who most likely: minimal arrows at the bottom right, same as a swipe left or right.
+         Indeed lives on the card itself; SPACE starts on the first card, so its cue shows then. -->
     <div class="next-pill" id="next-pill" role="group" aria-label="Move through the cards">
       <button class="next-arrow" type="button" data-dir="left" aria-label="Undo">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6" /></svg>
         <span>Undo</span>
       </button>
-      <button class="next-arrow indeed-key" type="button" id="pill-indeed">
-        <kbd class="key-cue">SPACE</kbd><span>Indeed</span>
-      </button>
-      <button class="next-arrow" type="button" data-dir="right" aria-label="Next card">
+      <button class="next-arrow" type="button" data-dir="right" id="pill-next" aria-label="Next card (Space or →)">
+        <kbd class="key-cue">SPACE</kbd>
         <span>Next</span>
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg>
       </button>
@@ -498,6 +497,6 @@
   <!-- Fade to Black Transition Curtain -->
   <div class="screen-fade-curtain" id="screen-fade-curtain" aria-hidden="true"></div>
 
-  <script type="module" src="app.js?v=80"></script>
+  <script type="module" src="app.js?v=81"></script>
 </body>
 </html>

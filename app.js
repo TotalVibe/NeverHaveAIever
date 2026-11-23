@@ -1127,7 +1127,9 @@ class NeverHaveIEverApp {
             <span class="card-hint-text">${data.category === 'most-likely'
               ? '<span class="hint-full">Swipe or arrow key to go on</span><span class="hint-short">Swipe or ←→</span>'
               : '<span class="hint-full">Drag card or tap emoji</span><span class="hint-short">Drag or tap</span>'}</span>
-            <button class="done-it-btn" type="button" aria-label="Celebrate that you have done it">${this.gameMode === 'most-likely' ? 'INDEED' : 'DONE IT!'}</button>
+            <button class="done-it-btn" type="button" aria-label="Celebrate that you have done it">
+              <kbd class="key-cue">${this.gameMode === 'most-likely' ? 'SPACE' : 'ENTER'}</kbd>${this.gameMode === 'most-likely' ? 'INDEED' : 'DONE IT!'}
+            </button>
           </div>
         </div>
 
@@ -2327,8 +2329,7 @@ class NeverHaveIEverApp {
       this.popKeyboardTargetArrow(direction);
       this.handleTargetTap(direction);
     });
-    // Indeed in the bottom pill: the same cheers as the card's own button (Space does the same)
-    document.getElementById('pill-indeed').addEventListener('click', () => this.celebrateDoneIt());
+    // The Indeed pill used to live in the bottom bar; it now lives on the card itself
 
     // Start bar: CUSTOMIZE and START sit below the intro card in every game
     this.shotCustomise.addEventListener('click', () => {
@@ -2603,6 +2604,12 @@ class NeverHaveIEverApp {
           const direction = dirs[Math.floor(Math.random() * dirs.length)];
           this.popKeyboardTargetArrow(direction);
           this.handleTargetTap(direction);
+          break;
+        case 'Enter':
+          e.preventDefault();
+          // The card's own button: Classic = DONE IT, Most-Likely = INDEED
+          if (this.activeCard?.dataset.cardType === 'level-up') break;
+          this.celebrateDoneIt();
           break;
         case 'z':
         case 'Z':

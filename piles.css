@@ -1934,10 +1934,35 @@ body:has(.age-gate-card) .classic-keys {
   display: none !important;
 }
 
-/* Who's Most Likely: Indeed is hidden on the first card */
+/* Who's Most Likely: the Next pill shows its SPACE cue only on the first card,
+   because from the second card on Space means Indeed (which lives on the card) */
 
-.next-pill.is-first #pill-indeed {
+#pill-next .key-cue {
   display: none;
+}
+
+@media (min-width: 1024px) {
+  #next-pill.is-first #pill-next .key-cue {
+    display: inline-flex;
+  }
+}
+
+/* The card's own DONE IT / INDEED button: pill sits beside the label */
+@media (min-width: 1024px) {
+  .card-hint .done-it-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
+
+.done-it-btn .key-cue {
+  margin: 0;
+  position: static;
+  transform: none;
 }
 
 /* Shots & Dares buttons: the same letter spacing as the intro's PLAY, and room for the key cue */
@@ -2974,16 +2999,18 @@ body:not(.mode-most-likely):not(.mode-shot-dare).game-waiting .shot-controls {
   }
 }
 
-/* The start-bar CUSTOMIZE pill: ENTER — same dimensions as the SPACE pill in START,
-   but tinted in the button's own purple */
+/* The start-bar CUSTOMIZE pill: ENTER — the same dimensions the SPACE pill actually
+   renders at in START (0.7rem / 30px, from the Revisions 13 group that outranks the
+   fluid clamp), but tinted in the button's own purple */
 
 .shot-customise .key-cue {
   background: rgba(130, 96, 190, 0.22);
   border-color: rgba(198, 173, 255, 0.4);
   color: #e4d7ff;
   margin: 0;
-  font-size: clamp(0.78rem, 1.5vmin, 1.4rem);
-  min-width: max(30px, 2.4em);
-  height: max(30px, 2.2em);
+  font-size: 0.7rem;
+  min-width: 30px;
+  height: 30px;
   padding: 0 8px;
+  letter-spacing: 0.08em;
 }
