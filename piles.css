@@ -631,6 +631,8 @@
 
 #mode-modal.deck-screen {
   z-index: 90;
+  /* The ID beats mobile.css's .modal-overlay padding: the home screen touches every edge */
+  padding: 0;
 }
 
 .deck-topbar {
@@ -2535,7 +2537,8 @@ body:has(.age-gate-card) .classic-keys {
 
 @media (min-width: 720px) {
 .deck-tile {
-    height: clamp(230px, 52dvh, 380px);
+    /* Slimmer than before so the bigger home title still fits one screen (no scroll) */
+    height: clamp(210px, 40dvh, 380px);
   }
 }
 
@@ -2600,5 +2603,63 @@ body:has(.age-gate-card) .classic-keys {
   background: rgba(255, 255, 255, 0.1);
   opacity: 1;
   transform: none;
+}
+
+/* ===== Revisions 50: the home title fills wide screens, and the screen never scrolls ===== */
+
+/* mobile.css's .emblem-title rule (for the card back) caps the cursive title at 3.6rem everywhere.
+   The two-class selector wins it back: on wide screens the title grows with the window. */
+
+@media (min-width: 1024px) {
+.deck-screen .deck-hero-title {
+    font-size: clamp(4rem, min(11vw, 13dvh), 10.5rem);
+  }
+}
+
+/* Trim the vertical rhythm so title, decks and SELECT always fit one screen (no scroll) */
+
+@media (min-width: 720px) {
+.deck-inner {
+    gap: clamp(4px, 1.2dvh, 16px);
+    padding: clamp(10px, 2dvh, 26px) clamp(12px, 4vw, 28px);
+  }
+}
+
+@media (min-width: 720px) {
+.deck-crest {
+    width: clamp(20px, 3.5dvh, 40px);
+    height: clamp(20px, 3.5dvh, 40px);
+  }
+}
+
+@media (min-width: 720px) {
+.deck-hero {
+    gap: clamp(4px, 1dvh, 10px);
+    margin-bottom: clamp(4px, 1dvh, 12px);
+  }
+}
+
+@media (min-width: 720px) {
+.deck-caption {
+    margin-top: clamp(4px, 1dvh, 14px);
+  }
+}
+
+@media (min-width: 720px) {
+.deck-list {
+    margin-top: clamp(4px, 1.2dvh, 18px);
+  }
+}
+
+@media (min-width: 720px) {
+.deck-tile {
+    margin-bottom: clamp(8px, 1.6dvh, 24px);
+  }
+}
+
+@media (min-width: 720px) {
+.deck-footer {
+    padding: clamp(8px, 1.8dvh, 22px) 16px clamp(10px, 2dvh, 30px);
+  }
 }
 
