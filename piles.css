@@ -1718,7 +1718,8 @@
 /* Shots & Dares: the title is larger */
 
 .shot-dares .shot-dares-title {
-  font-size: clamp(2.8rem, 11vw, 4.8rem);
+  /* Follows the fan's narrower cap (66vmin) instead of the full window */
+  font-size: clamp(2.8rem, min(11vw, 10vmin), 4.4rem);
 }
 
 /* Wide screens: three cards in a fan, a little apart; the chosen one comes to the front and keeps its size */
@@ -1727,9 +1728,9 @@
   width: 36%;
 }
 
-.shot-dare:nth-child(1) { --x: -112%; --y: 8px; --r: -5deg; }
+.shot-dare:nth-child(1) { --x: -88%; --y: 8px; --r: -5deg; }
 
-.shot-dare:nth-child(3) { --x: 112%; --y: 8px; --r: 5deg; }
+.shot-dare:nth-child(3) { --x: 88%; --y: 8px; --r: 5deg; }
 
 .shot-dare-text {
   font-size: 12cqw;
@@ -2756,17 +2757,12 @@ body:has(.age-gate-card) .classic-keys {
   }
 }
 
-/* Pick a dare: the fan widens with the screen; cards scale via their container */
+/* Pick a dare: the fan is capped like every other pile (66vmin, max 1050px); the three
+   cards scale with it via their container, so nothing overflows on 4K screens */
 
 @media (min-width: 720px) {
 .shot-dares {
-    width: min(clamp(780px, 96vmin, 1500px), calc(100vw - 24px));
-  }
-}
-
-@media (min-width: 720px) {
-.shot-dares-title {
-    font-size: clamp(2.8rem, 14vmin, 8rem);
+    width: min(clamp(320px, 66vmin, 1050px), calc(100vw - 24px));
   }
 }
 
