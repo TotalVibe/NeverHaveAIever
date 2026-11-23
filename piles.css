@@ -3060,3 +3060,40 @@ body:not(.mode-most-likely):not(.mode-shot-dare).game-waiting .shot-controls {
     width: 60%;
   }
 }
+
+/* ===== Revisions 58: dare screen balance ===== */
+
+/* Widescreen: the revealed card draws at x1.5 scale, so the pick-again tokens and
+   the dare text are set small here to land at the intended on-screen size */
+
+@media (min-width: 1024px) {
+  body.mode-shot-dare .shot-dare-text {
+    font-size: clamp(0.75rem, 7cqw, 1.7rem);
+  }
+
+  body.mode-shot-dare .dare-again {
+    padding: 5px 10px;
+    gap: 6px;
+    font-size: 0.62rem;
+  }
+
+  body.mode-shot-dare .dare-again svg {
+    width: 11px;
+    height: 11px;
+  }
+
+  body.mode-shot-dare .dare-again .key-cue {
+    font-size: 0.55rem;
+    min-width: 22px;
+    height: 22px;
+    padding: 0 6px;
+  }
+}
+
+/* Mobile: the dare screen rides higher — the -42px lift left a wide dead band
+   above the title on phones */
+@media (max-width: 719px) {
+  .mode-shot-dare .shot-wrap {
+    transform: translateY(-80px);
+  }
+}
