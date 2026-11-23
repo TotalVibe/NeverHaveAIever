@@ -1865,8 +1865,7 @@
   pointer-events: none;
 }
 
-.classic-random,
-.classic-keys-right {
+.classic-random {
   pointer-events: auto;
 }
 
@@ -1888,27 +1887,12 @@
 }
 
 .classic-random .kbd {
+  /* Smaller than the shared pill tokens: a quiet hint next to the label */
   margin-right: 8px;
-}
-
-.classic-keys-right {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 12px;
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  border-radius: 999px;
-  background: rgba(18, 21, 32, 0.72);
-  color: var(--text-soft);
-  font-size: 0.8rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-
-.classic-keys-right .kbd {
-  margin-right: 0;
-  min-width: 30px;
+  font-size: 0.7rem;
+  min-width: 26px;
+  height: 26px;
+  padding: 0 7px;
 }
 
 @media (min-width: 768px) {
@@ -2806,8 +2790,7 @@ body:has(.age-gate-card) .classic-keys {
   height: max(30px, 2.2em);
 }
 
-.classic-random,
-.classic-keys-right {
+.classic-random {
   font-size: clamp(0.8rem, 1.5vmin, 1.4rem);
 }
 

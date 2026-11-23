@@ -30,7 +30,7 @@
   <!-- Styles split by component; mobile.css loads last so responsive overrides win -->
   <link rel="stylesheet" href="base.css?v=152">
   <link rel="stylesheet" href="cards.css?v=152">
-  <link rel="stylesheet" href="piles.css?v=169">
+  <link rel="stylesheet" href="piles.css?v=170">
   <link rel="stylesheet" href="mobile.css?v=155">
 </head>
 <body class="game-waiting">
@@ -190,15 +190,11 @@
     </button>
   </main>
 
-  <!-- Classic on widescreen only: the keys, bottom left and right -->
+  <!-- Classic on widescreen only: the random-card button, bottom left -->
   <div class="classic-keys" aria-hidden="false">
     <button class="classic-random" id="classic-random" type="button">
       <kbd class="kbd">SPACE</kbd><span>Random card</span>
     </button>
-    <div class="classic-keys-right" aria-label="Arrow keys: up spicy, left cringe, right party, down wholesome">
-      <span>Keys</span>
-      <kbd class="kbd">↑</kbd><kbd class="kbd">←</kbd><kbd class="kbd">→</kbd><kbd class="kbd">↓</kbd>
-    </div>
   </div>
 
   <!-- Info & Game Rules Modal -->
