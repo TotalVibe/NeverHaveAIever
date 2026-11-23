@@ -2904,6 +2904,11 @@ body:not(.mode-most-likely):not(.mode-shot-dare).game-waiting .shot-controls {
   }
 
 .home-btn .key-cue {
+    /* Undo the global absolute key-cue placement (Revisions 14): the pill sits
+       in the row after the house icon instead of overlapping it */
+    position: static;
+    transform: none;
+    margin: 0;
     min-width: max(26px, 2.2em);
     height: max(20px, 1.7em);
     font-size: 0.62rem;
