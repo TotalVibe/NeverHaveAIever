@@ -2671,7 +2671,8 @@ body:has(.age-gate-card) .classic-keys {
 @media (max-width: 719px) {
 .mode-most-likely .card-stack,
 .mode-shot-dare .shot-wrap {
-    transform: translateY(-14px);
+    /* Dead centre of the screen: no lift at all */
+    transform: none;
   }
 }
 
