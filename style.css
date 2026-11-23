@@ -3851,24 +3851,59 @@ body.unhinged-screen-shake {
   display: none !important;
 }
 
+/* Shot controls: match next-pill glassmorphism pill style */
 .shot-customise,
 .shot-action {
   height: 46px;
-  border-radius: 14px;
+  padding: 0 20px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(18, 21, 32, 0.72);
+  color: var(--text-main);
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  transition: background 0.15s ease;
 }
 
 .shot-customise {
-  position: relative;
-  flex: 0 0 40%;
-  margin: 0;
-  padding: 0 10px;
+  display: inline-flex;
+  align-items: center;
   gap: 6px;
-  white-space: nowrap;
+}
+
+/* Undo the in-card customise button's margin-top, match START's type, and keep
+   the purple hue of the other customise buttons */
+.shot-actions .shot-customise,
+.shot-actions .shot-action {
+  margin: 0;
+  font-size: clamp(0.8rem, 2.2vw, 1rem);
+  letter-spacing: normal;
+}
+
+.shot-actions .shot-customise {
+  border-color: rgba(198, 173, 255, 0.48);
+  background: rgba(130, 96, 190, 0.18);
+  color: #e4d7ff;
+}
+
+.shot-actions .shot-customise:hover,
+.shot-actions .shot-customise:focus-visible {
+  background: rgba(151, 111, 220, 0.32);
 }
 
 .shot-customise svg {
   width: 16px;
   height: 16px;
+}
+
+.shot-action:hover {
+  background: rgba(255, 255, 255, 0.1);
 }
 
 /* ===== Revisions 4: swipeable decks, title alignment, rotating edge on the border, dare selector ===== */
@@ -4246,7 +4281,7 @@ body.unhinged-screen-shake {
 
 /* Customize and START share the row equally */
 .shot-customise {
-  flex: 0 0 50%;
+  flex: 1 1 0;
 }
 
 .shot-actions.is-split .shot-action {
@@ -5397,4 +5432,24 @@ body:has(.age-gate-card) .classic-keys {
   .screen-fade-curtain {
     transition-duration: 0.05s;
   }
+}
+
+/* ===== Revisions 49: the home screen SELECT gets the same glass pill style as START ===== */
+
+.deck-play {
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(18, 21, 32, 0.72);
+  color: var(--text-main);
+  font-size: clamp(0.8rem, 2.2vw, 1rem);
+  letter-spacing: normal;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  transition: background 0.15s ease, transform 0.15s ease, opacity 0.15s ease;
+}
+
+.deck-play:hover {
+  background: rgba(255, 255, 255, 0.1);
+  opacity: 1;
+  transform: none;
 }
