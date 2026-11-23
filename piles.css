@@ -1785,17 +1785,8 @@
   margin-left: 0;
 }
 
-@media (min-width: 720px) {
-.shot-dares {
-    width: min(780px, calc(100vw - 24px));
-  }
-}
-
-@media (min-width: 720px) {
-.shot-dare {
-    width: 34%;
-  }
-}
+/* (Stale 780px container + 34% card rules removed: they predated the 66vmin fan
+   and silently shrank the cards back down after the size restore) */
 
 @media (max-width: 719px) {
 .shot-dare {
@@ -3045,5 +3036,27 @@ body:not(.mode-most-likely):not(.mode-shot-dare).game-waiting .shot-controls {
   .dare-again svg {
     width: 15px;
     height: 15px;
+  }
+}
+
+/* ===== Revisions 57: dare cards expand on wide screens ===== */
+
+/* Final word on card sizes at >=1024: earlier revision blocks (34% here, 36% in
+   mobile.css) predate the 66vmin fan and shrink everything back down. The
+   revealed card renders at x1.5 scale, so its width is set at 60% to draw the
+   intended ~90%-of-fan footprint; the fan spread pulls in to 80% so the wider
+   cards still fit a 1024px window. */
+
+@media (min-width: 1024px) {
+  body.mode-shot-dare .shot-dare {
+    width: 53%;
+  }
+
+  body.mode-shot-dare .shot-dare:nth-child(1) { --x: -80%; }
+
+  body.mode-shot-dare .shot-dare:nth-child(3) { --x: 80%; }
+
+  body.mode-shot-dare .shot-dare.is-revealed {
+    width: 60%;
   }
 }

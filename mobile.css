@@ -1038,6 +1038,7 @@ body.unhinged-screen-shake {
 .shot-dare:nth-child(2) { --x: 0%; --y: -6px; --r: 0deg; }
 
 .shot-dare.is-revealed {
+  /* Renders at ×1.5 scale (below); keeps the compact footprint in the flow */
   width: 36%;
   --x: 0%;
   --y: -6px;
