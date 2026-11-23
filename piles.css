@@ -1671,8 +1671,8 @@
 }
 
 .shot-controls .dare-pill .next-arrow {
-  /* Content-sized arrows in a compact, centred pill (not stretched flex: 1) */
-  flex: 0 0 auto;
+  /* The three arrows share the pill equally: identical clickable areas */
+  flex: 1 1 0;
   justify-content: center;
   height: 44px;
   font-size: 0.85rem;
@@ -2140,7 +2140,9 @@ body:has(.age-gate-card) .classic-keys {
 /* SOMEONE LOST! and PLAY AGAIN: narrower, centred */
 
 .shot-actions:not(.is-split) .shot-action {
+  /* Auto margins centre the lone button in the flex row (its container is flex-start) */
   flex: 0 0 66%;
+  margin: 0 auto;
 }
 
 /* Shots & Dares dare text: a little smaller */
@@ -2426,6 +2428,7 @@ body:has(.age-gate-card) .classic-keys {
 
 .shot-actions:not(.is-split) .shot-action {
   flex: 0 0 66%;
+  margin: 0 auto;
 }
 
 /* ===== Revisions 33: the pick-again button, smaller overall ===== */
