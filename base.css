@@ -25,9 +25,9 @@
   --color-wholesome-glow: rgba(116, 143, 252, 0.45);
 
   --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  /* ~7.5% of a mobile card (26px on a ~340px card). Grows with the card on large
-     screens so corners keep the same rounded proportion on monitors & TVs */
-  --radius-card: clamp(26px, 5vmin, 96px);
+  /* Softer than a literal mobile-proportion match (~5% of card width on big
+     screens); goes up from mobile but stays clearly less round than before */
+  --radius-card: clamp(22px, 3.4vmin, 64px);
   /* Prominent card/button stroke (~0.6% of a mobile card). Thin 1px accents stay in px */
   --stroke-card: clamp(2px, 0.38vmin, 8px);
   --radius-pill: 9999px;
