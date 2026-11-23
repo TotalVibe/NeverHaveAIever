@@ -199,6 +199,8 @@ class NeverHaveIEverApp {
     this.shotCustomise = document.getElementById('shot-customise');
     this.shotActions = document.getElementById('shot-actions');
     this.darePill = document.getElementById('dare-pill');
+    // Every game waits at its intro card until START (button, Space, Enter or a first swipe)
+    this.awaitingStart = true;
 
     this.init();
   }
@@ -435,8 +437,10 @@ class NeverHaveIEverApp {
   }
 
   revealTargetButtons() {
-    if (this.ageGateActive) return;
+    // While the game waits at the start bar, the targets (and the pill) stay hidden
+    if (this.ageGateActive || this.awaitingStart) return;
     const arena = document.querySelector('.game-arena');
+    clearTimeout(this.targetHideTimer);
     arena.classList.remove('intro-hidden', 'intro-hiding');
     arena.classList.add('intro-revealed');
   }
@@ -1382,6 +1386,10 @@ class NeverHaveIEverApp {
 
   executeSwipe(direction) {
     if (this.gameMode === 'shot-dare') return; // shot dare has its own buttons
+    if (this.awaitingStart) {
+      // The first swipe starts the game and plays the intro card in the same motion
+      this.beginStart();
+    }
     if (this.isAnimating || this.isCelebrating || !this.activeCard) return;
     if (this.activeCard.dataset.cardType === 'level-up') {
       this.resolveLevelUp(direction);
@@ -1759,6 +1767,12 @@ class NeverHaveIEverApp {
     Object.values(this.usedQuestions).forEach(used => used.clear());
     this.activeCardCategory = mode === 'most-likely' ? 'most-likely' : 'spicy';
 
+    // New start flow: every game waits at its intro card with CUSTOMIZE + START below it
+    this.awaitingStart = true;
+    document.body.classList.add('game-waiting');
+    // The waiting bar is CUSTOMIZE + START sharing the row equally
+    this.shotActions.classList.add('is-split');
+
     try {
       if (!history.state || history.state.screen !== 'game') {
         history.pushState({ screen: 'game', mode }, '');
@@ -1774,7 +1788,9 @@ class NeverHaveIEverApp {
     this.stackContainer.classList.remove('shuffling', 'reshuffle-arriving');
     this.isAnimating = false;
     this.restartGame();
-    setTimeout(() => this.revealTargetButtons(), 200);
+    // Classic: the swipe targets came from the previous round, so hide them again;
+    // they come back together with the START gesture. On phones they are always hidden.
+    if (mode === 'classic') this.hideTargetButtons();
   }
 
   // ----- Shot dare time -----
@@ -1923,8 +1939,26 @@ class NeverHaveIEverApp {
 
   // The action button, and Enter or Space, go forward through the shot dare round
   shotPrimaryAction() {
+    if (this.awaitingStart) {
+      this.beginStart();
+      return;
+    }
     if (this.shotPhase === 'intro' || this.shotPhase === 'revealed') this.startShotRound();
     else if (this.shotPhase === 'playing') this.didItAll();
+  }
+
+  // START (button, Space, Enter or a first swipe): the waiting intro hands over to the game
+  beginStart() {
+    if (!this.awaitingStart || this.ageGateActive || this.isCelebrating) return;
+    this.awaitingStart = false;
+    document.body.classList.remove('game-waiting');
+    if (this.gameMode === 'shot-dare') {
+      this.startShotRound();
+      return;
+    }
+    sounds.init();
+    sounds.playClick();
+    this.revealTargetButtons();
   }
 
   undoLastCard() {
@@ -2157,7 +2191,8 @@ class NeverHaveIEverApp {
       }
       this.customiseModal.classList.remove('active');
       this.returnFlippedPanel({ animate: returnCard });
-      this.stackContainer.querySelector('.game-card.current .customise-btn')?.focus();
+      // Focus returns to the start bar's CUSTOMIZE button (the one that opened the pop-up)
+      this.shotCustomise?.focus({ preventScroll: true });
     };
     this.closeCustomiseModal = closeCustomiseModal;
     this.customiseModal.querySelector('.customise-modal-close').addEventListener('click', () => {
@@ -2286,10 +2321,11 @@ class NeverHaveIEverApp {
     // Indeed in the bottom pill: the same cheers as the card's own button (Space does the same)
     document.getElementById('pill-indeed').addEventListener('click', () => this.celebrateDoneIt());
 
-    // Shot dare: START and CUSTOMIZE sit below the card; the dare cards are below that
+    // Start bar: CUSTOMIZE and START sit below the intro card in every game
     this.shotCustomise.addEventListener('click', () => {
       sounds.playClick();
-      openCustomiseModal({ from: 'shot' });
+      // The card-deck games flip their intro card out for the pop-up; shot dare has its own card slot
+      openCustomiseModal({ from: this.gameMode === 'shot-dare' ? 'shot' : 'card' });
     });
     this.shotAction.addEventListener('click', () => this.shotPrimaryAction());
     // The dare picker: previous, pick, next
@@ -2471,6 +2507,19 @@ class NeverHaveIEverApp {
       const isGameKey = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' ', 'Enter'].includes(e.key);
       if (e.repeat && isGameKey) {
         e.preventDefault();
+        return;
+      }
+
+      // While waiting at the start bar, only starting the game is possible
+      if (this.awaitingStart) {
+        if (e.key === ' ' || e.key === 'Enter' || e.key.startsWith('Arrow')) {
+          e.preventDefault();
+          this.beginStart();
+          if (e.key.startsWith('Arrow')) {
+            const dir = { ArrowUp: 'top', ArrowDown: 'bottom', ArrowLeft: 'left', ArrowRight: 'right' }[e.key];
+            this.handleTargetTap(dir);
+          }
+        }
         return;
       }
 

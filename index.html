@@ -30,10 +30,10 @@
   <!-- Styles split by component; mobile.css loads last so responsive overrides win -->
   <link rel="stylesheet" href="base.css?v=151">
   <link rel="stylesheet" href="cards.css?v=151">
-  <link rel="stylesheet" href="piles.css?v=157">
+  <link rel="stylesheet" href="piles.css?v=158">
   <link rel="stylesheet" href="mobile.css?v=151">
 </head>
-<body>
+<body class="game-waiting">
 
   <!-- Dynamic Ambient Glow Background -->
   <div class="ambient-glow" id="ambient-glow"></div>
@@ -141,7 +141,8 @@
       </div>
     </div>
 
-    <!-- Shots & Dares: CUSTOMIZE and START, pinned to the bottom of the screen -->
+    <!-- Start bar: CUSTOMIZE and START, shared by all three games while waiting at the intro card.
+         The mode's own in-game controls (arrows pill, classic keys) appear once START is pressed. -->
     <div class="shot-controls">
         <div class="next-pill dare-pill" id="dare-pill" role="group" aria-label="Choose a dare" hidden>
           <button class="next-arrow" type="button" id="dare-prev" aria-label="Previous dare">
@@ -152,7 +153,7 @@
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg>
           </button>
         </div>
-        <div class="shot-actions" id="shot-actions">
+        <div class="shot-actions is-split" id="shot-actions">
           <button class="customise-btn shot-customise" id="shot-customise" type="button">
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path d="M12 2.8 13.9 9l6.3 2-6.3 2-1.9 6.2L10.1 13 3.8 11l6.3-2L12 2.8Z" />
@@ -160,7 +161,7 @@
             </svg>
             <span>CUSTOMIZE</span>
           </button>
-          <button class="btn-primary shot-action" id="shot-action" type="button">START</button>
+          <button class="btn-primary shot-action" id="shot-action" type="button"><kbd class="key-cue">SPACE</kbd><span class="btn-label">START</span></button>
         </div>
     </div>
 
@@ -501,6 +502,6 @@
   <!-- Fade to Black Transition Curtain -->
   <div class="screen-fade-curtain" id="screen-fade-curtain" aria-hidden="true"></div>
 
-  <script type="module" src="app.js?v=77"></script>
+  <script type="module" src="app.js?v=78"></script>
 </body>
 </html>

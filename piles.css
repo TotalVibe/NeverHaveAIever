@@ -2853,3 +2853,47 @@ body:has(.age-gate-card) .classic-keys {
 }
 
 
+/* ===== Revisions 53: new start flow — CUSTOMIZE + START below the card in every game ===== */
+
+/* Every game now waits at its intro card with the same bottom bar Shots & Dares had:
+   CUSTOMIZE on the left, START on the right. The bar shows before the game starts. */
+
+body.game-waiting .shot-controls {
+  display: block;
+}
+
+/* While waiting, the in-game controls stay hidden until START is pressed */
+
+body.game-waiting .next-pill,
+body.game-waiting .classic-keys {
+  display: none !important;
+}
+
+/* The start bar stays behind the home screen and the 18+ question, like the classic keys */
+
+body.screen-deck .shot-controls,
+body.screen-age-gate .shot-controls,
+body:has(#mode-modal.active) .shot-controls {
+  display: none !important;
+}
+
+/* Customize has moved to the start bar, so the card backs no longer carry it */
+
+.game-card .card-back .customise-btn {
+  display: none !important;
+}
+
+/* The start bar matches each game's card width */
+
+@media (min-width: 720px) {
+body.game-waiting .shot-controls {
+    width: min(clamp(320px, 66vmin, 1050px), calc(100vw - 24px));
+  }
+}
+
+@media (min-width: 768px) and (min-height: 760px) {
+/* Classic is also the body's default (class-free) state before a game is chosen */
+body:not(.mode-most-likely):not(.mode-shot-dare).game-waiting .shot-controls {
+    width: min(clamp(340px, 62vmin, 1000px), calc(100vw - 24px));
+  }
+}
