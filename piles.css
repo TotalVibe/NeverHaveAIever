@@ -796,7 +796,7 @@
 }
 
 .shot-actions.is-split .shot-action {
-  flex: 1 1 60%;
+  flex: 1 1 0;
 }
 
 /* Pick a dare: wider than the card, so the three cards have room */
@@ -1147,7 +1147,8 @@
 .shot-actions .shot-customise,
 .shot-actions .shot-action {
   margin: 0;
-  font-size: clamp(0.8rem, 2.2vw, 1rem);
+  /* Same fluid size as the home SELECT and the other game buttons (Revisions 52) */
+  font-size: clamp(0.8rem, min(2.2vw, 2.6vh), 1.25rem);
   letter-spacing: normal;
 }
 
@@ -1163,8 +1164,9 @@
 }
 
 .shot-customise svg {
-  width: 16px;
-  height: 16px;
+  /* Scales with the button label instead of staying at a fixed 16px */
+  width: 1.1em;
+  height: 1.1em;
 }
 
 .shot-action:hover {
@@ -1560,8 +1562,10 @@
   flex: 1 1 0;
 }
 
+/* Later revision: START matches CUSTOMIZE exactly, so the row is a true 50/50 split */
+
 .shot-actions.is-split .shot-action {
-  flex: 1 1 50%;
+  flex: 1 1 0;
 }
 
 @media (min-width: 720px) {
@@ -2793,12 +2797,12 @@ body:has(.age-gate-card) .classic-keys {
   font-size: clamp(0.8rem, 1.5vmin, 1.4rem);
 }
 
-/* Game buttons (SELECT, START, SOMEONE LOST!, PLAY AGAIN) grow on big screens */
+/* Game buttons (SELECT, START, SOMEONE LOST!, PLAY AGAIN, CUSTOMIZE) share one size */
 
 .shot-action,
 .deck-play,
 .shot-customise {
-  font-size: clamp(0.8rem, min(2.2vw, 2.6vh), 2rem);
+  font-size: clamp(0.8rem, min(2.2vw, 2.6vh), 1.25rem);
 }
 
 .deck-play,
