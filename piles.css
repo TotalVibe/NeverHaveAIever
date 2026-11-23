@@ -100,22 +100,12 @@
   pointer-events: none;
 }
 
-/* Header: Home and a smaller Restart, both round */
+/* Header: Home only, a round icon that grows an ESC cue on widescreen */
 
 .header-nav {
   display: flex;
   align-items: center;
   gap: 8px;
-}
-
-.app-header .header-nav .restart-btn {
-  width: 34px;
-  height: 34px;
-}
-
-.app-header .header-nav .restart-btn svg {
-  width: 16px;
-  height: 16px;
 }
 
 /* ----- Deck screen ----- */
@@ -2895,5 +2885,29 @@ body.game-waiting .shot-controls {
 /* Classic is also the body's default (class-free) state before a game is chosen */
 body:not(.mode-most-likely):not(.mode-shot-dare).game-waiting .shot-controls {
     width: min(clamp(340px, 62vmin, 1000px), calc(100vw - 24px));
+  }
+}
+/* ===== Revisions 54: header = Home only, with an ESC glass pill on widescreen ===== */
+
+/* The Restart button is gone; Home is the lone round button in the header-nav */
+
+/* ESC lives inside the button; shown only on widescreen (this media matches .key-cue's own
+   reveal point), so phones and narrow windows keep the plain square icon button */
+
+@media (min-width: 1024px) {
+.app-header .icon-btn.home-btn:has(.key-cue) {
+    width: auto;
+    min-width: clamp(40px, 10vw, 46px);
+    height: clamp(40px, 10vw, 46px);
+    padding: 0 clamp(9px, 1.2vw, 14px);
+    gap: 8px;
+  }
+
+.home-btn .key-cue {
+    min-width: max(26px, 2.2em);
+    height: max(20px, 1.7em);
+    font-size: 0.62rem;
+    padding: 0 8px;
+    letter-spacing: 0.08em;
   }
 }

@@ -487,16 +487,6 @@ body.unhinged-screen-shake {
 }
 
 @media (max-width: 360px) {
-.icon-btn.reshuffle-btn {
-    width: auto;
-    padding-right: 9px;
-    padding-left: 9px;
-    gap: 6px;
-    font-size: 0.68rem;
-  }
-}
-
-@media (max-width: 360px) {
 .header-actions {
     gap: 4px;
   }
@@ -601,22 +591,6 @@ body.unhinged-screen-shake {
     flex-direction: column;
     align-items: flex-start;
     gap: 8px;
-  }
-}
-
-@media (orientation: landscape) and (max-height: 520px) {
-/* Restart is icon-only here, so it matches the round buttons */
-.app-header .reshuffle-btn {
-    width: 40px;
-    height: 40px;
-    padding: 0;
-    gap: 0;
-  }
-}
-
-@media (orientation: landscape) and (max-height: 520px) {
-.app-header .reshuffle-btn span {
-    display: none;
   }
 }
 

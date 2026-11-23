@@ -1767,11 +1767,11 @@ class NeverHaveIEverApp {
     Object.values(this.usedQuestions).forEach(used => used.clear());
     this.activeCardCategory = mode === 'most-likely' ? 'most-likely' : 'spicy';
 
-    // New start flow: every game waits at its intro card with CUSTOMIZE + START below it
+    // New start flow: every game waits at its intro card with CUSTOMIZE + START below it.
+    // The bar is reset so labels and hidings from the previous game never leak into it.
     this.awaitingStart = true;
     document.body.classList.add('game-waiting');
-    // The waiting bar is CUSTOMIZE + START sharing the row equally
-    this.shotActions.classList.add('is-split');
+    this.setStartBar('START');
 
     try {
       if (!history.state || history.state.screen !== 'game') {
@@ -1945,6 +1945,15 @@ class NeverHaveIEverApp {
     }
     if (this.shotPhase === 'intro' || this.shotPhase === 'revealed') this.startShotRound();
     else if (this.shotPhase === 'playing') this.didItAll();
+  }
+
+  // The waiting start bar: CUSTOMIZE + START sharing the row equally, whatever the last game left behind
+  setStartBar(label) {
+    this.shotActions.classList.add('is-split');
+    this.shotCustomise.hidden = false;
+    this.shotAction.hidden = false;
+    this.shotAction.innerHTML = `${KEY_CUE}<span class="btn-label">${label}</span>`;
+    this.darePill.hidden = true;
   }
 
   // START (button, Space, Enter or a first swipe): the waiting intro hands over to the game
@@ -2423,10 +2432,6 @@ class NeverHaveIEverApp {
     });
 
     document.getElementById('undo-btn').addEventListener('click', () => this.undoLastCard());
-    document.getElementById('reshuffle-btn').addEventListener('click', () => {
-      sounds.playClick();
-      this.restartCurrentGame();
-    });
     document.getElementById('home-btn').addEventListener('click', () => {
       sounds.playClick();
       this.goHome();

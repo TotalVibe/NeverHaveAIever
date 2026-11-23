@@ -107,29 +107,6 @@ body {
   transition: background 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-.reshuffle-btn {
-  width: auto;
-  min-width: 0;
-  flex-shrink: 0;
-  height: clamp(40px, 10vw, 46px);
-  padding: 0 clamp(10px, 2.5vw, 14px);
-  gap: 8px;
-  font-size: clamp(0.8rem, 2.6vw, 0.92rem);
-  font-weight: 700;
-  letter-spacing: 0.25px;
-  text-transform: uppercase;
-  white-space: nowrap;
-}
-
-.reshuffle-btn span {
-  color: rgba(248, 250, 252, 0.85);
-}
-
-.reshuffle-btn svg {
-  width: 18px;
-  height: 18px;
-}
-
 #info-btn svg {
   width: 23px;
   height: 23px;
@@ -1303,30 +1280,16 @@ body {
 
 @media (min-width: 768px) and (min-height: 760px) {
 /* Round icon buttons only; the Restart pill keeps its own sizing */
-.icon-btn:not(.reshuffle-btn) {
+.icon-btn {
     width: clamp(44px, 3.4vw, 50px);
     height: clamp(44px, 3.4vw, 50px);
   }
 }
 
 @media (min-width: 768px) and (min-height: 760px) {
-.icon-btn:not(.reshuffle-btn) svg {
+.icon-btn svg {
     width: 23px;
     height: 23px;
-  }
-}
-
-@media (min-width: 768px) and (min-height: 760px) {
-.reshuffle-btn {
-    height: clamp(42px, 3.3vw, 48px);
-    font-size: clamp(0.85rem, 1.1vw, 0.98rem);
-  }
-}
-
-@media (min-width: 768px) and (min-height: 760px) {
-.reshuffle-btn svg {
-    width: 20px;
-    height: 20px;
   }
 }
 

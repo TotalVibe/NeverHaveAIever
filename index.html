@@ -28,10 +28,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Baumans&family=Dancing+Script:wght@700&family=Elsie+Swash+Caps:wght@400;900&family=Great+Vibes&display=swap" rel="stylesheet">
   <meta name="description" content="A party game for hilarious confessions, wild stories, and unforgettable nights.">
   <!-- Styles split by component; mobile.css loads last so responsive overrides win -->
-  <link rel="stylesheet" href="base.css?v=151">
-  <link rel="stylesheet" href="cards.css?v=151">
-  <link rel="stylesheet" href="piles.css?v=158">
-  <link rel="stylesheet" href="mobile.css?v=151">
+  <link rel="stylesheet" href="base.css?v=152">
+  <link rel="stylesheet" href="cards.css?v=152">
+  <link rel="stylesheet" href="piles.css?v=159">
+  <link rel="stylesheet" href="mobile.css?v=152">
 </head>
 <body class="game-waiting">
 
@@ -47,18 +47,13 @@
   <canvas id="confetti-canvas"></canvas>
 
   <!-- Top Navigation Bar -->
- <!-- Top Navigation Bar -->
   <header class="app-header">
     <div class="header-nav">
-      <button class="icon-btn home-btn" id="home-btn" type="button" title="Home: choose a game" aria-label="Home: choose a game">
+      <button class="icon-btn home-btn" id="home-btn" type="button" title="Home: choose a game (Esc)" aria-label="Home: choose a game (Esc)">
         <svg viewBox="0 0 24 24" aria-hidden="true">
           <path d="M4 11 12 4l8 7M6 10v9h4v-5h4v5h4v-9" />
         </svg>
-      </button>
-      <button class="icon-btn restart-btn" id="reshuffle-btn" type="button" title="Restart game" aria-label="Restart game">
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M20 11a8 8 0 0 0-14.9-4M5 3v4h4M4 13a8 8 0 0 0 14.9 4M19 21v-4h-4" />
-        </svg>
+        <kbd class="key-cue">ESC</kbd>
       </button>
     </div>
 
@@ -502,6 +497,6 @@
   <!-- Fade to Black Transition Curtain -->
   <div class="screen-fade-curtain" id="screen-fade-curtain" aria-hidden="true"></div>
 
-  <script type="module" src="app.js?v=78"></script>
+  <script type="module" src="app.js?v=79"></script>
 </body>
 </html>
