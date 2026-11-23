@@ -459,28 +459,21 @@
   transform: translateX(-50%);
   display: flex;
   align-items: flex-start;
-  gap: 10px;
+  /* 10px on a phone card, growing with the card on widescreen */
+  gap: clamp(10px, 3cqi, 26px);
 }
 
 .shot-arch svg {
-  width: 17px;
-  height: 17px;
+  /* 17px on a phone card, growing with the card on widescreen (Revisions 52 pattern) */
+  width: clamp(17px, 5cqi, 56px);
+  height: clamp(17px, 5cqi, 56px);
   fill: none;
+  /* The stroke thickens with the glasses too */
+  stroke-width: clamp(1.8px, 0.35cqi, 4px);
   stroke: #ffffff;
-  stroke-width: 1.8;
   stroke-linejoin: round;
   stroke-linecap: round;
 }
-
-.shot-arch svg:nth-child(1) { transform: translateY(10px) rotate(-16deg); }
-
-.shot-arch svg:nth-child(2) { transform: translateY(3px) rotate(-8deg); }
-
-.shot-arch svg:nth-child(3) { transform: none; }
-
-.shot-arch svg:nth-child(4) { transform: translateY(3px) rotate(8deg); }
-
-.shot-arch svg:nth-child(5) { transform: translateY(10px) rotate(16deg); }
 
 .shot-blurb {
   position: absolute;
@@ -1341,7 +1334,9 @@
 }
 
 .mode-shot-dare .card-back .emblem-title {
-  font-size: clamp(1.8rem, 19cqi, 4.4rem);
+  /* Scales with the card (19cqi) like the classic titles; the cap keeps one
+     widescreen step below the classic 7rem cap while still growing on big screens */
+  font-size: clamp(1.8rem, 19cqi, 6.5rem);
 }
 
 /* ===== Revisions 6: deck spacing, colour-matched sparkles, larger text, arch animation, how-to rows ===== */
@@ -1426,15 +1421,17 @@
   animation-delay: calc(0.25s + var(--i, 0) * 0.14s);
 }
 
-.shot-arch svg:nth-child(1) { --i: 0; --arch-y: 10px; --arch-r: -16deg; }
+/* The arch rise/tilt scales with the card, matching the glasses' growth */
 
-.shot-arch svg:nth-child(2) { --i: 1; --arch-y: 3px; --arch-r: -8deg; }
+.shot-arch svg:nth-child(1) { --i: 0; --arch-y: clamp(10px, 2.9cqi, 34px); --arch-r: -16deg; }
+
+.shot-arch svg:nth-child(2) { --i: 1; --arch-y: clamp(3px, 0.9cqi, 10px); --arch-r: -8deg; }
 
 .shot-arch svg:nth-child(3) { --i: 2; --arch-y: 0px; --arch-r: 0deg; }
 
-.shot-arch svg:nth-child(4) { --i: 3; --arch-y: 3px; --arch-r: 8deg; }
+.shot-arch svg:nth-child(4) { --i: 3; --arch-y: clamp(3px, 0.9cqi, 10px); --arch-r: 8deg; }
 
-.shot-arch svg:nth-child(5) { --i: 4; --arch-y: 10px; --arch-r: 16deg; }
+.shot-arch svg:nth-child(5) { --i: 4; --arch-y: clamp(10px, 2.9cqi, 34px); --arch-r: 16deg; }
 
 @keyframes arch-in {
   from {
