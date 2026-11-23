@@ -2918,3 +2918,60 @@ body:not(.mode-most-likely):not(.mode-shot-dare).game-waiting .shot-controls {
     letter-spacing: 0.08em;
   }
 }
+/* ===== Revisions A: key cues sit right next to their label, and CUSTOMIZE gains ENTER ===== */
+
+/* Un-pin the cue from the button's left corner (was position: absolute in Revisions 14):
+   the pill now sits in the flow, immediately before its label, which is no longer
+   stretched across the button, so cue + label form one centred group */
+
+.key-cue {
+  position: static;
+  transform: none;
+  margin: 0;
+}
+
+@media (min-width: 1024px) {
+.key-cue {
+    display: inline-flex;
+  }
+
+.shot-action:has(.key-cue),
+  .deck-play:has(.key-cue),
+  .indeed-key:has(.key-cue),
+  #dare-pick:has(.key-cue) {
+    justify-content: center;
+    gap: 12px;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+.shot-actions.is-split .shot-action:has(.key-cue) {
+    justify-content: center;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+/* No more stretched, centre-aligned labels: cue and label read as one phrase */
+.shot-action .btn-label,
+  .deck-play span,
+  .indeed-key span,
+  #dare-pick span {
+    flex: 0 0 auto;
+    text-align: left;
+  }
+
+/* The cue's own 12px margin would double the flex gap */
+.shot-action .key-cue,
+  .deck-play .key-cue {
+    margin-right: 0;
+  }
+}
+
+/* The start-bar CUSTOMIZE pill: ENTER, tinted in the button's own purple */
+
+.shot-customise .key-cue {
+  background: rgba(130, 96, 190, 0.22);
+  border-color: rgba(198, 173, 255, 0.4);
+  color: #e4d7ff;
+  margin: 0;
+}

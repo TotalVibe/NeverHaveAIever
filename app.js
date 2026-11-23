@@ -2515,9 +2515,15 @@ class NeverHaveIEverApp {
         return;
       }
 
-      // While waiting at the start bar, only starting the game is possible
+      // While waiting at the start bar: ENTER is the CUSTOMIZE shortcut; Space starts
       if (this.awaitingStart) {
-        if (e.key === ' ' || e.key === 'Enter' || e.key.startsWith('Arrow')) {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          sounds.playClick();
+          this.openCustomiseModal({ from: this.gameMode === 'shot-dare' ? 'shot' : 'card' });
+          return;
+        }
+        if (e.key === ' ' || e.key.startsWith('Arrow')) {
           e.preventDefault();
           this.beginStart();
           if (e.key.startsWith('Arrow')) {
