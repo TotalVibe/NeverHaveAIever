@@ -1873,7 +1873,8 @@
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  padding: 9px 12px 9px 6px;
+  /* 48px tall on widescreen: the same height as the card's DONE IT button */
+  padding: 11px 12px 11px 5px;
   border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: 999px;
   background: rgba(18, 21, 32, 0.72);
