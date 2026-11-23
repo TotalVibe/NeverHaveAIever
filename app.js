@@ -1774,7 +1774,7 @@ class NeverHaveIEverApp {
     this.stackContainer.classList.remove('shuffling', 'reshuffle-arriving');
     this.isAnimating = false;
     this.restartGame();
-    this.revealTargetButtons();
+    setTimeout(() => this.revealTargetButtons(), 200);
   }
 
   // ----- Shot dare time -----
