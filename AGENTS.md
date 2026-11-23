@@ -12,6 +12,7 @@ Use fluid viewport sizing (`vh`, `vmin`, `clamp()`) so cards, piles, and typogra
 - `rem` — spacing
 - `em` — proportional button/text glows and shadows
 - `px` — only for thin borders and subtle surface elevation
+- Card corners & strokes: Scale border-radius and prominent card/button border-width with `clamp()` or `vmin` (never `%` on rectangles) so cards keep the same rounded corner proportion and stroke weight on large monitors and TVs.
 
 ## CSS architecture
 

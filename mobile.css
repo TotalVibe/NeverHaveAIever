@@ -145,8 +145,8 @@ body.unhinged-screen-shake {
   border-radius: var(--radius-card);
   background: linear-gradient(180deg, #1c2032 0%, #131622 100%);
   /* High-contrast crisp border matching the bottom edge of the top card */
-  border: 2px solid rgba(255, 255, 255, calc(0.55 - (var(--layer-idx) * 0.035)));
-  border-bottom: 2.5px solid rgba(255, 255, 255, calc(0.85 - (var(--layer-idx) * 0.045)));
+  border: var(--stroke-card) solid rgba(255, 255, 255, calc(0.55 - (var(--layer-idx) * 0.035)));
+  border-bottom: calc(var(--stroke-card) + 0.5px) solid rgba(255, 255, 255, calc(0.85 - (var(--layer-idx) * 0.045)));
   box-shadow: 
     0 -3px 8px rgba(0, 0, 0, 0.38),
     0 8px 24px rgba(0, 0, 0, 0.45),
@@ -431,7 +431,7 @@ body.unhinged-screen-shake {
   max-height: 85dvh;
   padding: 0;
   background: #111420;
-  border: 2px solid rgba(255, 255, 255, 0.28);
+  border: var(--stroke-card) solid rgba(255, 255, 255, 0.28);
   border-radius: var(--radius-card);
   box-shadow: 0 20px 48px -10px rgba(0, 0, 0, 0.75), 0 0 1px 1px rgba(255, 255, 255, 0.16);
   overflow: hidden;
