@@ -2140,8 +2140,7 @@ body:has(.age-gate-card) .classic-keys {
 /* SOMEONE LOST! and PLAY AGAIN: narrower, centred */
 
 .shot-actions:not(.is-split) .shot-action {
-  flex: 0 0 62%;
-  margin: 0 auto;
+  flex: 0 0 66%;
 }
 
 /* Shots & Dares dare text: a little smaller */
@@ -2421,10 +2420,12 @@ body:has(.age-gate-card) .classic-keys {
   }
 }
 
-/* ===== Revisions 32: SOMEONE LOST! and PLAY AGAIN wider ===== */
+/* ===== Revisions 32: the game-over controls share one width ===== */
+
+/* SOMEONE LOST! / PLAY AGAIN and the dare picker pill below it: same width, centred */
 
 .shot-actions:not(.is-split) .shot-action {
-  flex: 0 0 78%;
+  flex: 0 0 66%;
 }
 
 /* ===== Revisions 33: the pick-again button, smaller overall ===== */

@@ -1019,8 +1019,8 @@ body.unhinged-screen-shake {
 }
 
 /* Dare picker: the pill at the bottom, the same style as Who most likely.
-   Compact: sized by its content and centred, not stretched across the bar
-   (mobile hides it entirely; cards are chosen by direct tap) */
+   Shares the game-over width (SOMEONE LOST! / PLAY AGAIN are 66%), centred;
+   mobile hides it entirely, since cards are chosen by direct tap */
 
 .shot-controls .dare-pill {
   position: relative;
@@ -1028,7 +1028,7 @@ body.unhinged-screen-shake {
   bottom: auto;
   transform: none;
   display: flex;
-  width: max-content;
+  width: 66%;
   margin: 0 auto;
   justify-content: center;
   padding: 6px;
