@@ -990,7 +990,8 @@ body.unhinged-screen-shake {
 /* The chosen card comes to the front and centre, a little larger */
 
 .shot-dare.is-revealed {
-  width: 62%;
+  /* 90% of the narrower fan = the same absolute size the old 62%-of-96vmin card had */
+  width: 90%;
   z-index: 6;
 }
 
