@@ -441,6 +441,8 @@ class NeverHaveIEverApp {
     if (this.ageGateActive || this.awaitingStart) return;
     const arena = document.querySelector('.game-arena');
     clearTimeout(this.targetHideTimer);
+    // Classic widescreen: re-measure the target offsets before showing them
+    this.syncClassicTargetAlignment();
     arena.classList.remove('intro-hidden', 'intro-hiding');
     arena.classList.add('intro-revealed');
   }
@@ -1710,6 +1712,40 @@ class NeverHaveIEverApp {
     track.style.transform = `translateX(${-offset}px)`;
   }
 
+  // Classic on widescreen: line the spicy and wholesome buttons up with the UI
+  // that lives outside the arena — spicy with the header controls row, wholesome
+  // with the RANDOM CARD button. Their offsets are measured here because pure
+  // CSS cannot see across the three containers.
+  syncClassicTargetAlignment() {
+    const arena = document.querySelector('.game-arena');
+    if (!arena) return;
+    if (this.gameMode !== 'classic' || !window.matchMedia('(min-width: 1024px)').matches) {
+      arena.style.removeProperty('--target-top-align');
+      arena.style.removeProperty('--target-bottom-align');
+      return;
+    }
+    // Measure the resting layout: clear the vars, then read the boxes
+    arena.style.removeProperty('--target-top-align');
+    arena.style.removeProperty('--target-bottom-align');
+    const header = document.querySelector('.app-header');
+    const randomBtn = document.getElementById('classic-random');
+    const top = document.getElementById('target-top');
+    const bottom = document.getElementById('target-bottom');
+    const ar = arena.getBoundingClientRect();
+    const hr = header?.getBoundingClientRect();
+    const tr = top?.getBoundingClientRect();
+    const br = bottom?.getBoundingClientRect();
+    const rr = randomBtn?.getBoundingClientRect();
+    // The classic-keys row hides while a modal is open; keep the last good values then
+    if (!ar.height || !hr?.height || !tr?.height || !br?.height || !rr?.height) return;
+    // Spicy: vertically centred on the header row
+    const topOffset = (hr.top + hr.height / 2) - ar.top - tr.height / 2;
+    // Wholesome: vertically centred on the RANDOM CARD button
+    const bottomOffset = ar.bottom - (rr.top + rr.height / 2) - br.height / 2;
+    arena.style.setProperty('--target-top-align', `${topOffset.toFixed(1)}px`);
+    arena.style.setProperty('--target-bottom-align', `${bottomOffset.toFixed(1)}px`);
+  }
+
   // Deck chosen: the customise pop-up comes next as an optional step
   chooseMode() {
     // The customise step is asked once; after that, choosing a game goes straight in
@@ -1792,7 +1828,10 @@ class NeverHaveIEverApp {
     this.restartGame();
     // Classic: the swipe targets came from the previous round, so hide them again;
     // they come back together with the START gesture. On phones they are always hidden.
-    if (mode === 'classic') this.hideTargetButtons();
+    if (mode === 'classic') {
+      this.syncClassicTargetAlignment();
+      this.hideTargetButtons();
+    }
   }
 
   // ----- Shot dare time -----
@@ -2376,6 +2415,8 @@ class NeverHaveIEverApp {
     window.addEventListener('resize', () => {
       const level = SPICY_LEVELS[Number(levelSlider.value)];
       if (level) this.updateSpicyLevelPreview(level);
+      // Classic widescreen keeps the swipe targets aligned with the surrounding UI
+      this.syncClassicTargetAlignment();
     });
     // Tapping a level's name selects it, the same as dragging the slider to it
     this.customiseModal.querySelectorAll('.customise-level-option').forEach((option) => {

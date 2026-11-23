@@ -2997,3 +2997,24 @@ body:not(.mode-most-likely):not(.mode-shot-dare).game-waiting .shot-controls {
   padding: 0 8px;
   letter-spacing: 0.08em;
 }
+
+/* ===== Revisions 55: classic widescreen alignment ===== */
+
+/* On wide screens the swipe targets line up with the UI around the arena.
+   The exact offsets are measured in app.js (syncClassicTargetAlignment) and
+   arrive as vars on .game-arena; the fallbacks keep today's off-anywhere values. */
+
+@media (min-width: 1024px) {
+  body.mode-classic .target-btn.target-top {
+    top: var(--target-top-align, clamp(6px, 1vh, 12px));
+  }
+
+  body.mode-classic .target-btn.target-bottom {
+    bottom: var(--target-bottom-align, 22px);
+  }
+
+  /* The deck rides a touch higher so it sits centred between the targets */
+  body.mode-classic .card-stack {
+    transform: translateY(calc(-42px - 2.2vh));
+  }
+}
