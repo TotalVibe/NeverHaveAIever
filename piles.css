@@ -3018,10 +3018,10 @@ body:not(.mode-most-likely):not(.mode-shot-dare).game-waiting .shot-controls {
   margin: 0;
 }
 
-/* All screens: an even 10px inset from both edges, square in the card's corner */
+/* All screens: an even inset from both edges, clear of the card's corner */
 .shot-dare .dare-again {
-  right: 10px;
-  bottom: 10px;
+  right: 16px;
+  bottom: 16px;
 }
 
 /* Widescreen: the button grows to carry the pill comfortably */
@@ -3068,7 +3068,7 @@ body:not(.mode-most-likely):not(.mode-shot-dare).game-waiting .shot-controls {
 
 @media (min-width: 1024px) {
   body.mode-shot-dare .shot-dare-text {
-    font-size: clamp(0.75rem, 7cqw, 1.7rem);
+    font-size: clamp(0.75rem, 8cqw, 1.9rem);
   }
 
   body.mode-shot-dare .dare-again {
