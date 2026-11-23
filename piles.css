@@ -3019,3 +3019,31 @@ body:not(.mode-most-likely):not(.mode-shot-dare).game-waiting .shot-controls {
     transform: translateY(calc(-42px - 2.2vh));
   }
 }
+
+/* ===== Revisions 56: pick-again keyboard pill, size and corner ===== */
+
+/* The key cue sits in flow at the left, before the shot glass */
+.dare-again .key-cue {
+  margin: 0;
+}
+
+/* All screens: an even 10px inset from both edges, square in the card's corner */
+.shot-dare .dare-again {
+  right: 10px;
+  bottom: 10px;
+}
+
+/* Widescreen: the button grows to carry the pill comfortably */
+@media (min-width: 1024px) {
+  .shot-dare .dare-again {
+    padding: 8px 14px;
+    gap: 10px;
+    font-size: clamp(0.62rem, 1.1vw, 0.9rem);
+    white-space: nowrap;
+  }
+
+  .dare-again svg {
+    width: 15px;
+    height: 15px;
+  }
+}

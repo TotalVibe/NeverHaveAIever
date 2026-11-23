@@ -1851,10 +1851,12 @@ class NeverHaveIEverApp {
     const showingDares = phase === 'dare' || phase === 'revealed';
     this.shotSlot.hidden = showingDares;
     this.shotDares.hidden = !showingDares;
-    // The intro uses START on the card; the action button below handles the rest
+    // The intro uses START on the card; the action button below handles the rest.
+    // The pill tells the truth: PLAY AGAIN answers to Enter, the others to Space.
     const labels = { intro: 'START', playing: 'SOMEONE LOST!', revealed: 'PLAY AGAIN' };
+    const cues = { intro: 'SPACE', playing: 'SPACE', revealed: 'ENTER' };
     this.shotAction.hidden = !labels[phase];
-    this.shotAction.innerHTML = labels[phase] ? `${KEY_CUE}<span class="btn-label">${labels[phase]}</span>` : '';
+    this.shotAction.innerHTML = labels[phase] ? `<kbd class="key-cue">${cues[phase]}</kbd><span class="btn-label">${labels[phase]}</span>` : '';
     this.shotCustomise.hidden = phase !== 'intro';
     this.shotActions.classList.toggle('is-split', phase === 'intro');
     this.darePill.hidden = phase !== 'dare';
@@ -2607,7 +2609,12 @@ class NeverHaveIEverApp {
           }
           return;
         }
-        if (e.key === ' ' || e.key === 'Enter') {
+        if (e.key === ' ') {
+          e.preventDefault();
+          // On a revealed dare Space is Pick again (its pill says so); Enter carries on
+          if (this.shotPhase === 'revealed') this.pickAgain();
+          else this.shotPrimaryAction();
+        } else if (e.key === 'Enter') {
           e.preventDefault();
           this.shotPrimaryAction();
         } else if (e.key.startsWith('Arrow')) {
