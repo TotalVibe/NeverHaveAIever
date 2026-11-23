@@ -2951,6 +2951,13 @@ body:not(.mode-most-likely):not(.mode-shot-dare).game-waiting .shot-controls {
     padding-right: 20px;
   }
 
+/* CUSTOMIZE's pill matches START's rhythm: same 12px gap and side padding */
+.shot-customise:has(.key-cue) {
+    gap: 12px;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
 /* No more stretched, centre-aligned labels: cue and label read as one phrase */
 .shot-action .btn-label,
   .deck-play span,
@@ -2967,11 +2974,16 @@ body:not(.mode-most-likely):not(.mode-shot-dare).game-waiting .shot-controls {
   }
 }
 
-/* The start-bar CUSTOMIZE pill: ENTER, tinted in the button's own purple */
+/* The start-bar CUSTOMIZE pill: ENTER — same dimensions as the SPACE pill in START,
+   but tinted in the button's own purple */
 
 .shot-customise .key-cue {
   background: rgba(130, 96, 190, 0.22);
   border-color: rgba(198, 173, 255, 0.4);
   color: #e4d7ff;
   margin: 0;
+  font-size: clamp(0.78rem, 1.5vmin, 1.4rem);
+  min-width: max(30px, 2.4em);
+  height: max(30px, 2.2em);
+  padding: 0 8px;
 }
