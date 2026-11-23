@@ -1,0 +1,1249 @@
+/*
+ * mobile.css - small-screen & landscape adjustments and reduced-motion rules only.
+ * Loaded last of the four so responsive overrides win.
+ */
+
+body.unhinged-screen-shake {
+  animation: unhinged-screen-shake 420ms ease-out;
+}
+
+/* App Header */
+
+.app-header {
+  position: relative;
+  z-index: 25;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: clamp(8px, 1.8vh, 14px) clamp(16px, 4vw, 32px);
+  max-width: 840px;
+  margin: 0 auto;
+  width: 100%;
+  flex-shrink: 0;
+}
+
+.header-actions {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: clamp(6px, 2vw, 10px);
+  flex-shrink: 0;
+}
+
+.icon-btn {
+  background: rgba(18, 21, 32, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: var(--text-main);
+  border-radius: var(--radius-pill);
+  width: clamp(40px, 10vw, 46px);
+  height: clamp(40px, 10vw, 46px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(0.95rem, 2.8vw, 1.1rem);
+  cursor: pointer;
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  backdrop-filter: blur(14px) saturate(140%);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.icon-btn svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.game-arena.level-up-active .target-left .emoji svg,
+.game-arena.level-up-active .target-right .emoji svg {
+  display: block;
+  width: 0.9em;
+  height: 0.9em;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.game-arena.intro-hiding .target-btn {
+  pointer-events: none;
+  animation: target-intro-hide 180ms ease-in both;
+}
+
+.game-arena.intro-revealed .target-btn {
+  animation: target-intro-reveal 420ms cubic-bezier(0.2, 0.85, 0.25, 1) both;
+}
+
+.target-btn .arrow-indicator.keyboard-pop {
+  color: var(--target-accent);
+  animation: keyboard-arrow-pop 420ms cubic-bezier(0.2, 0.9, 0.3, 1.4);
+}
+
+.target-btn.target-bottom {
+  --target-accent: var(--color-wholesome);
+  --target-dark-gradient: linear-gradient(to top, rgba(21, 24, 36, 0), rgba(21, 24, 36, 0.92));
+  --target-edge-gradient: linear-gradient(to top, rgba(116, 143, 252, 0), rgba(116, 143, 252, 0.95));
+  --target-glow: rgba(116, 143, 252, 0.2);
+  bottom: 22px;
+  left: 50%;
+  transform: translateX(-50%);
+  flex-direction: row;
+  padding: clamp(6px, 1vh, 8px) clamp(14px, 3vw, 20px);
+  gap: 8px;
+  border-top: 2px solid rgba(116, 143, 252, 0.72);
+}
+
+/* =========================================================
+   CARD STACK CONTAINER & 10 PHYSICAL STACKED RECTANGLES (-Y STEPPED)
+   ========================================================= */
+
+.card-stack {
+  position: relative;
+  /* Centred card width with plenty of margin from lateral buttons. Never wider than the
+     screen, so on ultra-narrow screens it stays centred instead of spilling to one side */
+  width: min(clamp(275px, 42vw, 380px), calc(100vw - 24px));
+  /* Card contents size themselves in proportion to this width */
+  container-type: inline-size;
+  flex-shrink: 0;
+  height: clamp(330px, 54dvh, 480px);
+  margin: clamp(16px, 2.5vh, 28px) auto 0;
+  transform: translateY(-42px);
+  touch-action: none;
+  perspective: 1200px;
+  -webkit-perspective: 1200px;
+}
+
+.card-stack.shuffling .game-card.current {
+  animation: shuffle-current 0.65s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+.card-stack.shuffling .game-card.next {
+  animation: shuffle-next 0.65s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+.card-stack.shuffling .deck-card-layer {
+  animation: shuffle-layer 0.65s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+.card-stack.reshuffle-arriving .game-card.current {
+  animation: card-enter 0.5s cubic-bezier(0.2, 0.85, 0.25, 1) both;
+}
+
+/* Individual Stack Layer: Stepped down so the deck peeks out below the active card. */
+
+.deck-card-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: var(--radius-card);
+  background: linear-gradient(180deg, #1c2032 0%, #131622 100%);
+  /* High-contrast crisp border matching the bottom edge of the top card */
+  border: 2px solid rgba(255, 255, 255, calc(0.55 - (var(--layer-idx) * 0.035)));
+  border-bottom: 2.5px solid rgba(255, 255, 255, calc(0.85 - (var(--layer-idx) * 0.045)));
+  box-shadow: 
+    0 -3px 8px rgba(0, 0, 0, 0.38),
+    0 8px 24px rgba(0, 0, 0, 0.45),
+    inset 0 1.5px 0.5px rgba(255, 255, 255, 0.45);
+  transform-origin: center bottom;
+  /* Step down with positive Y so the bottom rounded borders peek out below the main card. */
+  transform: 
+    translateY(calc(var(--layer-idx) * 3px))
+    scale(calc(1 - (var(--layer-idx) * 0.014)));
+  opacity: calc(1 - (var(--layer-idx) * 0.03));
+  pointer-events: none;
+}
+
+/* =========================================================
+   FRONT FACE: CLEAN STATEMENT (NO COPY BUTTON, NO NUMBER)
+   ========================================================= */
+
+.card-front {
+  background: var(--bg-card);
+  padding: clamp(18px, 3vh, 26px) clamp(16px, 4vw, 24px);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  transform: rotateY(0deg);
+}
+
+.level-up-card.level-up-anticipating {
+  animation: level-up-anticipation 180ms ease-in-out infinite;
+  will-change: translate;
+}
+
+.card-body {
+  position: relative;
+  z-index: 2;
+  transform: translateY(-15px);
+  margin: auto 0;
+  text-align: center;
+  padding: clamp(10px, 2vh, 18px) 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+}
+
+.prompt-prefix {
+  font-size: clamp(0.82rem, 2.5vw, 1rem);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--active-card-color, #ff2d75);
+  margin-bottom: clamp(12px, 2.4vh, 20px);
+  opacity: 0.95;
+  transition: color 0.3s ease;
+}
+
+.prompt-text {
+  font-family: 'Baumans', var(--font-sans), cursive;
+  font-size: clamp(1.3rem, 4.6vw, 1.7rem);
+  font-weight: 700;
+  line-height: 1.68;
+  color: #ffffff;
+  text-wrap: balance;
+}
+
+.card-hint {
+  position: absolute;
+  z-index: 2;
+  right: 14px;
+  bottom: clamp(14px, 2.5vh, 22px);
+  left: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0;
+  color: var(--text-muted);
+  /* Sized to the card, and kept on one line */
+  font-size: clamp(0.45rem, 3.6cqi, 0.84rem);
+  font-weight: 600;
+  letter-spacing: 0;
+  line-height: 1.3;
+  white-space: nowrap;
+  text-align: left;
+  visibility: visible;
+  pointer-events: none;
+}
+
+.done-it-btn {
+  flex: 0 0 auto;
+  padding: 9px 14px;
+  border: 1px solid color-mix(in srgb, var(--active-card-color, #ff2d75) 65%, transparent);
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  font: inherit;
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.55px;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  pointer-events: auto;
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 0 16px var(--active-card-glow, rgba(255, 45, 117, 0.45)), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  transition: background 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+}
+
+.celebration-shake {
+  animation: celebration-shake 2.5s ease-in-out both;
+}
+
+/* =========================================================
+   BACK FACE: VECTOR TEXTURE + FANCY CURSIVE 2-LINE TITLE
+   ========================================================= */
+
+.card-back {
+  --card-back-frame-inset: 20px;
+  --card-back-inner-inset: 4px;
+  background: #111420;
+  transform: rotateY(180deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Ornate Frame on Card Back */
+
+.card-back-frame {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border: 1.5px solid rgba(255, 255, 255, 0.16);
+  border-radius: calc(var(--radius-card) - var(--card-back-frame-inset));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 16px;
+  background: radial-gradient(circle at 50% 50%, rgba(25, 29, 44, 0.65) 0%, rgba(13, 16, 26, 0.88) 100%);
+}
+
+/* Fancy Cursive 2-Line Title ("Never Have" / "AI Ever") */
+
+.emblem-title {
+  font-family: 'Great Vibes', 'Alex Brush', 'Dancing Script', cursive;
+  grid-row: 2;
+  font-size: clamp(1.4rem, 15cqi, 3.6rem);
+  font-weight: 400;
+  line-height: 1.05;
+  color: #ffffff;
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.5), 0 2px 10px rgba(0, 0, 0, 0.9);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: clamp(2px, 0.6vh, 4px) 0;
+  transform: rotate(-2deg);
+}
+
+.emblem-sub {
+  /* Pinned near the bottom of the card, outside the centred stack. Flex centring keeps the
+     text centred even when it is wider than the card. */
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: clamp(12px, 3.4vh, 28px);
+  display: flex;
+  justify-content: center;
+  font-family: var(--font-sans);
+  font-size: clamp(0.55rem, 3.6cqi, 0.68rem);
+  font-weight: 700;
+  white-space: nowrap;
+  letter-spacing: 2.2px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.game-card.current.face-down:not(.level-up-card) .emblem-sub {
+  animation: swipe-direction-cue 20s ease-in-out 6.5s infinite;
+}
+
+.crest-diamond {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: clamp(24px, 4.6vh, 36px);
+  height: clamp(24px, 4.6vh, 36px);
+  color: #d7c8ff;
+}
+
+.customise-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 16px;
+  padding: clamp(7px, 4cqi, 12px) clamp(12px, 6.5cqi, 20px);
+  border: 1px solid rgba(198, 173, 255, 0.48);
+  border-radius: var(--radius-pill);
+  background: rgba(130, 96, 190, 0.18);
+  color: #e4d7ff;
+  font-family: var(--font-sans);
+  font-size: clamp(0.6rem, 4.3cqi, 0.9rem);
+  font-weight: 800;
+  letter-spacing: 1.1px;
+  line-height: 1;
+  cursor: pointer;
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 0 16px rgba(164, 125, 255, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  transition: background 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+}
+
+/* Floating Toast Notification */
+
+#toast {
+  position: absolute;
+  top: 50%;
+  right: calc(100% + clamp(4px, 1.5vw, 10px));
+  width: max-content;
+  max-width: min(260px, calc(100vw - 32px));
+  white-space: nowrap;
+  transform: translate(-8px, -50%);
+  background: rgba(24, 27, 41, 0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: #fff;
+  padding: 8px 18px;
+  border-radius: var(--radius-pill);
+  font-size: 0.82rem;
+  font-weight: 600;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+  pointer-events: none;
+  opacity: 0;
+  z-index: 30;
+  transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+#toast.visible {
+  opacity: 1;
+  transform: translate(0, -50%);
+}
+
+/* Modals */
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.78);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(12px, 3.5vw, 24px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+/* How to Play pop-up: reverse of the cover card (same pattern, frame and crest) */
+
+.info-reverse {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  /* Sized to its content; only limited by the screen height, then the list scrolls */
+  max-height: 85vh;
+  max-height: 85dvh;
+  padding: 0;
+  background: #111420;
+  border: 2px solid rgba(255, 255, 255, 0.28);
+  border-radius: var(--radius-card);
+  box-shadow: 0 20px 48px -10px rgba(0, 0, 0, 0.75), 0 0 1px 1px rgba(255, 255, 255, 0.16);
+  overflow: hidden;
+}
+
+/* Customize pop-up: same card look as How to Play; the panel itself scrolls on small screens */
+
+.customise-modal-content.info-reverse {
+  display: flex;
+  flex-direction: column;
+  height: auto;
+  max-height: 85vh;
+  max-height: 85dvh;
+  overflow: hidden;
+}
+
+/* Spans the full width of the pop-up, with the same inset on both sides, so the
+   slider's blur glow isn't cut off at the scroll box edges */
+
+.customise-scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 14px, #000 calc(100% - 12px), transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0, #000 14px, #000 calc(100% - 12px), transparent 100%);
+  margin: 0 -24px;
+  padding: 2px 24px 0;
+}
+
+/* Finger waves side to side, then pops up with a small bounce (a tap), and repeats */
+
+.info-cat--tap .info-cat-emoji {
+  display: inline-block;
+  position: relative;
+  z-index: 2;
+  transform-origin: 50% 85%;
+  animation: finger-cycle 4.2s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+.info-cat--tap .info-cat-emoji {
+    animation: none;
+  }
+}
+
+@media (max-width: 360px) {
+.app-header {
+    padding-right: 12px;
+    padding-left: 12px;
+  }
+}
+
+@media (max-width: 360px) {
+.icon-btn.reshuffle-btn {
+    width: auto;
+    padding-right: 9px;
+    padding-left: 9px;
+    gap: 6px;
+    font-size: 0.68rem;
+  }
+}
+
+@media (max-width: 360px) {
+.header-actions {
+    gap: 4px;
+  }
+}
+
+@media (max-width: 360px) {
+.icon-btn {
+    width: 32px;
+    height: 32px;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 360px) {
+.icon-btn svg {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+@media (max-width: 360px) {
+.card-stack {
+    width: calc(100% - 94px);
+    height: clamp(300px, 48dvh, 370px);
+  }
+}
+
+@media (max-width: 360px) {
+.game-arena.level-up-active .target-left .emoji svg,
+  .game-arena.level-up-active .target-right .emoji svg {
+    width: 0.75em;
+    height: 0.75em;
+  }
+}
+
+@media (max-width: 360px) {
+.prompt-text {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 360px) {
+.card-hint {
+    left: 10px;
+    right: 10px;
+    gap: 5px;
+  }
+}
+
+@media (max-width: 360px) {
+.done-it-btn {
+    padding: 9px 11px;
+    font-size: 0.68rem;
+  }
+}
+
+@media (max-height: 680px) {
+.app-header {
+    padding: 6px 12px;
+  }
+}
+
+@media (max-height: 680px) {
+.card-stack {
+    height: clamp(280px, 48dvh, 360px);
+  }
+}
+
+@media (max-height: 680px) {
+.card-front {
+    padding: 14px 12px;
+  }
+}
+
+@media (max-height: 680px) {
+.prompt-prefix {
+    margin-bottom: 8px;
+  }
+}
+
+@media (max-height: 680px) {
+.prompt-text {
+    font-size: 1.2rem;
+  }
+}
+
+@media (orientation: landscape) and (max-height: 520px) {
+/* All header buttons stack in one left-aligned column of round buttons, leaving the centre to the cards */
+.app-header {
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    width: auto;
+    height: 100%;
+    padding: 10px 8px;
+    gap: 8px;
+  }
+}
+
+@media (orientation: landscape) and (max-height: 520px) {
+.header-actions {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+}
+
+@media (orientation: landscape) and (max-height: 520px) {
+/* Restart is icon-only here, so it matches the round buttons */
+.app-header .reshuffle-btn {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    gap: 0;
+  }
+}
+
+@media (orientation: landscape) and (max-height: 520px) {
+.app-header .reshuffle-btn span {
+    display: none;
+  }
+}
+
+@media (orientation: landscape) and (max-height: 520px) {
+.app-header .icon-btn {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+@media (orientation: landscape) and (max-height: 520px) {
+#toast {
+    top: 0;
+    right: auto;
+    left: calc(100% + 8px);
+    max-width: min(260px, calc(100vw - 160px));
+    transform: translate(0, -8px);
+  }
+}
+
+@media (orientation: landscape) and (max-height: 520px) {
+#toast.visible {
+    transform: translate(0, 0);
+  }
+}
+
+@media (orientation: landscape) and (max-height: 520px) {
+.target-btn.target-bottom {
+    bottom: 20px;
+  }
+}
+
+@media (orientation: landscape) and (max-height: 520px) {
+.card-stack {
+    height: clamp(100px, calc(100dvh - 222px), 168px);
+    width: clamp(240px, 40vw, 340px);
+    transform: translateY(-8px);
+  }
+}
+
+@media (orientation: landscape) and (max-height: 520px) {
+.card-body {
+    transform: translateY(-8px);
+  }
+}
+
+@media (orientation: landscape) and (max-height: 520px) {
+.card-back {
+    --card-back-frame-inset: 8px;
+    padding: 6px;
+  }
+}
+
+@media (orientation: landscape) and (max-height: 520px) {
+.card-back-frame {
+    padding: 4px;
+  }
+}
+
+@media (orientation: landscape) and (max-height: 520px) {
+.crest-diamond {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+@media (orientation: landscape) and (max-height: 520px) {
+.emblem-title {
+    display: none;
+  }
+}
+
+@media (orientation: landscape) and (max-height: 520px) {
+.emblem-sub {
+    font-size: 0.48rem;
+    letter-spacing: 1.2px;
+  }
+}
+
+@media (orientation: landscape) and (max-height: 520px) {
+.customise-btn {
+    gap: 4px;
+    margin-top: 2px;
+    padding: 5px 9px;
+    font-size: 0.5rem;
+    letter-spacing: 0.7px;
+  }
+}
+
+@media (orientation: landscape) and (max-height: 520px) {
+.deck-card-layer {
+    transform: translateY(calc(var(--layer-idx) * 1.5px)) scale(calc(1 - (var(--layer-idx) * 0.014)));
+  }
+}
+
+@media (orientation: landscape) and (max-height: 520px) {
+.prompt-text {
+    font-size: 1.1rem;
+  }
+}
+
+@media (orientation: landscape) and (max-height: 520px) {
+.card-hint {
+    bottom: 8px;
+  }
+}
+
+@media (orientation: landscape) and (max-height: 520px) {
+.done-it-btn {
+    padding: 7px 11px;
+  }
+}
+
+@media (min-width: 768px) {
+.app-header {
+    max-width: none;
+    width: 100%;
+    box-sizing: border-box;
+    padding-left: clamp(16px, 3vw, 32px);
+    padding-right: clamp(16px, 3vw, 32px);
+  }
+}
+
+@media (min-width: 768px) and (min-height: 760px) {
+.app-header {
+    max-width: none;
+    width: 100%;
+    box-sizing: border-box;
+    padding-left: clamp(16px, 3vw, 32px);
+    padding-right: clamp(16px, 3vw, 32px);
+  }
+}
+
+@media (min-width: 768px) and (min-height: 760px) {
+.card-stack {
+    width: clamp(340px, 40vw, 480px);
+    height: clamp(420px, 64dvh, 600px);
+  }
+}
+
+@media (min-width: 768px) and (min-height: 760px) {
+.card-front {
+    padding: 26px 28px;
+  }
+}
+
+@media (min-width: 768px) and (min-height: 760px) {
+.prompt-text {
+    font-size: clamp(1.5rem, 2.9vw, 2rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+body.unhinged-screen-shake {
+    animation: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+.target-btn .arrow-indicator.keyboard-pop {
+    animation-duration: 0.01ms;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+.game-arena.intro-revealed .target-btn,
+  .game-arena.intro-hiding .target-btn {
+    animation-duration: 0.01ms;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+.card-stack.shuffling .game-card.current,
+  .card-stack.shuffling .game-card.next,
+  .card-stack.shuffling .deck-card-layer,
+  .card-stack.reshuffle-arriving .game-card.current {
+    animation-duration: 0.01ms;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+.celebration-shake {
+    animation: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+.game-card.current.face-down:not(.level-up-card) .emblem-sub {
+    animation: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+.game-card.current.level-up-card .level-up-choice-hint span:last-child {
+    animation: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+.level-up-card.level-up-anticipating {
+    animation: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+.game-card.level-up-card::after,
+  .game-card.intro-card::after {
+    animation: none;
+  }
+}
+
+@media (max-width: 480px) {
+.modal-overlay {
+    padding: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+/* Fills a phone, but stops growing past 720px so very tall screens don't stretch it further */
+.info-reverse {
+    height: calc(100vh - 16px);
+    height: calc(100dvh - 16px);
+    max-height: calc(100vh - 16px);
+    max-height: calc(100dvh - 16px);
+    max-height: min(calc(100dvh - 16px), 720px);
+  }
+}
+
+@media (max-width: 480px) {
+/* Customize is a card-like panel, so it sits inside a generous frame of space */
+#customise-modal {
+    padding: 28px 22px;
+  }
+}
+
+@media (max-width: 480px) {
+/* Sized to its content; only capped at the screen height, then the middle scrolls */
+.customise-modal-content.info-reverse {
+    height: auto;
+    max-height: calc(100vh - 56px);
+    max-height: calc(100dvh - 56px);
+  }
+}
+
+@media (max-width: 480px) {
+.customise-scroll {
+    flex: 0 1 auto;
+  }
+}
+
+.emblem-title {
+  position: relative;
+}
+
+.card-sparkle {
+  position: absolute;
+  width: var(--sparkle-size, 5px);
+  height: var(--sparkle-size, 5px);
+  /* Centre each star on its point */
+  margin: calc(var(--sparkle-size, 5px) / -2) 0 0 calc(var(--sparkle-size, 5px) / -2);
+  background: #c9a9ff;
+  clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%);
+  filter: drop-shadow(0 0 3px rgba(180, 140, 255, 0.9));
+  opacity: 0;
+  animation: card-sparkle-flash var(--sparkle-duration, 9s) ease-in-out var(--sparkle-delay, 0s) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+.card-sparkle {
+    animation: none;
+  }
+}
+
+/* Age gate "No": the card gives a small nudge and the message slides in */
+
+.game-card.is-nudging {
+  animation: age-gate-nudge 0.45s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+.game-card.is-nudging,
+  .age-gate-denied.is-visible {
+    animation: none;
+  }
+}
+
+/* Very narrow cards get a shorter hint so it always stays on one line beside DONE IT */
+
+.hint-short {
+  display: none;
+}
+
+@media (max-width: 360px) {
+.hint-full {
+    display: none;
+  }
+}
+
+@media (max-width: 360px) {
+.hint-short {
+    display: inline;
+  }
+}
+
+.mode-option:focus-visible,
+.customise-skip-btn:focus-visible,
+.next-arrow:focus-visible,
+.shot-action:focus-visible,
+.shot-start:focus-visible,
+.shot-dare:focus-visible,
+.deck-play:focus-visible,
+.icon-btn:focus-visible {
+  outline: 2px solid #c4b5fd;
+  outline-offset: 2px;
+}
+
+.shot-dare-row {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+@media (max-width: 719px) {
+.shot-dare-row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+  }
+}
+
+/* Pick a dare: three cards fanned slightly; the one picked flips and comes to the front */
+
+.shot-dare-row {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: clamp(240px, 44dvh, 320px);
+}
+
+.shot-dare:nth-child(2) { --r: 2deg; --x: 0%; --y: -4px; }
+
+.shot-dare.is-revealed {
+  width: 74%;
+  height: clamp(230px, 44dvh, 290px);
+  --r: 0deg;
+  --x: 0%;
+  --y: 0px;
+  z-index: 5;
+}
+
+.shot-dare.is-focus:not(.is-revealed) {
+  transform: translate(-50%, -50%) translateX(var(--x, 0%)) translateY(calc(var(--y, 0px) - 10px)) rotate(var(--r, 0deg));
+}
+
+.shot-dare.is-focus:not(.is-revealed) .shot-dare-back {
+  box-shadow: inset 0 0 0 5px rgba(0, 0, 0, 0.45), 0 0 22px -4px rgba(255, 45, 117, 0.75);
+}
+
+/* Wide screens: three taller cards in a fan; the chosen one comes to the front */
+
+.shot-dare-row {
+  height: clamp(340px, 54dvh, 440px);
+}
+
+@media (max-width: 719px) {
+.shot-dare-row {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    height: auto;
+  }
+}
+
+@media (max-width: 719px) {
+.shot-dare.is-revealed {
+    width: 100%;
+  }
+}
+
+@media (max-width: 719px) {
+.shot-dare.is-focus:not(.is-revealed) {
+  }
+}
+
+.shot-dare-row {
+  height: clamp(340px, 54dvh, 440px);
+}
+
+.shot-dare:nth-child(2) { --r: 1deg; --x: 0%; --y: -4px; }
+
+.shot-dare.is-focus:not(.is-revealed) {
+  z-index: 4;
+}
+
+/* The chosen card comes to the front and centre, a little larger */
+
+.shot-dare.is-revealed {
+  width: 62%;
+  z-index: 6;
+}
+
+@media (max-width: 719px) {
+.shot-dare-row {
+    height: 410px;
+  }
+}
+
+@media (max-width: 719px) {
+.shot-dare:nth-child(2) { --n: 1; }
+}
+
+@media (max-width: 719px) {
+.shot-dare.is-focus:not(.is-revealed) {
+    transform: translateX(-50%) translateY(-8px);
+  }
+}
+
+@media (max-width: 719px) {
+.shot-dare.is-revealed {
+    top: 50%;
+    width: 72%;
+    transform: translate(-50%, -50%);
+  }
+}
+
+/* Dare picker: the pill at the bottom, the same style as Who most likely */
+
+.shot-controls .dare-pill {
+  position: relative;
+  left: auto;
+  bottom: auto;
+  transform: none;
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  padding: 6px;
+}
+
+.shot-dare:nth-child(2) { --x: 0%; --y: -6px; --r: 0deg; }
+
+.shot-dare.is-revealed {
+  width: 36%;
+  --x: 0%;
+  --y: -6px;
+  --r: 0deg;
+  z-index: 6;
+}
+
+@media (max-width: 719px) {
+.shot-dare-row {
+    height: 290px;
+  }
+}
+
+@media (max-width: 719px) {
+.shot-dare:nth-child(2) { --x: 0%; --y: -22px; --r: 0deg; z-index: 3; }
+}
+
+@media (max-width: 719px) {
+.shot-dare.is-focus:not(.is-revealed) {
+    transform: translate(-50%, -50%) translateX(var(--x, 0%)) translateY(calc(var(--y, 0px) - 10px)) rotate(var(--r, 0deg));
+  }
+}
+
+@media (max-width: 719px) {
+.shot-dare.is-revealed {
+    width: 46%;
+    --x: 0%;
+    --y: 0px;
+    --r: 0deg;
+    z-index: 6;
+  }
+}
+
+@media (min-width: 720px) {
+.shot-dare-row {
+    height: clamp(380px, 60dvh, 520px);
+  }
+}
+
+@media (max-width: 719px) {
+.shot-dare-row {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    height: auto;
+  }
+}
+
+@media (max-width: 719px) {
+.shot-dare.is-focus:not(.is-revealed) {
+    z-index: 4;
+  }
+}
+
+@media (max-width: 719px) {
+.shot-dare.is-revealed {
+    z-index: 6;
+  }
+}
+
+@media (min-width: 768px) {
+.app-header {
+    max-width: none;
+    width: 100%;
+    box-sizing: border-box;
+    padding: clamp(12px, 2.4dvh, 22px) clamp(16px, 3vw, 32px);
+  }
+}
+
+@media (min-width: 720px) {
+.shot-dare-row {
+    height: clamp(420px, 62dvh, 560px);
+  }
+}
+
+@media (min-width: 720px) {
+.shot-dare.is-revealed {
+    transform: translate(-50%, -50%) scale(1.5);
+    z-index: 6;
+  }
+}
+
+@media (max-width: 719px) {
+/* Hide the UI selector pill on mobile (cards are chosen by direct tap) */
+.shot-controls .dare-pill {
+    display: none !important;
+  }
+}
+
+@media (max-width: 719px) {
+.shot-dare-row {
+    position: relative;
+    display: block;
+    height: 474px;
+  }
+}
+
+@media (max-width: 719px) {
+.shot-dare:nth-child(2) { --n: 1; }
+}
+
+@media (max-width: 719px) {
+/* Disable hover effect and focus outline on mobile touch */
+.shot-dare:hover,
+  .shot-dare:active,
+  .shot-dare:focus,
+  .shot-dare:focus-visible {
+    outline: none !important;
+  }
+}
+
+@media (max-width: 719px) {
+/* No pre-selected focus lift or glowing box-shadow on mobile */
+.shot-dare.is-focus:not(.is-revealed) {
+    transform: translateX(-50%) rotate(var(--tilt, 0deg));
+    z-index: 1;
+  }
+}
+
+@media (max-width: 719px) {
+.shot-dare.is-focus:not(.is-revealed) .shot-dare-back {
+    box-shadow: inset 0 0 0 5px rgba(0, 0, 0, 0.45);
+  }
+}
+
+@media (max-width: 719px) {
+/* The picked card comes to the centre of the row and grows by 150%, keeping its proportions */
+.shot-dare.is-revealed {
+    top: 50%;
+    transform: translate(-50%, -50%) scale(1.5);
+    z-index: 6;
+  }
+}
+
+.dare-again .again-long {
+  display: inline;
+}
+
+.dare-again .again-short {
+  display: none;
+}
+
+@media (max-width: 719px) {
+.dare-again .again-long {
+    display: none;
+  }
+}
+
+@media (max-width: 719px) {
+.dare-again .again-short {
+    display: inline;
+  }
+}
+
+@media (min-width: 1024px) {
+.next-pill .indeed-key {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 0 14px 0 8px;
+    width: auto;
+  }
+}
+
+@media (max-width: 719px) {
+.next-pill .indeed-key {
+    display: none;
+  }
+}
+
+/* ===== Screen Fade to Black Transition Curtain ===== */
+
+.screen-fade-curtain {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  background-color: #06070c;
+  z-index: 99999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: opacity;
+}
+
+@media (prefers-reduced-motion: reduce) {
+.screen-fade-curtain {
+    transition-duration: 0.05s;
+  }
+}
+
