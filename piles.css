@@ -2671,8 +2671,9 @@ body:has(.age-gate-card) .classic-keys {
 @media (max-width: 719px) {
 .mode-most-likely .card-stack,
 .mode-shot-dare .shot-wrap {
-    /* Dead centre of the screen: no lift at all */
-    transform: none;
+    /* Same lift as the classic deck on mobile (mobile.css), so all three
+       games read as vertically centred in the same place */
+    transform: translateY(-42px);
   }
 }
 
