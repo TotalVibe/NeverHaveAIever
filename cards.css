@@ -483,8 +483,8 @@ body.entry-instant .game-card.card-entering {
   background-color: #111420;
   background-image:
     radial-gradient(circle at 50% 50%, rgba(255, 45, 117, 0.14) 0%, transparent 68%),
-    repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.04) 0px, rgba(255, 255, 255, 0.04) clamp(1.5px, 0.18vmin, 4px), transparent clamp(1.5px, 0.18vmin, 4px), transparent clamp(14px, 1.7vmin, 30px)),
-    repeating-linear-gradient(-45deg, rgba(255, 255, 255, 0.04) 0px, rgba(255, 255, 255, 0.04) clamp(1.5px, 0.18vmin, 4px), transparent clamp(1.5px, 0.18vmin, 4px), transparent clamp(14px, 1.7vmin, 30px));
+    repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.04) 0px, rgba(255, 255, 255, 0.04) clamp(1.5px, 0.15vmin, 3.5px), transparent clamp(1.5px, 0.15vmin, 3.5px), transparent clamp(14px, 1.5vmin, 26px)),
+    repeating-linear-gradient(-45deg, rgba(255, 255, 255, 0.04) 0px, rgba(255, 255, 255, 0.04) clamp(1.5px, 0.15vmin, 3.5px), transparent clamp(1.5px, 0.15vmin, 3.5px), transparent clamp(14px, 1.5vmin, 26px));
   pointer-events: none;
 }
 
@@ -495,8 +495,8 @@ body.entry-instant .game-card.card-entering {
   left: var(--card-back-inner-inset);
   right: var(--card-back-inner-inset);
   bottom: var(--card-back-inner-inset);
-  border: clamp(1px, 0.24cqi, 4px) dashed rgba(255, 255, 255, 0.08);
-  border-radius: calc(var(--radius-card) - var(--card-back-frame-inset) - clamp(1px, 0.24cqi, 4px) - var(--card-back-inner-inset));
+  border: clamp(1px, 0.2cqi, 3.5px) dashed rgba(255, 255, 255, 0.08);
+  border-radius: calc(var(--radius-card) - var(--card-back-frame-inset) - clamp(1px, 0.2cqi, 3.5px) - var(--card-back-inner-inset));
   pointer-events: none;
 }
 
