@@ -3312,18 +3312,27 @@ body:not(.mode-most-likely):not(.mode-shot-dare).game-waiting .shot-controls {
     0.0554em -0.0230em 0 hsl(var(--hue, 340) 90% 64% / 0.6);
 }
 
-/* Ink-derived sizes for the 8 × 12 portrait grid (pitch 12.5cqw across,
-   11cqw down, before the centre-pull): big 23.5 + small 11.75 em boxes give an
-   ink diameter sum of ≈12.6cqw, so even a bare 72%-ink glyph pair overlaps
-   every neighbour, including across the checkerboard diagonals. */
+/* Ink-derived sizes for the 8 × 12 portrait grid (Wv = card width; pitch
+   12.5cqw across, 11cqw down). Emoji glyphs carry transparent padding, so the
+   math runs on the ink circle (≈72% of the em) at the worst lattice points,
+   and both sizes carry ≥10% margin ON TOP of the centre-pull:
+   - Corner points between four cells (the empty diamonds the old small sizes
+     kept leaking) sit ≈8.3cqw from the two adjacent BIG glyph centres → big
+     ink radius must be ≥ 9.2cqw → 27cqw em box (27 × 0.36 = 9.7). Jittered
+     down 8% it still clears: 24.8 × 0.36 = 8.9.
+   - Edge midpoints between a big and a small sit ≈5.5–6.25cqw from each →
+     small ink radius must be ≥ 6.9cqw → 19cqw em box (19 × 0.36 = 6.8 at base,
+     covers even the 12.5cqw half-pitch after jitter: 17.5 × 0.36 = 6.3 ≈ 6.25).
+   Result: big ink alone tiles the plane corner-to-corner — the card background
+   mathematically cannot show through, exactly like the packed-collage look. */
 
 .dare-back-emoji .dare-pattern-big {
-  font-size: 23.5cqw;
+  font-size: calc(var(--sz, 1) * 27cqw);
   line-height: 1;
 }
 
 .dare-back-emoji .dare-pattern-small {
-  font-size: 11.75cqw;
+  font-size: calc(var(--sz, 1) * 19cqw);
   line-height: 1;
 }
 

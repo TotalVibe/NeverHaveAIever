@@ -100,16 +100,15 @@ function emojiMarkup(text) {
   return html;
 }
 
-// The dare card back: a solid wall of the category emoji — big and small
-// alternating like a quincunx, densely packed so no card background shows
+// The dare card back: a solid mountain of the category emoji — big and small
+// alternating like a quincunx, packed so tightly that NO card background shows
 // (sizes live in piles.css). Emoji glyphs carry transparent padding inside
-// their em box, so the sizes there are computed from the INK circle (≈72% of
-// the em) versus the grid pitch: every neighbouring pair of glyphs overlaps
-// past touching. The cell count follows the card's shape, with the flat phone
-// cards using more columns to near-square the cells. Every emoji keeps its
-// grid position, gets its own random tilt (--rot), and is pulled toward the
-// pattern's centre by a negative offset per cell of distance
-// (--gx/--gy × --pull in CSS), contracting the whole wall further.
+// their em box, so the sizing there is done on the INK circle (≈72% of the em)
+// with the worst lattice points accounted for: the big glyphs' ink alone must
+// cover the corner points between four cells, the small glyphs' ink the edge
+// midpoints — both with ≥10% margin, on top of which each cell is pulled
+// toward the pattern's centre (--gx/--gy × --pull in CSS) and jittered in size
+// (--sz). Grid counts follow the card's shape (portrait 8×12, flat phones 10×8).
 function dareCardPattern(emojiText) {
   const emoji = emojiMarkup(emojiText);
   const flat = window.matchMedia('(max-width: 719px)').matches;
@@ -118,6 +117,10 @@ function dareCardPattern(emojiText) {
   const midC = (cols - 1) / 2; // centre of the grid, in cells
   const midR = (rows - 1) / 2;
   const tilt = () => (Math.random() * 24 - 12).toFixed(1);
+  // Slight per-glyph size jitter, so the wall reads as a natural mound rather
+  // than a uniform stamp (CSS sizes carry the ≥10% ink-coverage margin this
+  // keeps inside). Both big and small vary by ±8% around their base.
+  const szJitter = () => (0.92 + Math.random() * 0.16).toFixed(2);
   let html = '';
   for (let r = 0; r < rows; r += 1) {
     for (let c = 0; c < cols; c += 1) {
@@ -126,9 +129,10 @@ function dareCardPattern(emojiText) {
       // symmetric around the middle)
       const gx = (c - midC).toFixed(1);
       const gy = (r - midR).toFixed(1);
+      const sz = szJitter();
       html += (r + c) % 2 === 0
-        ? `<span class="dare-pattern-big" style="--rot: ${tilt()}deg; --gx: ${gx}; --gy: ${gy}">${emoji}</span>`
-        : `<span class="dare-pattern-small" style="--rot: ${tilt()}deg; --gx: ${gx}; --gy: ${gy}">${emoji}</span>`;
+        ? `<span class="dare-pattern-big" style="--rot: ${tilt()}deg; --gx: ${gx}; --gy: ${gy}; --sz: ${sz}">${emoji}</span>`
+        : `<span class="dare-pattern-small" style="--rot: ${tilt()}deg; --gx: ${gx}; --gy: ${gy}; --sz: ${sz}">${emoji}</span>`;
     }
   }
   return html;
