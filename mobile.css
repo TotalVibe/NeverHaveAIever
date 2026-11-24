@@ -1407,3 +1407,17 @@ body.unhinged-screen-shake {
     box-shadow: none;
   }
 }
+
+/* ===== Dare cards: all three glow in their own hue, phones ===== */
+
+/* Phones have no hover rim, so the colour reads from the glow instead: every
+   face-down card carries the two-layer halo in its own --hue, focused or not.
+   Same selectors as the "no glow" block above, appended after it, so this wins. */
+
+@media (max-width: 719px) {
+  .shot-dare:not(.is-revealed),
+  .shot-dare:hover:not(.is-revealed),
+  .shot-dare.is-focus:not(.is-revealed) {
+    box-shadow: 0 0 34px -6px hsla(var(--hue), 95%, 62%, 0.95), 0 0 110px -20px hsla(var(--hue), 95%, 60%, 0.65);
+  }
+}

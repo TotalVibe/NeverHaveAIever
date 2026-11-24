@@ -3787,3 +3787,33 @@ body:not(.mode-most-likely):not(.mode-shot-dare).game-waiting .shot-controls {
     transparent 300deg,
     transparent 360deg);
 }
+
+/* ===== Revisions 71: dare cards — two faint interior hairlines, deck-tile recipe ===== */
+
+/* Same double frame the three entry decks wear (the .deck-frame solid line plus
+   its dashed ::before stitch), rebuilt on the card faces themselves. Both faces
+   create their own stacking context — the front flips with a transform, the back
+   is clipped — so z-index: -1 slides the lines between the bright face colour
+   and everything drawn on it. */
+
+.shot-dare-back::before,
+.shot-dare-front::before {
+  content: '';
+  position: absolute;
+  inset: clamp(5px, 0.6vmin, 11px);
+  z-index: -1;
+  border: var(--corner-frame-stroke) solid rgba(255, 255, 255, 0.16);
+  border-radius: var(--corner-frame-radius-square);
+  pointer-events: none;
+}
+
+.shot-dare-back::after,
+.shot-dare-front::after {
+  content: '';
+  position: absolute;
+  inset: clamp(10px, 1.2vmin, 22px);
+  z-index: -1;
+  border: var(--corner-stitch-stroke) dashed var(--corner-stitch-color);
+  border-radius: var(--corner-stitch-radius-square);
+  pointer-events: none;
+}
