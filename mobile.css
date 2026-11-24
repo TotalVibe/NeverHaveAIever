@@ -1222,7 +1222,7 @@ body.unhinged-screen-shake {
   z-index: 99999;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: opacity 0.42s cubic-bezier(0.4, 0, 0.2, 1);
   will-change: opacity;
 }
 

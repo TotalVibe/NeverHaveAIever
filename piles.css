@@ -1434,6 +1434,13 @@
   }
 }
 
+/* Fade handover into the game: the glasses stand in place instead of rising
+   underneath the black curtain (see app.js startGame instantEntry) */
+
+body.entry-instant .shot-arch svg {
+  animation: none;
+}
+
 /* How to play: rows only show for the screen they were opened from */
 
 .info-cat[hidden] {

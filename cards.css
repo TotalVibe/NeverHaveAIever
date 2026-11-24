@@ -84,6 +84,14 @@
   }
 }
 
+/* Deck -> game handover through the fade-to-black: the cards arrive fully placed,
+   with no entry motion cut by the lifting curtain. The in-game customize reshuffle
+   keeps its own animation (app.js only sets this class on fade entries). */
+
+body.entry-instant .game-card.card-entering {
+  animation: none;
+}
+
 .game-card.current .card-front,
 .game-card.current .card-back {
   border: var(--stroke-card) solid rgba(255, 255, 255, 0.28);

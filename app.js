@@ -389,7 +389,7 @@ class NeverHaveIEverApp {
     });
   }
 
-  // Soft and quick fade-to-black screen transition
+  // Screen fade-to-black transition
   fadeTransition(action, onComplete) {
     if (this.isScreenFading) {
       if (typeof action === 'function') action();
@@ -406,7 +406,7 @@ class NeverHaveIEverApp {
     this.isScreenFading = true;
     curtain.classList.add('is-faded');
 
-    // Peak black reached (180ms)
+    // Peak black reached (420ms)
     setTimeout(() => {
       try {
         if (typeof action === 'function') action();
@@ -414,15 +414,15 @@ class NeverHaveIEverApp {
         console.error(err);
       }
 
-      // Soft dissolve out from black (200ms)
+      // Soft dissolve out from black (400ms)
       requestAnimationFrame(() => {
         curtain.classList.remove('is-faded');
         setTimeout(() => {
           this.isScreenFading = false;
           if (typeof onComplete === 'function') onComplete();
-        }, 220);
+        }, 460);
       });
-    }, 180);
+    }, 440);
   }
 
   init() {
@@ -1773,7 +1773,7 @@ class NeverHaveIEverApp {
     if (this.setupDone) {
       this.fadeTransition(() => {
         this.modeModal.classList.remove('active');
-        this.startGame(this.pendingMode);
+        this.startGame(this.pendingMode, { instantEntry: true });
       });
       return;
     }
@@ -1796,7 +1796,7 @@ class NeverHaveIEverApp {
       this.customiseModal.classList.remove('active', 'is-setup');
       this.modeModal.classList.remove('active');
       this.returnFlippedPanel({ animate: false });
-      this.startGame(this.pendingMode);
+      this.startGame(this.pendingMode, { instantEntry: true });
     });
   }
 
@@ -1828,7 +1828,15 @@ class NeverHaveIEverApp {
     document.body.classList.toggle('mode-shot-dare', this.gameMode === 'shot-dare');
   }
 
-  startGame(mode) {
+  startGame(mode, { instantEntry = false } = {}) {
+    // Deck -> game handover through the fade: reveal the cards fully placed, with no
+    // entry motion fighting the lifting curtain. The in-game reshuffle keeps its own.
+    clearTimeout(this.entryInstantTimer);
+    document.body.classList.toggle('entry-instant', instantEntry);
+    if (instantEntry) {
+      this.entryInstantTimer = setTimeout(() => document.body.classList.remove('entry-instant'), 900);
+    }
+
     document.body.classList.remove('screen-deck');
     this.gameMode = mode;
     this.setModeClasses();
@@ -1855,7 +1863,7 @@ class NeverHaveIEverApp {
 
     if (mode === 'shot-dare') {
       this.setAmbientGlow('rgba(255, 45, 117, 0.45)');
-      this.showShotIntro();
+      this.showShotIntro({ instantEntry });
       return;
     }
     this.syncMostLikelyPill();
@@ -1899,7 +1907,7 @@ class NeverHaveIEverApp {
   }
 
   // The card with its deck layers behind, built the same way as the classic cards
-  showShotCard({ prefix = '', tag = 'Shots & Dares', text = '', emoji, faceDown = false, withClock = false }) {
+  showShotCard({ prefix = '', tag = 'Shots & Dares', text = '', emoji, faceDown = false, withClock = false, animate = true }) {
     if (!this.shotSlot.querySelector('.deck-layers-container')) {
       this.shotSlot.prepend(this.buildDeckLayers());
     }
@@ -1908,7 +1916,7 @@ class NeverHaveIEverApp {
       text: { text, emoji },
       showCustomise: faceDown
     }, 'current', faceDown);
-    card.classList.add('card-entering');
+    if (animate) card.classList.add('card-entering');
     card.querySelector('.prompt-prefix').textContent = prefix;
     card.querySelector('.cat-tag-name').textContent = tag;
     if (withClock) card.append(this.buildShotBorder());
@@ -1925,9 +1933,9 @@ class NeverHaveIEverApp {
     return border;
   }
 
-  showShotIntro() {
+  showShotIntro({ instantEntry = false } = {}) {
     this.clearShotTimers();
-    this.showShotCard({ tag: 'Shots & Dares', emoji: '🥃', faceDown: true });
+    this.showShotCard({ tag: 'Shots & Dares', emoji: '🥃', faceDown: true, animate: !instantEntry });
     this.setShotPhase('intro');
     this.resetIdleHint();
   }
