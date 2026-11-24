@@ -110,6 +110,20 @@ smaller cards).
 | `--corner-stitch-stroke` | `clamp(1px, 0.2vmin, 3px)` | dashed stroke width |
 | `--corner-stitch-color` | `rgba(255,255,255,0.12)` | dash colour |
 | `--corner-stitch-radius` | `calc(var(--radius-card) - clamp(9px,1.1vmin,20px) - var(--corner-stitch-stroke) - 2 * clamp(4px,0.6vmin,11px))` | the pinched, near-square corner (inset subtracted twice, matching the classic card's pinch) |
+| `--corner-frame-radius-square` | `clamp(4px, 0.9vmin, 12px)` | solid frame corners, square variant |
+| `--corner-stitch-radius-square` | `clamp(2px, 0.6vmin, 8px)` | dashed stitch corners, near-square variant |
+
+## Radius tuning: round outside, square inside
+
+The character of the effect comes from the **contrast** between the two:
+
+- **Outer** → less round than `--radius-card`. Cards that need a straighter edge
+  scope their own radius (e.g. `.deck-option { --radius-deck: clamp(14px, 2.2vmin, 40px); }`)
+  and re-point `border-radius`, the backing pattern and any border overlay at it —
+  every layer of the card must share the same outer corner.
+- **Inner** → always very square. Use the `*-square` token variants for both the
+  faint frame and the dashed stitch; keep them smaller than their inset so the
+  corner reads as a near right angle sitting inside the rounder outer edge.
 
 ## Applying to a new card (checklist)
 
@@ -117,7 +131,8 @@ smaller cards).
 2. Put a `.vector-pattern` layer behind its content (layer 2), or any texture
    that can peek through between the borders.
 3. Add a frame element/pseudo with the faint solid border (layer 3).
-4. Add a `::before` inside it with the dashed stitch + `--corner-stitch-radius` (layer 4).
+4. Add a `::before` inside it with the dashed stitch + a square radius variant
+   (`--corner-stitch-radius`) (layer 4).
 5. Keep dashes subtle (α ≤ 0.12) — the pinch radius does the heavy lifting.
 
 Live example: `piles.css` → "Revisions 62" block applied to

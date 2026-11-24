@@ -43,6 +43,10 @@
   --corner-stitch-stroke: clamp(1px, 0.2vmin, 3px);
   --corner-stitch-color: rgba(255, 255, 255, 0.12);
   --corner-stitch-radius: calc(var(--radius-card) - clamp(9px, 1.1vmin, 20px) - var(--corner-stitch-stroke) - 2 * clamp(4px, 0.6vmin, 11px));
+  /* Square-corner variants: inner borders pinched into a near-square fit,
+     like the stitched corner of a printed card */
+  --corner-frame-radius-square: clamp(4px, 0.9vmin, 12px);
+  --corner-stitch-radius-square: clamp(2px, 0.6vmin, 8px);
 
   /* Pop-up type scale: one knob for every pop-up font. Each font is
      calc(var(--popup-type-scale) * clamp(...)); large screens breathe a bit more. */

@@ -3370,6 +3370,26 @@ body:not(.mode-most-likely):not(.mode-shot-dare).game-waiting .shot-controls {
    and the discontinuous dashed stitch line inside the frame, ending in the
    pinched near-square corner. Full spec: design/CARD-CORNER-EFFECT.md */
 
+/* Deck tiles keep their own, less round outer radius: the card looks straighter
+   than --radius-card makes the classic card, while everything inner stays square. */
+
+.deck-option {
+  --radius-deck: clamp(14px, 2.2vmin, 40px);
+  border-radius: var(--radius-deck);
+  box-shadow: var(--corner-halo);
+}
+
+/* The backing pattern and the rotating deck-colour edge follow the new radius,
+   so every layer of the tile shares the same outer corner */
+
+.deck-option-bg {
+  border-radius: calc(var(--radius-deck) - var(--stroke-card));
+}
+
+.deck-option::before {
+  border-radius: var(--radius-deck);
+}
+
 /* Halo: the 1px white edge that crisper-closes the outer stroke's corner.
    Stacked onto hover so the rotating deck-colour glow keeps working. */
 
@@ -3383,14 +3403,19 @@ body:not(.mode-most-likely):not(.mode-shot-dare).game-waiting .shot-controls {
 }
 
 /* Discontinuous stitch line: a dashed border just inside the faint solid frame,
-   echoing .card-back-frame::before on the classic card back. The pinch radius
-   (tighter than concentric) is what makes the corner end so small. */
+   echoing .card-back-frame::before on the classic card back. Both inner borders
+   end in near-square corners (square token variants), well inside the rounder
+   outer edge — that contrast is the "real-life card" look. */
+
+.deck-frame {
+  border-radius: var(--corner-frame-radius-square);
+}
 
 .deck-frame::before {
   content: '';
   position: absolute;
   inset: clamp(4px, 0.6vmin, 11px);
   border: var(--corner-stitch-stroke) dashed var(--corner-stitch-color);
-  border-radius: var(--corner-stitch-radius);
+  border-radius: var(--corner-stitch-radius-square);
   pointer-events: none;
 }
