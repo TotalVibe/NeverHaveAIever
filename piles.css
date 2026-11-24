@@ -3255,7 +3255,9 @@ body:not(.mode-most-likely):not(.mode-shot-dare).game-waiting .shot-controls {
   inset: 0;
   overflow: hidden;
   border-radius: inherit;
-  /* Emoji em box at --sz 1 — ink-overlap-verified in app.js (portrait 30, phone 26) */
+  /* Emoji em box at --sz 1 (portrait 33, phone 27 — sizes are ink-overlap-verified
+     in app.js for full-range rotations). Stacking order comes from app.js too: each
+     glyph gets a random z-index, so emojis bury each other like a real pile. */
   --pattern-em: 30cqw;
 }
 

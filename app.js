@@ -103,23 +103,25 @@ function emojiMarkup(text) {
 // The dare card back: a mountain of the category emoji. No CSS grid table —
 // this generates a jittered lattice of POINTS (hex-packed in JS: every second
 // row shifts half a pitch) and drops one emoji dead-centre on every point,
-// with position scatter, size and rotation all randomised. Densities are
-// chosen so the emoji INK (glyph PNGs carry transparent padding inside the em
-// box — ink ≈72% of it, less for figure-shaped ones like 💃, whose shortfall
-// the three hex neighbours' union covers) tiles the whole card even at the
-// MINIMUM jittered size with the full position scatter: ink radius must be
-// ≥ the hex covering radius (0.577 × pitch) + the scatter. On portrait cards:
-// pitch 12.5cqw needs 8.71cqw of radius, the 30cqw em box delivers 9.18; on
-// the flat phone cards: pitch 10cqw needs 6.97, the 26cqw box delivers 7.96 —
-// so no card background can show anywhere. The card's real aspect is measured
-// at draw time (cards are display-toggled, so the caller paints the pattern
-// only after the dare screen is visible); points run past all four edges and
-// the overflow clip keeps the bleed inside the rounded corners.
+// with position scatter, size, rotation and stacking order all randomised.
+// Densities are chosen so the emoji INK (glyph PNGs carry transparent padding
+// inside the em box) tiles the whole card even at the MINIMUM jittered size
+// with the full position scatter: ink radius must be ≥ the hex covering radius
+// (0.577 × pitch) + the scatter. Full-range rotations (±180°) can turn a glyph's
+// narrow side toward a gap, so the ink fill factor drops to 0.70 and the bases
+// pay for it — portrait: pitch 12.5cqw needs 8.71cqw of radius, the 33cqw em
+// box delivers 9.24 at the 0.80 size floor; the flat phone cards: pitch 10cqw
+// needs 6.97, the 27cqw box delivers 7.56. Beyond one glyph's own ink, the
+// three hex neighbours' unions cover shape shortfalls — so no card background
+// can show anywhere. The card's real aspect is measured at draw time (cards
+// are display-toggled, so the caller paints the pattern only after the dare
+// screen is visible); points run past all four edges and the overflow clip
+// keeps the bleed inside the rounded corners.
 function dareCardPattern(emojiText, cardEl) {
   const emoji = emojiMarkup(emojiText);
   const flat = window.matchMedia('(max-width: 719px)').matches;
   const pitch = flat ? 10 : 12.5;            // horizontal spacing between points (cqw)
-  const base = flat ? 26 : 30;               // emoji em box at --sz 1 (cqw)
+  const base = flat ? 27 : 33;               // emoji em box at --sz 1 (cqw)
   const aspect = cardEl && cardEl.offsetHeight > 0
     ? cardEl.offsetHeight / cardEl.offsetWidth
     : 0.756;                                 // fallback if the card is still hidden
@@ -128,14 +130,15 @@ function dareCardPattern(emojiText, cardEl) {
   const cols = Math.ceil(100 / pitch) + 1;   // +1: bleed past both side edges
   const rows = Math.ceil(heightCqw / py) + 1;
   const scatter = 0.12 * pitch;              // ±12% of the pitch around each point
-  const szJitter = () => (0.85 + Math.random() * 0.3).toFixed(2);
-  const tilt = () => (Math.random() * 28 - 14).toFixed(1);
+  const szJitter = () => (0.8 + Math.random() * 0.58).toFixed(2);   // 0.80–1.38 × base
+  const tilt = () => (Math.random() * 360 - 180).toFixed(1);        // any which way, incl. upside-down
+  const zLotto = () => Math.ceil(Math.random() * 20);               // random stacking: buried or on top
   let html = '';
   for (let j = -1; j < rows; j += 1) {
     for (let i = -1; i < cols; i += 1) {
       const x = (i + 0.5) * pitch + (j % 2) * pitch / 2 + (Math.random() * 2 - 1) * scatter;
       const y = (j + 0.5) * py + (Math.random() * 2 - 1) * scatter;
-      html += `<span class="dare-pattern" style="--rot: ${tilt()}deg; --sz: ${szJitter()}; left: ${x.toFixed(2)}%; top: ${((y / heightCqw) * 100).toFixed(2)}%">${emoji}</span>`;
+      html += `<span class="dare-pattern" style="--rot: ${tilt()}deg; --sz: ${szJitter()}; z-index: ${zLotto()}; left: ${x.toFixed(2)}%; top: ${((y / heightCqw) * 100).toFixed(2)}%">${emoji}</span>`;
     }
   }
   return html;
