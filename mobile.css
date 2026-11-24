@@ -414,10 +414,21 @@ body.unhinged-screen-shake {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: clamp(12px, 3.5vw, 24px);
+  padding: clamp(12px, 2.5vmin, 40px);
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.25s ease;
+}
+
+/* Widescreens and TVs: the How to Play pop-up grows with the viewport instead of
+   stopping at phone width (phones keep filling the screen below 720px) */
+@media (min-width: 720px) {
+  #info-modal .modal-content {
+    width: clamp(480px, 86vmin, 1120px);
+    max-width: min(92vw, 1120px);
+    max-height: 88vh;
+    max-height: 88dvh;
+  }
 }
 
 /* How to Play pop-up: reverse of the cover card (same pattern, frame and crest) */

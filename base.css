@@ -869,13 +869,13 @@ body {
   background: rgba(255, 255, 255, 0.08);
   border: none;
   color: var(--text-muted);
-  width: 34px;
-  height: 34px;
+  width: clamp(34px, 3.4vmin, 56px);
+  height: clamp(34px, 3.4vmin, 56px);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.1rem;
+  font-size: clamp(1.1rem, 1.5vmin, 1.7rem);
   cursor: pointer;
 }
 
@@ -895,8 +895,8 @@ body {
   margin: clamp(9px, 1.1vmin, 20px);
   border: clamp(1.5px, 0.22vmin, 3.5px) solid rgba(255, 255, 255, 0.16);
   border-radius: calc(var(--radius-card) - clamp(9px, 1.1vmin, 20px));
-  padding: 25px 14px 23px;
-  gap: 17px;
+  padding: clamp(25px, 3.2vmin, 52px) clamp(14px, 2.2vmin, 34px) clamp(23px, 3vmin, 48px);
+  gap: clamp(14px, 2vmin, 30px);
   background: radial-gradient(circle at 50% 50%, rgba(25, 29, 44, 0.65) 0%, rgba(13, 16, 26, 0.88) 100%);
 }
 
@@ -906,7 +906,7 @@ body {
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
-  gap: 17px;
+  gap: clamp(14px, 2vmin, 30px);
 }
 
 .info-scroll {
@@ -921,10 +921,10 @@ body {
   touch-action: pan-y;
   /* Padding sits inside the fade, so content is fully visible when at rest */
   padding: 0;
-  margin: 0 -14px;
+  margin: 0 clamp(-34px, -2.2vmin, -14px);
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: clamp(10px, 1.4vmin, 18px);
 }
 
 .info-reverse-frame > .info-modal-actions {
@@ -969,13 +969,13 @@ body {
 
 .info-install-btn {
   align-self: flex-start;
-  margin-top: 8px;
-  padding: 8px 14px;
+  margin-top: clamp(8px, 1.1vmin, 16px);
+  padding: clamp(8px, 1.1vmin, 14px) clamp(14px, 1.8vmin, 24px);
   border-radius: var(--radius-pill);
   border: 1px solid rgba(255, 255, 255, 0.3);
   background: rgba(255, 255, 255, 0.1);
   color: #ffffff;
-  font-size: 0.8rem;
+  font-size: clamp(0.8rem, 1.4vmin, 1.1rem);
   font-weight: 700;
   letter-spacing: 0.4px;
   cursor: pointer;
@@ -983,8 +983,8 @@ body {
 
 .info-reverse-frame > .modal-close {
   position: absolute;
-  top: 12px;
-  right: 12px;
+  top: clamp(10px, 1.4vmin, 22px);
+  right: clamp(10px, 1.4vmin, 22px);
 }
 
 .info-reverse-head {
@@ -995,14 +995,14 @@ body {
 }
 
 .info-reverse-head .crest-diamond {
-  width: 30px;
-  height: 30px;
+  width: clamp(30px, 3.6vmin, 60px);
+  height: clamp(30px, 3.6vmin, 60px);
 }
 
 .info-reverse-title {
   font-family: 'Great Vibes', 'Alex Brush', 'Dancing Script', cursive;
   font-weight: 400;
-  font-size: clamp(2.2rem, 8vw, 4.2rem);
+  font-size: clamp(2.2rem, min(8vw, 6.5vmin), 6.2rem);
   line-height: 1.05;
   color: #ffffff;
   text-shadow: 0 0 20px rgba(255, 255, 255, 0.5), 0 2px 10px rgba(0, 0, 0, 0.9);
@@ -1020,10 +1020,10 @@ body {
 .info-cat {
   display: flex;
   align-items: stretch;
-  gap: 10px;
-  min-height: 72px;
+  gap: clamp(10px, 1.4vmin, 18px);
+  min-height: clamp(72px, 8vmin, 116px);
   /* Side padding insets the text; the border still runs edge to edge */
-  padding: 11px 18px;
+  padding: clamp(11px, 1.5vmin, 22px) clamp(18px, 2.2vmin, 34px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
@@ -1036,12 +1036,12 @@ body {
   min-width: 0;
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: clamp(16px, 2.2vmin, 34px);
 }
 
 .info-cat-emoji {
   flex-shrink: 0;
-  font-size: 2rem;
+  font-size: clamp(2rem, 3.2vmin, 4.6rem);
   line-height: 1;
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
 }
@@ -1054,13 +1054,13 @@ body {
 }
 
 .info-cat-name {
-  font-size: 0.95rem;
+  font-size: clamp(0.95rem, 1.9vmin, 1.7rem);
   font-weight: 800;
   color: #ffffff;
 }
 
 .info-cat-text p {
-  font-size: 0.82rem;
+  font-size: clamp(0.82rem, 1.6vmin, 1.4rem);
   line-height: 1.4;
   color: var(--text-muted);
 }
@@ -1069,10 +1069,10 @@ body {
 
 .info-cat-arrow {
   flex-shrink: 0;
-  /* Runs out to the row's right edge (cancelling its 18px padding), so the content centres
+  /* Runs out to the row's right edge (cancelling its side padding), so the content centres
      between the divider and the edge */
-  width: 84px;
-  margin-right: -18px;
+  width: clamp(84px, 10vmin, 150px);
+  margin-right: calc(-1 * clamp(18px, 2.2vmin, 34px));
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1085,8 +1085,8 @@ body {
 }
 
 .info-cat-arrow svg {
-  width: 30px;
-  height: 30px;
+  width: clamp(30px, 3.5vmin, 56px);
+  height: clamp(30px, 3.5vmin, 56px);
   fill: none;
   stroke: currentColor;
   stroke-width: 2;
@@ -1096,7 +1096,7 @@ body {
 }
 
 .info-cat-arrow span {
-  font-size: 0.6rem;
+  font-size: clamp(0.6rem, 1.1vmin, 0.9rem);
   font-weight: 700;
   letter-spacing: 0.8px;
   line-height: 1.25;
@@ -1114,9 +1114,9 @@ body {
 .info-cat--wholesome { --cat-accent: var(--color-wholesome); }
 
 .info-attribution {
-  margin: 24px 0;
+  margin: clamp(20px, 2.6vmin, 40px) 0;
   color: var(--text-dim);
-  font-size: 0.76rem;
+  font-size: clamp(0.76rem, 1.2vmin, 1rem);
   text-align: center;
 }
 
@@ -1135,25 +1135,25 @@ body {
 .info-modal-actions {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
+  gap: clamp(10px, 1.4vmin, 18px);
 }
 
 .info-modal-actions .btn-primary {
-  min-height: 46px;
+  min-height: clamp(46px, 5.5vmin, 76px);
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 7px;
-  padding: 10px 8px;
-  font-size: clamp(0.72rem, 3.2vw, 0.95rem);
+  padding: clamp(10px, 1.4vmin, 16px) 8px;
+  font-size: clamp(0.75rem, min(3.2vw, 1.7vmin), 1.3rem);
 }
 
 .info-customise-btn svg {
   position: absolute;
   left: 12px;
   flex: 0 0 auto;
-  width: 18px;
-  height: 18px;
+  width: clamp(18px, 2.2vmin, 30px);
+  height: clamp(18px, 2.2vmin, 30px);
   fill: currentColor;
 }
 
@@ -1497,7 +1497,7 @@ body {
 /* Info rows: a fixed-width emoji column keeps the text aligned, whatever the artwork's size */
 
 .info-cat-emoji {
-  width: 2.2rem;
+  width: clamp(2.2rem, 3.4vmin, 4.6rem);
   display: flex;
   align-items: center;
   justify-content: center;
