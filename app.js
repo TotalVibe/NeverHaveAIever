@@ -2784,8 +2784,9 @@ class NeverHaveIEverApp {
     const active = document.activeElement;
 
     // The slider owns Left/Right (and Home/End): each press steps the heat
-    // natively and fires its input handler, which refreshes the preview
-    if (active === slider && (e.key.startsWith('Arrow') || e.key === 'Home' || e.key === 'End')) return;
+    // natively and fires its input handler, which refreshes the preview.
+    // Up and Down push past it, to the chips above and the description below.
+    if (active === slider && (e.key === 'ArrowLeft' || e.key === 'ArrowRight' || e.key === 'Home' || e.key === 'End')) return;
 
     // Typing owns the description box: Left/Right are caret movement and the
     // arrows only leave the box when the caret can't move further — on the
@@ -2804,14 +2805,24 @@ class NeverHaveIEverApp {
 
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
-      // Press whatever is focused: an audience tick, the close ✕, Skip or Save.
-      // The slider is left alone so Enter/Space can't trigger an accidental save or skip.
+      // Both press whatever is focused: an audience tick, the close ✕, Skip or Save.
+      // With nothing focused, Enter alone saves — Space deliberately does nothing
+      // so it can't skip by accident. The slider is left alone on Space
+      // (Enter there confirms the level by saving).
       if (modal.contains(active) && active.matches?.('button')) {
         active.click();
         return;
       }
-      // Nothing inside the pop-up has focus: Enter saves, Space skips, as their pills say
-      modal.querySelector(e.key === 'Enter' ? '.customise-modal-done' : '.customise-skip-btn').click();
+      if (e.key === 'Enter') {
+        modal.querySelector('.customise-modal-done').click();
+      }
+      return;
+    }
+
+    // Delete is the Skip shortcut, as its pill says
+    if (e.key === 'Delete') {
+      e.preventDefault();
+      modal.querySelector('.customise-skip-btn').click();
       return;
     }
 
@@ -2843,9 +2854,9 @@ class NeverHaveIEverApp {
         return;
       }
       if (this.customiseModal.classList.contains('active')) {
-        // Enter = Save and Space = Skip only when nothing in the pop-up has focus;
-        // otherwise the focused control gets pressed and the arrows move between
-        // the controls (this.handleCustomiseKey). Esc is handled above.
+        // Enter = Save (Space only presses the focused control, Delete = Skip,
+        // and the arrows move between the controls — this.handleCustomiseKey).
+        // Esc is handled above.
         this.handleCustomiseKey(e);
         return;
       }
