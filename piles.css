@@ -3363,3 +3363,34 @@ body:not(.mode-most-likely):not(.mode-shot-dare).game-waiting .shot-controls {
 .deck-text .mode-name {
   margin-bottom: clamp(8px, 1.4dvh, 22px);
 }
+
+/* ===== Revisions 62: deck tiles carry the classic card-corner recipe ===== */
+/* The INITIAL DECKS tiles adopt the classic card back's layered edge:
+   outer stroke (already theirs) + 1px halo, the crosshatch band (already theirs),
+   and the discontinuous dashed stitch line inside the frame, ending in the
+   pinched near-square corner. Full spec: design/CARD-CORNER-EFFECT.md */
+
+/* Halo: the 1px white edge that crisper-closes the outer stroke's corner.
+   Stacked onto hover so the rotating deck-colour glow keeps working. */
+
+.deck-option {
+  box-shadow: var(--corner-halo);
+}
+
+.deck-option:hover,
+.deck-option[aria-pressed="true"] {
+  box-shadow: var(--corner-halo), 0 0 0 1px var(--deck-color), 0 0 30px -6px var(--deck-color);
+}
+
+/* Discontinuous stitch line: a dashed border just inside the faint solid frame,
+   echoing .card-back-frame::before on the classic card back. The pinch radius
+   (tighter than concentric) is what makes the corner end so small. */
+
+.deck-frame::before {
+  content: '';
+  position: absolute;
+  inset: clamp(4px, 0.6vmin, 11px);
+  border: var(--corner-stitch-stroke) dashed var(--corner-stitch-color);
+  border-radius: var(--corner-stitch-radius);
+  pointer-events: none;
+}

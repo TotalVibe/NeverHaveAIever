@@ -33,6 +33,17 @@
   --radius-pill: 9999px;
   --shadow-card: 0 16px 40px -10px rgba(0, 0, 0, 0.75), 0 0 1px 1px rgba(255, 255, 255, 0.12);
 
+  /* ---- Classic card-corner recipe (the "real-life card" edge) ----
+     See design/CARD-CORNER-EFFECT.md for the full layered spec:
+     outer stroke + 1px halo, crosshatch texture band, faint solid frame,
+     and a discontinuous (dashed) stitch line whose corners pinch tighter
+     than the outer radius, like a printed card. */
+  --corner-halo: 0 0 1px 1px rgba(255, 255, 255, 0.16);
+  --corner-stitch-inset: clamp(6px, 1vmin, 16px);
+  --corner-stitch-stroke: clamp(1px, 0.2vmin, 3px);
+  --corner-stitch-color: rgba(255, 255, 255, 0.12);
+  --corner-stitch-radius: calc(var(--radius-card) - clamp(9px, 1.1vmin, 20px) - var(--corner-stitch-stroke) - 2 * clamp(4px, 0.6vmin, 11px));
+
   /* Pop-up type scale: one knob for every pop-up font. Each font is
      calc(var(--popup-type-scale) * clamp(...)); large screens breathe a bit more. */
   --popup-type-scale: 1;
