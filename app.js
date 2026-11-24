@@ -2368,7 +2368,9 @@ class NeverHaveIEverApp {
         this.customiseModal.classList.add('active');
       }
       this.flipModalIn();
-      this.customiseModal.querySelector('.customise-modal-close').focus();
+      // Focus starts on the first audience tick so pressing an arrow or Space
+      // begins in the pop-up's flow, not on the close ✕ in the corner
+      this.customiseModal.querySelector('.customise-audience-option')?.focus({ preventScroll: true });
       this.updateSpicyLevelPreview(this.spicyLevel);
     };
     this.openCustomiseModal = openCustomiseModal;
@@ -2706,7 +2708,7 @@ class NeverHaveIEverApp {
   // "Mostly women" lands on "Coworkers" (same column, one row below); the flow
   // continues down through the slider, the description box and the footer.
   // The cursor's column is remembered on the way down so Up returns where Down came from.
-  moveCustomiseFocus(key) {
+  moveCustomiseFocus(key, onSlider = false) {
     const modal = this.customiseModal;
     const slider = modal.querySelector('.customise-level-slider');
     const description = modal.querySelector('.customise-group-description');
@@ -2729,7 +2731,7 @@ class NeverHaveIEverApp {
     } else if (isClose) {
       row = -1;
       col = 2;
-    } else if (active === slider) {
+    } else if (active === slider || onSlider) {
       row = 2;
       col = this.customiseKeyCol ?? 1;
     } else if (active === description) {
@@ -2782,11 +2784,14 @@ class NeverHaveIEverApp {
     const slider = modal.querySelector('.customise-level-slider');
     const description = modal.querySelector('.customise-group-description');
     const active = document.activeElement;
+    // Most key events land on the focused element, but a slider that was
+    // clicked (some browsers don't focus it) reports itself as the target
+    const onSlider = active === slider || e.target === slider;
 
     // The slider owns Left/Right (and Home/End): each press steps the heat
     // natively and fires its input handler, which refreshes the preview.
     // Up and Down push past it, to the chips above and the description below.
-    if (active === slider && (e.key === 'ArrowLeft' || e.key === 'ArrowRight' || e.key === 'Home' || e.key === 'End')) return;
+    if (onSlider && (e.key === 'ArrowLeft' || e.key === 'ArrowRight' || e.key === 'Home' || e.key === 'End')) return;
 
     // Typing owns the description box: Left/Right are caret movement and the
     // arrows only leave the box when the caret can't move further — on the
@@ -2819,8 +2824,8 @@ class NeverHaveIEverApp {
       return;
     }
 
-    // Delete is the Skip shortcut, as its pill says
-    if (e.key === 'Delete') {
+    // Delete (or Backspace — Macs label ⌫ "delete") is the Skip shortcut, as its pill says
+    if (e.key === 'Delete' || e.key === 'Backspace') {
       e.preventDefault();
       modal.querySelector('.customise-skip-btn').click();
       return;
@@ -2828,7 +2833,7 @@ class NeverHaveIEverApp {
 
     if (e.key.startsWith('Arrow')) {
       e.preventDefault();
-      this.moveCustomiseFocus(e.key);
+      this.moveCustomiseFocus(e.key, onSlider);
     }
   }
 
