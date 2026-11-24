@@ -567,17 +567,19 @@ export const QUESTIONS = {
 
 // Shot dare time: one dare is drawn per round. The three cards on screen are for show only,
 // so every pick reveals the same drawn dare. Edit freely.
-// Dare categories: each dare belongs to one, and its emoji shows on the card back
+// Dare categories: each dare belongs to one, and its emoji shows on the card back.
+// Faces (and one bulky prop) only: round inky shapes tile the emoji mountain dense
+// and readable — human figures and flat symbols (💃 🎭 💬 💸) render thin and messy.
 export const DARE_CATEGORIES = {
-  dance: { name: 'Dance', emoji: '💃' },
-  perform: { name: 'Perform', emoji: '🎭' },
+  dance: { name: 'Dance', emoji: '😜' },
+  perform: { name: 'Perform', emoji: '🤡' },
   silly: { name: 'Silly', emoji: '🤪' },
-  sport: { name: 'Sport', emoji: '🤸' },
-  social: { name: 'Social', emoji: '💬' },
-  style: { name: 'Style', emoji: '👑' },
+  sport: { name: 'Sport', emoji: '😅' },
+  social: { name: 'Social', emoji: '😊' },
+  style: { name: 'Style', emoji: '😎' },
   mind: { name: 'Mind', emoji: '🤯' },
-  flirt: { name: 'Flirt', emoji: '💋' },
-  money: { name: 'Money', emoji: '💸' }
+  flirt: { name: 'Flirt', emoji: '😘' },
+  money: { name: 'Money', emoji: '🤑' }
 };
 
 // Shot dare time: one dare is drawn per round. The three cards on screen are for show only,

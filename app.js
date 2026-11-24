@@ -1,4 +1,4 @@
-import { CATEGORIES, QUESTIONS, SPICY_QUESTION_LEVELS, SHOT_DARES, DARE_CATEGORIES } from './questions.js?v=14';
+import { CATEGORIES, QUESTIONS, SPICY_QUESTION_LEVELS, SHOT_DARES, DARE_CATEGORIES } from './questions.js?v=15';
 import { sounds } from './sound.js?v=4';
 import { ConfettiEngine } from './confetti.js';
 
@@ -111,10 +111,11 @@ function emojiMarkup(text) {
 // narrow side toward a gap, so the ink fill factor drops to 0.70 and the bases
 // pay for it — portrait: pitch 12.5cqw needs 8.71cqw of radius, the 33cqw em
 // box delivers 9.24 at the 0.80 size floor; the flat phone cards: pitch 10cqw
-// needs 6.97, the 27cqw box delivers 7.56. Beyond one glyph's own ink, the
-// three hex neighbours' unions cover shape shortfalls — so no card background
-// can show anywhere. The card's real aspect is measured at draw time (cards
-// are display-toggled, so the caller paints the pattern only after the dare
+// needs 6.97, the 27cqw box delivers 7.56. (All category emojis are round faces
+// with ~0.9 ink ratio — see DARE_CATEGORIES — which is why this holds.) Beyond
+// one glyph's own ink, the three hex neighbours' unions cover the rest — so no
+// card background can show anywhere. The card's real aspect is measured at draw
+// time (cards are display-toggled, so the caller paints the pattern only after the dare
 // screen is visible); points run past all four edges and the overflow clip
 // keeps the bleed inside the rounded corners.
 function dareCardPattern(emojiText, cardEl) {
