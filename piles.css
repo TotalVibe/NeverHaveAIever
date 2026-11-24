@@ -3445,13 +3445,14 @@ body:not(.mode-most-likely):not(.mode-shot-dare).game-waiting .shot-controls {
 
 .deck-list {
   /* Mobile slider: neighbours stay clearly separated while you drag */
-  gap: clamp(18px, 5vw, 32px);
+  gap: clamp(24px, 7vw, 44px);
 }
 
 @media (min-width: 720px) {
 .deck-list {
     /* Tracker: 3 tiles of max(170px, min(58vmin, 34dvh, 29vw)) + two gutters.
-       Fluid with the screen: ~25px at 720px, ~43px at 1080p, 56px cap on TVs. */
-    gap: clamp(24px, 4vmin, 56px);
+       Fluid with the screen: ~43px at 720px, ~65px at 1080p, 88px cap on TVs.
+       The minmax(0, ...) tracks give a few px back on tight widths. */
+    gap: clamp(40px, 6vmin, 88px);
   }
 }
