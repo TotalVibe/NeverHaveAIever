@@ -298,6 +298,7 @@ body.entry-instant .game-card.card-entering {
   flex: 1 1 auto;
   min-width: 0;
   text-align: center;
+  text-transform: uppercase;
   opacity: 0;
   transform: translateY(6px);
   transition: opacity 0.8s ease, transform 0.8s ease;

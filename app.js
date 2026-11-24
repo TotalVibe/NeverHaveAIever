@@ -1159,7 +1159,7 @@ class NeverHaveIEverApp {
           </div>
           <div class="card-hint">
             <span class="card-hint-text">${data.category === 'most-likely'
-              ? '<span class="hint-full">Swipe or arrow key to go on</span><span class="hint-short">Swipe or ←→</span>'
+              ? '<span class="hint-full">Swipe card or arrow keys</span><span class="hint-short">Swipe or ←→</span>'
               : '<span class="hint-full">Drag card or tap emoji</span><span class="hint-short">Drag or tap</span>'}</span>
             <button class="done-it-btn" type="button" aria-label="Celebrate that you have done it">
               <kbd class="key-cue">ENTER</kbd>${this.gameMode === 'most-likely' ? 'INDEED' : 'DONE IT!'}
