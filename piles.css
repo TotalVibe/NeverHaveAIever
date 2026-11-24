@@ -3753,3 +3753,22 @@ body:not(.mode-most-likely):not(.mode-shot-dare).game-waiting .shot-controls {
   mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   mask-composite: exclude;
 }
+
+/* ===== Revisions 70: dare cards — leisurely rim spin, spaced sparks, soft whites ===== */
+
+/* The two white sparks drift apart (peaks 144 degrees apart, each with a soft
+   24-degree core), the whites turn sheer instead of pure, and the ring spins
+   at half its old pace. */
+
+.shot-dare:hover:not(.is-revealed)::after,
+.shot-dare.is-focus:not(.is-revealed)::after {
+  animation-duration: 12s;
+  background: conic-gradient(from var(--deck-angle),
+    transparent 0deg,
+    transparent 108deg,
+    rgba(255, 255, 255, 0.7) 132deg,
+    transparent 156deg,
+    rgba(255, 255, 255, 0.7) 276deg,
+    transparent 300deg,
+    transparent 360deg);
+}
