@@ -363,16 +363,14 @@ class NeverHaveIEverApp {
 
     window.addEventListener('popstate', () => {
       if (this.ageGateActive) return; // on the age question, back leaves the app
-      if (this.modeModal.classList.contains('active')) return; // on home screen, back leaves the app
 
-      // If in the optional first-time setup popup, return to the deck screen
+      // If in the optional first-time setup popup, reveal the deck screen underneath
       if (this.setupStep && this.customiseModal.classList.contains('active')) {
-        this.setupStep = false;
-        this.customiseModal.classList.remove('active', 'is-setup');
-        this.returnFlippedPanel({ animate: false });
-        this.openModeSelect();
+        this.cancelSetup();
         return;
       }
+
+      if (this.modeModal.classList.contains('active')) return; // on home screen, back leaves the app
 
       // If an overlay popup is open (customise from in-game, info modal, etc.), close it first
       const openModal = document.querySelector('.modal-overlay.active:not(#mode-modal)');
@@ -1779,22 +1777,37 @@ class NeverHaveIEverApp {
       });
       return;
     }
-    this.fadeTransition(() => {
-      this.modeModal.classList.remove('active');
-      this.setupStep = true;
-      this.openCustomiseModal({ from: 'setup' });
-    });
+    // First game: the setup pop-up sits on top of the deck screen, and the fade
+    // to black happens later, once Skip or Save and Play is pressed
+    if (this.setupStep) return;
+    this.setupStep = true;
+    this.openCustomiseModal({ from: 'setup' });
+    try {
+      history.pushState({ screen: 'setup' }, '');
+    } catch (_) {}
   }
 
   // Ends the optional setup, whether the player saved or skipped it, and starts the chosen game
   finishSetup() {
+    if (!this.setupStep) return;
     this.setupStep = false;
     this.setupDone = true;
-    this.customiseModal.classList.remove('active', 'is-setup');
-    this.returnFlippedPanel({ animate: false });
     this.fadeTransition(() => {
+      this.customiseModal.classList.remove('active', 'is-setup');
+      this.modeModal.classList.remove('active');
+      this.returnFlippedPanel({ animate: false });
       this.startGame(this.pendingMode);
     });
+  }
+
+  // Leaving the optional setup without playing: back to the deck screen underneath
+  cancelSetup() {
+    this.setupStep = false;
+    this.customiseModal.classList.remove('active', 'is-setup');
+    this.returnFlippedPanel({ animate: false });
+    try {
+      history.pushState({ screen: 'home' }, '');
+    } catch (_) {}
   }
 
   // Who's Most Likely: the first card has only Undo and Next; Indeed appears once a card has been passed
@@ -2244,7 +2257,8 @@ class NeverHaveIEverApp {
       descriptionField.placeholder = groupDescriptionExamples[nextGroupDescriptionExample];
       nextGroupDescriptionExample = (nextGroupDescriptionExample + 1) % groupDescriptionExamples.length;
       if (from === 'setup') {
-        // After choosing a game: nothing behind it to flip, so the pop-up just comes in
+        // First game: the pop-up comes in over the still-open deck screen; the fade
+        // to black waits until Skip or Save and Play
         this.customiseModal.classList.add('is-setup');
         this.customiseModal.classList.add('active');
       } else if (from === 'shot') {
@@ -2296,9 +2310,10 @@ class NeverHaveIEverApp {
     });
 
     const closeCustomiseModal = ({ returnCard = true } = {}) => {
-      // During game setup, closing the pop-up counts as skipping it
+      // During game setup, closing the pop-up just reveals the deck screen again;
+      // Skip and Save and Play are what start the game
       if (this.setupStep) {
-        this.finishSetup();
+        this.cancelSetup();
         return;
       }
       this.customiseModal.classList.remove('active');
@@ -2347,6 +2362,10 @@ class NeverHaveIEverApp {
     });
     this.customiseModal.querySelector('.customise-skip-btn').addEventListener('click', () => {
       sounds.playClick();
+      if (this.setupStep) {
+        this.finishSetup();
+        return;
+      }
       closeCustomiseModal();
     });
 
@@ -2607,12 +2626,12 @@ class NeverHaveIEverApp {
         }
         return;
       }
+      if (this.customiseModal.classList.contains('active')) return;
       if (this.modeModal.classList.contains('active')) {
         this.handleDeckKey(e);
         return;
       }
       if (this.isCelebrating || this.ageGateActive) return;
-      if (this.customiseModal.classList.contains('active')) return;
       if (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA') return;
       // Holding a key down doesn't fire a stream of swipes; each press counts once
       const isGameKey = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' ', 'Enter'].includes(e.key);
