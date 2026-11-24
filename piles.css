@@ -1928,19 +1928,15 @@ body:has(.age-gate-card) .classic-keys {
   display: none !important;
 }
 
-/* Modal pop-ups: the key pills sit anchored to the button's right edge, opposite
-   the left icon, so the labels stay centred */
+/* Modal pop-ups: the key pills sit inline before the label, centred together as
+   one group, exactly like the game buttons (CUSTOMIZE's svg stays pinned left) */
 
-#info-customise-btn .key-cue,
-#info-lets-play-btn .key-cue,
-.customise-actions .customise-modal-done .key-cue {
-  position: absolute;
-  right: clamp(10px, 1.4vmin, 18px);
-  margin-right: 0;
-}
-
-#info-lets-play-btn {
-  position: relative;
+.info-customise-btn > span,
+.customise-actions .customise-modal-done > span:first-of-type {
+  position: static;
+  left: auto;
+  transform: none;
+  white-space: nowrap;
 }
 
 /* Who's Most Likely: Next answers to Space (and →), so its SPACE cue
