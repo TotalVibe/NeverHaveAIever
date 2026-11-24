@@ -2355,6 +2355,10 @@ class NeverHaveIEverApp {
       const descriptionField = this.customiseModal.querySelector('.customise-group-description');
       descriptionField.placeholder = groupDescriptionExamples[nextGroupDescriptionExample];
       nextGroupDescriptionExample = (nextGroupDescriptionExample + 1) % groupDescriptionExamples.length;
+      // Re-sync the sparkle state in case text was kept from a previous round
+      descriptionField.closest('.customise-description-wrap').classList.toggle(
+        'has-text', descriptionField.value.trim().length > 0
+      );
       if (from === 'setup') {
         // First game: the pop-up comes in over the still-open deck screen; the fade
         // to black waits until Skip or Save and Play
@@ -2394,6 +2398,16 @@ class NeverHaveIEverApp {
       this.updateSpicyLevelPreview(this.spicyLevel);
     };
     this.openCustomiseModal = openCustomiseModal;
+
+    // Keep the description's "has text" state in sync so the sparkles and the
+    // highlighted border track the field's content even after it loses focus
+    const descriptionWrap = this.customiseModal.querySelector('.customise-description-wrap');
+    this.customiseModal.querySelector('.customise-group-description').addEventListener('input', () => {
+      descriptionWrap.classList.toggle(
+        'has-text',
+        this.customiseModal.querySelector('.customise-group-description').value.trim().length > 0
+      );
+    });
 
     this.cheersOverlay.addEventListener('animationend', (event) => {
       if (event.target === this.cheersOverlay && event.animationName === 'cheers-overlay-lifecycle') {

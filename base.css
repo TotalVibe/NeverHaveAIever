@@ -604,8 +604,21 @@ body {
   display: block;
 }
 
-.customise-description-wrap:focus-within .card-sparkles {
+/* The description sparkles while focused AND whenever it holds text —
+   :has(:not(:placeholder-shown)) tests the textarea inside the wrap, the
+   .has-text class is set from JS as a fallback for browsers without :has() */
+.customise-description-wrap:focus-within .card-sparkles,
+.customise-description-wrap:has(.customise-group-description:not(:placeholder-shown)) .card-sparkles,
+.customise-description-wrap.has-text .card-sparkles {
   display: block;
+}
+
+/* Filled description stays highlighted after the field loses focus */
+.customise-description-wrap:has(.customise-group-description:not(:placeholder-shown)) .customise-group-description,
+.customise-description-wrap.has-text .customise-group-description {
+  border-color: rgba(198, 173, 255, 0.6);
+  background: linear-gradient(135deg, rgba(130, 96, 190, 0.14), rgba(8, 10, 18, 0.6) 58%);
+  box-shadow: 0 0 14px rgba(164, 125, 255, 0.14), 0 0 22px rgba(164, 125, 255, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
 .customise-description-wrap {
