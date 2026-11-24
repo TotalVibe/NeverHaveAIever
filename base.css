@@ -799,7 +799,8 @@ body {
   outline: none;
   background: linear-gradient(135deg, rgba(130, 96, 190, 0.09), rgba(8, 10, 18, 0.55) 58%);
   color: var(--text-main);
-  font: 500 calc(var(--popup-type-scale) * clamp(0.8rem, 1.5vmin, 1.25rem))/1.45 var(--font-sans);
+  /* A step larger than the label: the description is the pop-up's main input */
+  font: 500 calc(var(--popup-type-scale) * clamp(0.95rem, 2.1vmin, 1.7rem))/1.4 var(--font-sans);
   box-shadow: 0 0 14px rgba(164, 125, 255, 0.09), inset 0 1px 0 rgba(255, 255, 255, 0.035);
   transition: border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
 }
