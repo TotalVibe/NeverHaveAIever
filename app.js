@@ -438,6 +438,14 @@ class NeverHaveIEverApp {
     this.modeModal.querySelectorAll('.deck-tile').forEach((tile) => tile.prepend(this.buildDeckLayers()));
     const deckTitle = document.querySelector('.deck-hero-title');
     if (deckTitle) this.addTitleSparkles(deckTitle);
+    // The popup Customise buttons share the starter card's purple pill and its sparkles
+    const popupCustomiseButtons = [
+      document.getElementById('info-customise-btn'),
+      this.customiseModal.querySelector('.customise-modal-done'),
+    ].filter(Boolean);
+    popupCustomiseButtons.forEach((btn) => {
+      this.addBorderSparkles(btn, { inset: 3, count: 6, sizeMin: 5, sizeRange: 3, durMin: 7, durRange: 4 });
+    });
     // The classic intro card is where the first-time age question lives. Returning
     // visitors start on the deck screen, and their first card is only dealt when a
     // game is chosen — dealing it here put the classic card behind the fading deck
