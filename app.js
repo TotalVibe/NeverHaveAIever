@@ -1424,7 +1424,7 @@ class NeverHaveIEverApp {
     if (this.gameMode === 'shot-dare') return; // shot dare has its own buttons
     if (this.awaitingStart) {
       // The first swipe starts the game and plays the intro card in the same motion
-      this.beginStart();
+      this.beginStart({ flipCard: false });
     }
     if (this.isAnimating || this.isCelebrating || !this.activeCard) return;
     if (this.activeCard.dataset.cardType === 'level-up') {
@@ -2095,7 +2095,7 @@ class NeverHaveIEverApp {
   }
 
   // START (button, Space, Enter or a first swipe): the waiting intro hands over to the game
-  beginStart() {
+  beginStart({ flipCard = true } = {}) {
     if (!this.awaitingStart || this.ageGateActive || this.isCelebrating) return;
     this.awaitingStart = false;
     document.body.classList.remove('game-waiting');
@@ -2105,7 +2105,23 @@ class NeverHaveIEverApp {
     }
     sounds.init();
     sounds.playClick();
+    // Like Shots & Dares, START pulls the first card: the top card turns over
+    // and reveals the opening question. A first swipe or arrow key already
+    // plays its motion, so those starts skip the reveal.
+    if (flipCard) this.revealFirstCard();
     this.revealTargetButtons();
+  }
+
+  // Classic & who-most-likely: turn the intro card over like a real draw,
+  // so the first question appears the same way Shots & Dares reveals its sentence.
+  revealFirstCard() {
+    const card = this.activeCard;
+    if (!card || !card.classList.contains('face-down')) return;
+    // The intro flourishes (blurb, customize button) live on the back; drop them
+    // as the card joins play.
+    card.classList.remove('intro-card', 'face-down');
+    sounds.playSnapBack();
+    this.resetIdleHint();
   }
 
   undoLastCard() {
@@ -2673,8 +2689,11 @@ class NeverHaveIEverApp {
         }
         if (e.key === ' ' || e.key.startsWith('Arrow')) {
           e.preventDefault();
-          this.beginStart();
-          if (e.key.startsWith('Arrow')) {
+          const isArrow = e.key.startsWith('Arrow');
+          // An arrow key starts the game and plays that swipe in one motion,
+          // exactly like a first drag; Space reveals the first card on its own.
+          this.beginStart({ flipCard: !isArrow });
+          if (isArrow) {
             const dir = { ArrowUp: 'top', ArrowDown: 'bottom', ArrowLeft: 'left', ArrowRight: 'right' }[e.key];
             this.handleTargetTap(dir);
           }
