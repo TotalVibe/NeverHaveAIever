@@ -2702,6 +2702,46 @@ class NeverHaveIEverApp {
     }
   }
 
+  // Who is playing pop-up: the keyboard works the way the controls look.
+  // Arrows rove between the controls, Enter or Space presses the focused one,
+  // the slider claims Left/Right to change the heat, and the description owns typing.
+  handleCustomiseKey(e) {
+    const modal = this.customiseModal;
+    const slider = modal.querySelector('.customise-level-slider');
+    const description = modal.querySelector('.customise-group-description');
+    const active = document.activeElement;
+
+    // Typing owns the description box: arrows and Enter are text, Tab is the way out
+    if (active === description || active?.matches?.('input, textarea')) return;
+    // Arrow keys natively step the slider and fire its input handler, which refreshes the preview
+    if (active === slider && (e.key.startsWith('Arrow') || e.key === 'Home' || e.key === 'End')) return;
+
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      // Press whatever is focused: an audience tick, the close ✕, Skip or Save.
+      // The slider is left alone so Enter/Space can't trigger an accidental save or skip.
+      if (modal.contains(active) && active.matches?.('button')) {
+        active.click();
+        return;
+      }
+      // Nothing inside the pop-up has focus: Enter saves, Space skips, as their pills say
+      modal.querySelector(e.key === 'Enter' ? '.customise-modal-done' : '.customise-skip-btn').click();
+      return;
+    }
+
+    if (e.key.startsWith('Arrow')) {
+      e.preventDefault();
+      // The roving focus order matches the visual flow: close, the six audience
+      // ticks, the intensity slider, the description box, Skip, Save — wrapping
+      const focusables = Array.from(modal.querySelectorAll(
+        '.customise-modal-close, .customise-audience-option, .customise-level-slider, .customise-group-description, .customise-skip-btn, .customise-modal-done'
+      ));
+      const step = (e.key === 'ArrowDown' || e.key === 'ArrowRight') ? 1 : -1;
+      const index = Math.max(0, focusables.indexOf(active));
+      focusables[(index + step + focusables.length) % focusables.length]?.focus({ preventScroll: true });
+    }
+  }
+
   bindKeyboard() {
     window.addEventListener('keydown', (e) => {
       // Escape closes the top pop-up first, then goes Home (the deck screen) from anywhere
@@ -2724,13 +2764,10 @@ class NeverHaveIEverApp {
         return;
       }
       if (this.customiseModal.classList.contains('active')) {
-        // Save and Play = Enter, Skip = Space. Esc is handled above.
-        if (e.target.matches?.('input, textarea')) return; // typing in the group description
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          sounds.playClick();
-          this.customiseModal.querySelector(e.key === 'Enter' ? '.customise-modal-done' : '.customise-skip-btn').click();
-        }
+        // Enter = Save and Space = Skip only when nothing in the pop-up has focus;
+        // otherwise the focused control gets pressed and the arrows move between
+        // the controls (this.handleCustomiseKey). Esc is handled above.
+        this.handleCustomiseKey(e);
         return;
       }
       if (this.infoModal.classList.contains('active')) {

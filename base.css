@@ -821,6 +821,40 @@ body {
   line-height: 1.4;
 }
 
+/* Keyboard controls hint: a quiet row of pills under the description,
+   matching the key cues on the Skip and Save buttons */
+.customise-keys-hint {
+  display: none;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: clamp(4px, 0.7vmin, 8px);
+  margin: 4px 0 0;
+  color: var(--text-dim);
+  font-size: calc(var(--popup-type-scale) * clamp(0.62rem, 1.1vmin, 0.95rem));
+  line-height: 1.4;
+}
+
+.customise-keys-hint .key-cue {
+  /* Same quiet pill size as the pop-up action cues */
+  min-width: max(22px, 2.2em);
+  height: max(22px, 1.9em);
+  padding: 0 6px;
+  margin-right: 0;
+  border-radius: 6px;
+  font-size: clamp(0.6rem, 1cqi, 0.9rem);
+}
+
+.customise-keys-hint .customise-keys-sep {
+  opacity: 0.5;
+}
+
+/* Only widescreen, fine-pointer setups see it — touch users tap directly */
+@media (min-width: 1024px) and (pointer: fine) {
+  .customise-keys-hint {
+    display: flex;
+  }
+}
+
 .customise-modal-done {
   position: relative;
   margin-top: 0;
@@ -923,6 +957,14 @@ body {
 .modal-close:hover {
   background: rgba(255, 255, 255, 0.2);
   color: #fff;
+}
+
+/* The ✕ is the first stop in the pop-up's arrow-key rove, so it needs a visible ring */
+.modal-close:focus-visible {
+  outline: none;
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  box-shadow: 0 0 0 2px rgba(198, 173, 255, 0.6);
 }
 
 .info-reverse-frame {
