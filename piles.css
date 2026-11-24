@@ -3370,23 +3370,31 @@ body:not(.mode-most-likely):not(.mode-shot-dare).game-waiting .shot-controls {
    and the discontinuous dashed stitch line inside the frame, ending in the
    pinched near-square corner. Full spec: design/CARD-CORNER-EFFECT.md */
 
-/* Deck tiles keep their own, less round outer radius: the card looks straighter
-   than --radius-card makes the classic card, while everything inner stays square. */
+/* Deck tiles keep their own, less round outer radius and their own thinner
+   stroke: the card looks straighter and lighter than --radius-card makes the
+   classic card, while everything inner stays square. The tokens live on
+   .deck-tile so the pile layers underneath share both values. */
+
+.deck-tile {
+  --radius-deck: clamp(14px, 2.2vmin, 40px);
+}
 
 .deck-option {
-  --radius-deck: clamp(14px, 2.2vmin, 40px);
   border-radius: var(--radius-deck);
+  border-width: var(--stroke-deck);
   box-shadow: var(--corner-halo);
 }
 
-/* The backing pattern and the rotating deck-colour edge follow the new radius,
-   so every layer of the tile shares the same outer corner */
+/* The backing pattern and the rotating deck-colour edge follow the new radius
+   and stroke, so every layer of the tile shares the same outer corner */
 
 .deck-option-bg {
-  border-radius: calc(var(--radius-deck) - var(--stroke-card));
+  border-radius: calc(var(--radius-deck) - var(--stroke-deck));
 }
 
 .deck-option::before {
+  inset: calc(-1 * var(--stroke-deck));
+  padding: var(--stroke-deck);
   border-radius: var(--radius-deck);
 }
 
@@ -3402,6 +3410,15 @@ body:not(.mode-most-likely):not(.mode-shot-dare).game-waiting .shot-controls {
   box-shadow: var(--corner-halo), 0 0 0 1px var(--deck-color), 0 0 30px -6px var(--deck-color);
 }
 
+/* Pile of cards under each selector: same less round radius and same thinner
+   stroke, so the stack reads as copies of the tile in front of it */
+
+.deck-tile .deck-card-layer {
+  border-radius: var(--radius-deck);
+  border-width: var(--stroke-deck);
+  border-bottom-width: calc(var(--stroke-deck) + 0.5px);
+}
+
 /* Discontinuous stitch line: a dashed border just inside the faint solid frame,
    echoing .card-back-frame::before on the classic card back. Both inner borders
    end in near-square corners (square token variants), well inside the rounder
@@ -3409,6 +3426,7 @@ body:not(.mode-most-likely):not(.mode-shot-dare).game-waiting .shot-controls {
 
 .deck-frame {
   border-radius: var(--corner-frame-radius-square);
+  border-width: var(--corner-frame-stroke);
 }
 
 .deck-frame::before {

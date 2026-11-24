@@ -107,7 +107,9 @@ smaller cards).
 |---|---|---|
 | `--corner-halo` | `0 0 1px 1px rgba(255,255,255,0.16)` | crisp outer edge |
 | `--corner-stitch-inset` | `clamp(6px, 1vmin, 16px)` | gap between card edge/outer stroke and the stitch |
-| `--corner-stitch-stroke` | `clamp(1px, 0.2vmin, 3px)` | dashed stroke width |
+| `--corner-stitch-stroke` | `clamp(1px, 0.14vmin, 2px)` | dashed stroke width, kept thin |
+| `--corner-frame-stroke` | `clamp(1px, 0.15vmin, 2.5px)` | faint solid frame stroke, kept thin |
+| `--stroke-deck` | `clamp(1.5px, 0.22vmin, 4px)` | thinner outer stroke for deck-screen cards and their pile layers |
 | `--corner-stitch-color` | `rgba(255,255,255,0.12)` | dash colour |
 | `--corner-stitch-radius` | `calc(var(--radius-card) - clamp(9px,1.1vmin,20px) - var(--corner-stitch-stroke) - 2 * clamp(4px,0.6vmin,11px))` | the pinched, near-square corner (inset subtracted twice, matching the classic card's pinch) |
 | `--corner-frame-radius-square` | `clamp(4px, 0.9vmin, 12px)` | solid frame corners, square variant |
