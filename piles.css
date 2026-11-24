@@ -2408,7 +2408,12 @@ body:has(.age-gate-card) .classic-keys {
 
 @media (min-width: 1024px) {
 .deck-play:has(.key-cue) {
-    padding-left: 10px;
+    /* Not max-content: on wide screens SELECT spans generously under the deck row */
+    width: min(50vw, 640px);
+    justify-content: center;
+    gap: 0;
+    padding-left: 16px;
+    padding-right: 16px;
   }
 }
 
