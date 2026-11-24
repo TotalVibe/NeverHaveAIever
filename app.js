@@ -100,19 +100,21 @@ function emojiMarkup(text) {
   return html;
 }
 
-// The dare card back: a checkerboard of the category emoji, big and small
-// alternating like a quincunx pattern (sizes live in piles.css). The cell count
-// follows the card's shape — portrait cards on desktop use fewer, much bigger
-// cells; the flat phone cards need twice the columns to keep cells near-square.
-// Every emoji keeps its grid position but is oversized so neighbours overlap,
-// gets its own random tilt (rotate around its centre, --rot), and is pulled
-// toward the pattern's centre by a negative offset per cell of distance
-// (--gx/--gy × --pull in CSS), contracting the whole grid so glyphs interlock.
+// The dare card back: a solid wall of the category emoji — big and small
+// alternating like a quincunx, densely packed so no card background shows
+// (sizes live in piles.css). Emoji glyphs carry transparent padding inside
+// their em box, so the sizes there are computed from the INK circle (≈72% of
+// the em) versus the grid pitch: every neighbouring pair of glyphs overlaps
+// past touching. The cell count follows the card's shape, with the flat phone
+// cards using more columns to near-square the cells. Every emoji keeps its
+// grid position, gets its own random tilt (--rot), and is pulled toward the
+// pattern's centre by a negative offset per cell of distance
+// (--gx/--gy × --pull in CSS), contracting the whole wall further.
 function dareCardPattern(emojiText) {
   const emoji = emojiMarkup(emojiText);
   const flat = window.matchMedia('(max-width: 719px)').matches;
-  const cols = flat ? 10 : 6;
-  const rows = flat ? 5 : 8;
+  const cols = flat ? 10 : 8;
+  const rows = flat ? 8 : 12;
   const midC = (cols - 1) / 2; // centre of the grid, in cells
   const midR = (rows - 1) / 2;
   const tilt = () => (Math.random() * 24 - 12).toFixed(1);

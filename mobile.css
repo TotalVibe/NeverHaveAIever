@@ -1247,26 +1247,25 @@ body.unhinged-screen-shake {
   .shot-dare.is-focus:not(.is-revealed) { z-index: 4; }
   .shot-dare.is-revealed { z-index: 6; }
 
-  /* Emoji pattern: the phone cards are wide and flat, so JS renders a 10 × 5
-     grid (twice the columns of the desktop cards) keeping the cells near-square.
-     Like on desktop, the glyphs are oversized to ~1.56× the cell so neighbours
-     touch and overlap, bleeding off the card edge under the rounded-corner clip,
-     and --pull contracts the whole pattern toward its centre. The mobile cells
-     sit ~10cqw apart (vs 16.7cqw on the portrait cards), so the pull scales
-     down with the pitch to keep the same interlock. The double hue stroke on
-     the glyphs lives in piles.css and scales with the font size. */
+  /* Emoji pattern: the phone cards are wide and flat, so JS renders a 10 × 8
+     grid to near-square the cells. Like on desktop, sizes are computed from
+     the glyphs' ink circle (≈72% of the em box) against the ~10cqw pitch, so
+     every neighbouring pair of emojis overlaps past touching and no background
+     shows — a solid pile that bleeds off the card edge under the rounded-corner
+     clip. --pull contracts the wall toward its centre at the same ratio as the
+     portrait cards. The double hue stroke on the glyphs lives in piles.css. */
   .shot-dare-back .dare-back-emoji {
     grid-template-columns: repeat(10, 1fr);
-    grid-template-rows: repeat(5, 1fr);
+    grid-template-rows: repeat(8, 1fr);
     --pull: -0.72cqw;
   }
 
   .dare-back-emoji .dare-pattern-big {
-    font-size: 15.5cqw;
+    font-size: 18.6cqw;
   }
 
   .dare-back-emoji .dare-pattern-small {
-    font-size: 7.75cqw;
+    font-size: 9.3cqw;
   }
 }
 

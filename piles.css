@@ -3241,27 +3241,28 @@ body:not(.mode-most-likely):not(.mode-shot-dare).game-waiting .shot-controls {
   z-index: 5;
 }
 
-/* Card back: a dense checkerboard of the category emoji, big and small
-   alternating in a quincunx (the small ones fill the gaps between the big ones),
-   all upright. Big emojis are oversized well past their cell (grid spacing is
-   untouched) so neighbours touch and overlap, and each carries a double internal
-   stroke in the card's assigned hue (rule below). */
+/* Card back: a solid wall of the category emoji, big and small
+   alternating in a quincunx, packed like a collage — the reference look has no
+   background showing between the emojis at all. Emoji glyphs carry transparent
+   padding inside their em box, so sizes are computed from the INK circle
+   (≈72% of the em) against the grid pitch: the ink of every neighbouring pair
+   overlaps past touching (see app.js for the grid counts per card shape). */
 
 .shot-dare-back .dare-back-emoji {
   position: absolute;
-  inset: 0; /* full bleed: oversized emojis run off the card edge... */
+  inset: 0; /* full bleed: the overlapping emojis run off the card edge... */
   overflow: hidden; /* ...and are clipped by the card's own rounded corners */
   border-radius: inherit;
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  grid-template-rows: repeat(8, 1fr);
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: repeat(12, 1fr);
   place-items: center;
   font-size: 0; /* each cell sets its own size */
   /* How hard each glyph is pulled toward the pattern's centre: a negative
      offset per cell of distance (--gx/--gy from app.js). -1.2cqw per cell
-     shortens the grid pitch by ~14%, so big and small glyphs interlock more
-     than size alone would — and the pattern squeezes the tightest at its
-     edges, since those cells sit farthest from the centre. */
+     shortens the grid pitch by ~19% on top of the ink overlap, so the wall
+     reads as a tight pile — and squeezes hardest at the edges, since those
+     cells sit farthest from the centre. */
   --pull: -1.2cqw;
 }
 
@@ -3311,17 +3312,18 @@ body:not(.mode-most-likely):not(.mode-shot-dare).game-waiting .shot-controls {
     0.0554em -0.0230em 0 hsl(var(--hue, 340) 90% 64% / 0.6);
 }
 
-/* Big glyphs run at ~1.56× the cell width, so each emoji crosses into its
-   four diagonal neighbours; with the centre-pull on top (--pull, above) the
-   effective pitch shrinks a further ~14%, so big and small interlock well past
-   touching. The small ones (half the big size) stay visible in the gaps. */
+/* Ink-derived sizes for the 8 × 12 portrait grid (pitch 12.5cqw across,
+   11cqw down, before the centre-pull): big 23.5 + small 11.75 em boxes give an
+   ink diameter sum of ≈12.6cqw, so even a bare 72%-ink glyph pair overlaps
+   every neighbour, including across the checkerboard diagonals. */
+
 .dare-back-emoji .dare-pattern-big {
-  font-size: 26cqw;
+  font-size: 23.5cqw;
   line-height: 1;
 }
 
 .dare-back-emoji .dare-pattern-small {
-  font-size: 13cqw;
+  font-size: 11.75cqw;
   line-height: 1;
 }
 
