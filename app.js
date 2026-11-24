@@ -2258,9 +2258,14 @@ class NeverHaveIEverApp {
     const stage = document.createElement('div');
     stage.className = 'card-flip-stage';
     const ghost = element.cloneNode(true);
-    // The copy sits in a box as wide as the card, so its container-relative sizes (title, buttons) match the original
+    // The copy sits in a box as wide as the card, so its container-relative sizes (title, buttons) match the original.
+    // Perspective lives on this box: it must sit on the ghost's direct parent, because the stage's own
+    // perspective doesn't reach a grandchild — without it the flip-out renders as a flat 2D squash
+    // (the popup "collapses" sideways on wide screens). Depth scales with the panel width so big
+    // pop-ups don't over-skew at the same angle that reads naturally on a phone.
+    const depth = Math.max(1200, rect.width * 2.2);
     const box = document.createElement('div');
-    box.style.cssText = `position:fixed;left:${rect.left}px;top:${rect.top}px;width:${rect.width}px;height:${rect.height}px;container-type:inline-size;pointer-events:none;`;
+    box.style.cssText = `position:fixed;left:${rect.left}px;top:${rect.top}px;width:${rect.width}px;height:${rect.height}px;container-type:inline-size;perspective:${depth}px;pointer-events:none;`;
     ghost.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;margin:0;transform:none;transition:none;pointer-events:none;';
     box.append(ghost);
     stage.append(box);
@@ -2278,9 +2283,12 @@ class NeverHaveIEverApp {
   flipModalIn(delay = 160) {
     if (this.prefersReducedMotion()) return;
     const content = this.customiseModal.querySelector('.modal-content');
+    // Perspective grows with the pop-up width so widescreen panels flip with the same
+    // moderate depth as phone-sized ones instead of skewing into a harsh trapezoid
+    const depth = Math.max(1200, content.getBoundingClientRect().width * 2.2);
     content.animate([
-      { transform: 'perspective(1200px) rotateY(75deg) translateX(40px) scale(0.92)', opacity: 0 },
-      { transform: 'perspective(1200px) rotateY(0deg) translateX(0) scale(1)', opacity: 1 }
+      { transform: `perspective(${depth}px) rotateY(75deg) translateX(40px) scale(0.92)`, opacity: 0 },
+      { transform: `perspective(${depth}px) rotateY(0deg) translateX(0) scale(1)`, opacity: 1 }
     ], { duration: 520, delay, easing: 'cubic-bezier(0.2, 0.85, 0.25, 1)', fill: 'backwards' });
   }
 
