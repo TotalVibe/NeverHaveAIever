@@ -1421,3 +1421,26 @@ body.unhinged-screen-shake {
     box-shadow: 0 0 34px -6px hsla(var(--hue), 95%, 62%, 0.95), 0 0 110px -20px hsla(var(--hue), 95%, 60%, 0.65);
   }
 }
+
+@media (prefers-reduced-motion: reduce) {
+/* Game entry: no hold-back and no blur emergence — the deck, the header and
+   the start bar are all there immediately */
+body.game-entering .app-header,
+body.game-entering .shot-controls {
+    opacity: 1;
+    visibility: visible;
+    transition: none;
+  }
+
+body.game-entering .card-stack,
+body.game-entering .shot-slot {
+    animation: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+/* Shot starter card: no hopping loop */
+.shot-wrap .shot-slot .game-card.intro-card {
+    animation: none;
+  }
+}

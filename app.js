@@ -1811,6 +1811,8 @@ class NeverHaveIEverApp {
     this.pendingMode = this.gameMode;
     this.syncModeOptions();
     this.ageGateActive = false;
+    clearTimeout(this.uiEnterTimer);
+    document.body.classList.remove('game-entering');
     document.body.classList.remove('screen-age-gate');
     document.body.classList.add('screen-deck');
     this.modeModal.classList.add('active');
@@ -1952,6 +1954,13 @@ class NeverHaveIEverApp {
     }
 
     document.body.classList.remove('screen-deck');
+
+    // The deck surfaces from a soft blur over ~1.5s, then the header and the
+    // bottom start bar fade in (CSS: Revisions 72)
+    clearTimeout(this.uiEnterTimer);
+    document.body.classList.add('game-entering');
+    this.uiEnterTimer = setTimeout(() => document.body.classList.remove('game-entering'), 1600);
+
     this.gameMode = mode;
     this.setModeClasses();
     this.cardHistory = [];

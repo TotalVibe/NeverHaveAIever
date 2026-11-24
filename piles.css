@@ -3031,7 +3031,7 @@ body:not(.mode-most-likely):not(.mode-shot-dare).game-waiting .shot-controls {
     width: min(clamp(340px, 62vmin, 1000px), calc(100vw - 24px));
   }
 }
-/* ===== Revisions 54: header = Home only, with an ESC glass pill on widescreen ===== */
+/* ===== Revisions 55: header = Home only, with an ESC glass pill on widescreen ===== */
 
 /* The Restart button is gone; Home is the lone round button in the header-nav */
 
@@ -3841,4 +3841,41 @@ body:not(.mode-most-likely):not(.mode-shot-dare).game-waiting .shot-controls {
   border: var(--corner-stitch-stroke) dashed var(--corner-stitch-color);
   border-radius: var(--corner-stitch-radius-square);
   pointer-events: none;
+}
+
+/* ===== Revisions 72: on entry, the deck surfaces from a blur, then the UI ===== */
+
+/* The header and the start bar linger after a game opens: the deck and its
+   title card surface from 0% opacity and a soft blur over ~1.5s first, then the
+   controls drift in through a slow 1.6s fade. startGame adds the class and a
+   timer drops it ~1.6s in; the controls' hidden state swaps instantly (their
+   own 0s transition) so their fade never fights the lifting curtain, and
+   visibility flips the moment the fade starts — no mid-fade pop. */
+
+body.game-entering .card-stack,
+body.game-entering .shot-slot {
+  animation: deck-emerge 1.5s ease-out both;
+}
+
+@keyframes deck-emerge {
+  from {
+    opacity: 0;
+    filter: blur(18px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+
+.app-header,
+.shot-controls {
+  transition: opacity 1.6s ease, visibility 0s linear;
+}
+
+body.game-entering .app-header,
+body.game-entering .shot-controls {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0s linear, visibility 0s linear;
 }
