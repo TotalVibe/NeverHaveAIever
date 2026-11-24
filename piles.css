@@ -1928,8 +1928,21 @@ body:has(.age-gate-card) .classic-keys {
   display: none !important;
 }
 
-/* Modal pop-ups: the key pills sit inline before the label, centred together as
-   one group, exactly like the game buttons (CUSTOMIZE's svg stays pinned left) */
+/* Modal pop-ups: the key pills sit after the label and are a step smaller than
+   the shared key cues, so they read as a quiet hint on the button */
+
+.info-customise-btn .key-cue,
+#info-lets-play-btn .key-cue,
+.customise-actions .customise-skip-btn .key-cue,
+.customise-actions .customise-modal-done .key-cue {
+  margin-right: 0;
+  margin-left: clamp(8px, 1.1vmin, 14px);
+  font-size: clamp(0.62rem, 1.1vmin, 0.95rem);
+  min-width: max(22px, 2.2em);
+  height: max(22px, 1.9em);
+  padding: 0 6px;
+  border-radius: 6px;
+}
 
 .info-customise-btn > span,
 .customise-actions .customise-modal-done > span:first-of-type {
