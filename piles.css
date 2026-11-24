@@ -3257,14 +3257,21 @@ body:not(.mode-most-likely):not(.mode-shot-dare).game-waiting .shot-controls {
   grid-template-rows: repeat(8, 1fr);
   place-items: center;
   font-size: 0; /* each cell sets its own size */
+  /* How hard each glyph is pulled toward the pattern's centre: a negative
+     offset per cell of distance (--gx/--gy from app.js). -1.2cqw per cell
+     shortens the grid pitch by ~14%, so big and small glyphs interlock more
+     than size alone would — and the pattern squeezes the tightest at its
+     edges, since those cells sit farthest from the centre. */
+  --pull: -1.2cqw;
 }
 
-/* Every emoji keeps its cell centre (its "position") but is well oversized so
-   neighbours overlap and touch while the grid spacing stays put; --rot is the
-   random tilt set per emoji in app.js */
+/* Every emoji keeps its cell position, rotated at its own random tilt, and is
+   pulled inward by --pull per cell of signed distance from the centre. */
 .dare-pattern-big,
 .dare-pattern-small {
-  transform: rotate(var(--rot, 0deg));
+  transform:
+    translate(calc(var(--gx, 0) * var(--pull, -1.2cqw)), calc(var(--gy, 0) * var(--pull, -1.2cqw)))
+    rotate(var(--rot, 0deg));
   /* Double stroke in each card's assigned hue (--hue from app.js). Colour emoji
      glyphs ignore -webkit-text-stroke, so the rings are traced the way sticker
      outlines are in CSS: a stack of full-glyph silhouette shadows around the
@@ -3305,8 +3312,9 @@ body:not(.mode-most-likely):not(.mode-shot-dare).game-waiting .shot-controls {
 }
 
 /* Big glyphs run at ~1.56× the cell width, so each emoji crosses into its
-   four diagonal neighbours; the small ones (half the big size) still sit
-   visible in the gaps between them. Grid spacing itself is unchanged. */
+   four diagonal neighbours; with the centre-pull on top (--pull, above) the
+   effective pitch shrinks a further ~14%, so big and small interlock well past
+   touching. The small ones (half the big size) stay visible in the gaps. */
 .dare-back-emoji .dare-pattern-big {
   font-size: 26cqw;
   line-height: 1;

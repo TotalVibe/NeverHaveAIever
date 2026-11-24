@@ -105,19 +105,28 @@ function emojiMarkup(text) {
 // follows the card's shape — portrait cards on desktop use fewer, much bigger
 // cells; the flat phone cards need twice the columns to keep cells near-square.
 // Every emoji keeps its grid position but is oversized so neighbours overlap,
-// and each gets its own random tilt (rotate around its centre, --rot).
+// gets its own random tilt (rotate around its centre, --rot), and is pulled
+// toward the pattern's centre by a negative offset per cell of distance
+// (--gx/--gy × --pull in CSS), contracting the whole grid so glyphs interlock.
 function dareCardPattern(emojiText) {
   const emoji = emojiMarkup(emojiText);
   const flat = window.matchMedia('(max-width: 719px)').matches;
   const cols = flat ? 10 : 6;
   const rows = flat ? 5 : 8;
+  const midC = (cols - 1) / 2; // centre of the grid, in cells
+  const midR = (rows - 1) / 2;
   const tilt = () => (Math.random() * 24 - 12).toFixed(1);
   let html = '';
   for (let r = 0; r < rows; r += 1) {
     for (let c = 0; c < cols; c += 1) {
+      // Signed distance from the pattern's centre, in cells (negative up/left of
+      // centre; .5 values at even grid edges are kept exact so the pull stays
+      // symmetric around the middle)
+      const gx = (c - midC).toFixed(1);
+      const gy = (r - midR).toFixed(1);
       html += (r + c) % 2 === 0
-        ? `<span class="dare-pattern-big" style="--rot: ${tilt()}deg">${emoji}</span>`
-        : `<span class="dare-pattern-small" style="--rot: ${tilt()}deg">${emoji}</span>`;
+        ? `<span class="dare-pattern-big" style="--rot: ${tilt()}deg; --gx: ${gx}; --gy: ${gy}">${emoji}</span>`
+        : `<span class="dare-pattern-small" style="--rot: ${tilt()}deg; --gx: ${gx}; --gy: ${gy}">${emoji}</span>`;
     }
   }
   return html;

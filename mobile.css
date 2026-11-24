@@ -1249,13 +1249,16 @@ body.unhinged-screen-shake {
 
   /* Emoji pattern: the phone cards are wide and flat, so JS renders a 10 × 5
      grid (twice the columns of the desktop cards) keeping the cells near-square.
-     Like on desktop, the grid spacing never changes: glyphs are simply oversized
-     to ~1.56× the cell so neighbours touch and overlap, bleeding off the card
-     edge under the rounded-corner clip. The double hue stroke on the glyphs
-     lives in piles.css and scales with the font size. */
+     Like on desktop, the glyphs are oversized to ~1.56× the cell so neighbours
+     touch and overlap, bleeding off the card edge under the rounded-corner clip,
+     and --pull contracts the whole pattern toward its centre. The mobile cells
+     sit ~10cqw apart (vs 16.7cqw on the portrait cards), so the pull scales
+     down with the pitch to keep the same interlock. The double hue stroke on
+     the glyphs lives in piles.css and scales with the font size. */
   .shot-dare-back .dare-back-emoji {
     grid-template-columns: repeat(10, 1fr);
     grid-template-rows: repeat(5, 1fr);
+    --pull: -0.72cqw;
   }
 
   .dare-back-emoji .dare-pattern-big {
