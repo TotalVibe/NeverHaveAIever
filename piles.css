@@ -3236,3 +3236,37 @@ body:not(.mode-most-likely):not(.mode-shot-dare).game-waiting .shot-controls {
     animation: none;
   }
 }
+
+/* ===== Revisions 61: deck cards — emoji, title and description spread evenly on wide screens ===== */
+
+/* On wide screens the card is a tall portrait, so the three content blocks no longer
+   bunch around the centre with leftover space at the bottom: spacing is distributed
+   evenly above, between and below them. Phones keep the centred slider layout. */
+
+@media (min-width: 720px) {
+.deck-option {
+    justify-content: space-evenly;
+    gap: 0;
+    padding: clamp(10px, 2.5dvh, 36px) 12px;
+  }
+}
+
+@media (min-width: 720px) {
+.deck-text .mode-desc {
+    /* Spacing above the description now comes from the even distribution, not a margin */
+    margin-top: 0;
+  }
+}
+
+@media (min-width: 720px) {
+.deck-text .mode-name {
+    /* The name band keeps its fixed 2-line height so all three titles align */
+    margin: 0;
+  }
+}
+
+/* The description keeps exactly its two lines: the <br> splits them and nowrap
+   stops the first sentence re-wrapping on wide cards. */
+.deck-text .mode-desc {
+  white-space: nowrap;
+}
