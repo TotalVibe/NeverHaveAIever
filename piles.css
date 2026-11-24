@@ -3268,16 +3268,9 @@ body:not(.mode-most-likely):not(.mode-shot-dare).game-waiting .shot-controls {
   }
 }
 
-@media (min-width: 720px) {
-.deck-text .mode-desc {
-    /* Spacing above the description now comes from the even distribution, not a margin */
-    margin-top: 0;
-  }
-}
-
-@media (min-width: 720px) {
+/* All resolutions: a little air under the cursive title, so it visually detaches
+   from the 2-line instruction below it. This replaces the description's old
+   margin-top so the margins don't stack on mobile. */
 .deck-text .mode-name {
-    /* The name band keeps its fixed 2-line height so all three titles align */
-    margin: 0;
-  }
+  margin-bottom: clamp(8px, 1.4dvh, 22px);
 }
