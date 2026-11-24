@@ -462,6 +462,17 @@ class NeverHaveIEverApp {
     document.querySelectorAll('.shot-customise').forEach((el) => {
       this.addBorderSparkles(el, { inset: 3, count: 6, sizeMin: 5, sizeRange: 3, durMin: 7, durRange: 4 });
     });
+    // Who is playing: selected fields wear the sparkle border. The audience
+    // ticks light up when ticked and the group description does while it is
+    // focused — CSS shows their layers only in the selected state. The card
+    // intensity slider deliberately stays sparkle-free (it has its glow).
+    this.customiseModal.querySelectorAll('.customise-audience-option').forEach((chip) => {
+      this.addBorderSparkles(chip, { inset: 3, count: 8, sizeMin: 4, sizeRange: 2, durMin: 6, durRange: 4 });
+    });
+    const descriptionWrap = this.customiseModal.querySelector('.customise-description-wrap');
+    if (descriptionWrap) {
+      this.addBorderSparkles(descriptionWrap, { inset: 7, count: 12, sizeMin: 5, sizeRange: 3, durMin: 7, durRange: 5 });
+    }
     this.targetIntroTimer = setTimeout(() => this.revealTargetButtons(), 2000);
     this.updateAmbientGlow(this.activeCardCategory);
     this.bindIdleHintEvents();

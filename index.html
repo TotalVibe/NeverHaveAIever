@@ -28,7 +28,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Baumans&family=Dancing+Script:wght@700&family=Elsie+Swash+Caps:wght@400;900&family=Great+Vibes&display=swap" rel="stylesheet">
   <meta name="description" content="A party game for hilarious confessions, wild stories, and unforgettable nights.">
   <!-- Styles split by component; mobile.css loads last so responsive overrides win -->
-  <link rel="stylesheet" href="base.css?v=159">
+  <link rel="stylesheet" href="base.css?v=160">
   <link rel="stylesheet" href="cards.css?v=154">
   <link rel="stylesheet" href="piles.css?v=196">
   <link rel="stylesheet" href="mobile.css?v=164">
@@ -475,7 +475,9 @@
         </div>
       </div>
       <label class="customise-description-label" for="customise-group-description">Describe your group</label>
-      <textarea class="customise-group-description" id="customise-group-description" rows="2" maxlength="70" placeholder=""></textarea>
+      <div class="customise-description-wrap">
+        <textarea class="customise-group-description" id="customise-group-description" rows="2" maxlength="70" placeholder=""></textarea>
+      </div>
       <p class="customise-preview-note">Your group description is never saved or sent anywhere.</p>
       </div>
       <div class="customise-actions">
@@ -496,6 +498,6 @@
   <!-- Fade to Black Transition Curtain -->
   <div class="screen-fade-curtain" id="screen-fade-curtain" aria-hidden="true"></div>
 
-  <script type="module" src="app.js?v=101"></script>
+  <script type="module" src="app.js?v=102"></script>
 </body>
 </html>
