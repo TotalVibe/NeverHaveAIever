@@ -2688,11 +2688,6 @@ body:has(.age-gate-card) .classic-keys {
   }
 }
 
-.screen-fade-curtain.is-faded {
-  opacity: 1;
-  pointer-events: auto;
-}
-
 /* ===== Revisions 49: the home screen SELECT gets the same glass pill style as START ===== */
 
 .deck-play {

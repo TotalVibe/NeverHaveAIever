@@ -1222,29 +1222,6 @@ body.unhinged-screen-shake {
   }
 }
 
-/* ===== Screen Fade to Black Transition Curtain ===== */
-
-.screen-fade-curtain {
-  position: fixed;
-  inset: 0;
-  width: 100vw;
-  height: 100vh;
-  height: 100dvh;
-  background-color: #06070c;
-  z-index: 99999;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.42s cubic-bezier(0.4, 0, 0.2, 1);
-  will-change: opacity;
-}
-
-@media (prefers-reduced-motion: reduce) {
-.screen-fade-curtain {
-    transition-duration: 0.05s;
-  }
-}
-
-
 /* ===== Dare stack: slightly taller cards that overlap each other ===== */
 
 /* The cards stay 162px apart in the stack; growing them to 176px makes each card's

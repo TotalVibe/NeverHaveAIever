@@ -162,6 +162,9 @@ class NeverHaveIEverApp {
     this.setupStep = false;
     this.setupDone = false;
     this.isScreenFading = false;
+    this.fadePhase = null;
+    this.fadeCoverFallback = null;
+    this.fadeRevealFallback = null;
     this.shotPhase = 'idle';
     this.shotTimers = [];
     this.dareBag = [];
@@ -390,39 +393,99 @@ class NeverHaveIEverApp {
   }
 
   // Screen fade-to-black transition
+  //
+  // A small phase machine so the screen swap never happens while the curtain is
+  // only half down: covering → covered → revealing → idle.
+  //   covering  – curtain is fading in; the screen underneath is still live
+  //   covered   – curtain is fully black; every screen swap runs right here
+  //   revealing – curtain is lifting off the freshly painted new screen
+  //
+  // The waits come from the curtain's own CSS transition (transitionend, with a
+  // fallback derived from the computed duration), so JavaScript can never drift
+  // out of sync with the stylesheet — including the reduced-motion speed-up.
+
   fadeTransition(action, onComplete) {
-    if (this.isScreenFading) {
-      if (typeof action === 'function') action();
-      if (typeof onComplete === 'function') onComplete();
-      return;
-    }
     const curtain = document.getElementById('screen-fade-curtain');
-    if (!curtain) {
-      if (typeof action === 'function') action();
-      if (typeof onComplete === 'function') onComplete();
-      return;
-    }
-
-    this.isScreenFading = true;
-    curtain.classList.add('is-faded');
-
-    // Peak black reached (420ms)
-    setTimeout(() => {
+    const run = (fn) => {
       try {
-        if (typeof action === 'function') action();
+        if (typeof fn === 'function') fn();
       } catch (err) {
         console.error(err);
       }
+    };
+    // Curtain durations live in CSS (base.css); read them instead of guessing
+    const fadeMs = (el) => {
+      const durations = getComputedStyle(el).transitionDuration.split(',');
+      return Math.max(0, ...durations.map((d) => parseFloat(d) || 0)) * 1000;
+    };
 
-      // Soft dissolve out from black (400ms)
-      requestAnimationFrame(() => {
-        curtain.classList.remove('is-faded');
-        setTimeout(() => {
-          this.isScreenFading = false;
-          if (typeof onComplete === 'function') onComplete();
-        }, 460);
-      });
-    }, 440);
+    // A fade is already in flight. Never run a swap uncovered: while the
+    // curtain is moving, drop the request; while the screen is fully black,
+    // run the swap under the existing cover.
+    if (this.fadePhase) {
+      if (this.fadePhase === 'covered') {
+        run(action);
+        run(onComplete);
+      }
+      return;
+    }
+    if (!curtain) {
+      run(action);
+      run(onComplete);
+      return;
+    }
+
+    const setPhase = (p) => {
+      this.fadePhase = p;
+      this.isScreenFading = p !== null;
+    };
+
+    setPhase('covering');
+    curtain.classList.add('is-running', 'is-faded');
+
+    const finish = () => {
+      setPhase(null);
+      curtain.classList.remove('is-running');
+      run(onComplete);
+    };
+
+    // Lift the curtain: the double rAF guarantees the new screen has been
+    // painted under at least one fully black frame before the fade-out begins,
+    // instead of the browser coalescing the frame with the heavy DOM rebuild.
+    const reveal = () => {
+      if (this.fadePhase !== 'covered') return;
+      setPhase('revealing');
+      curtain.classList.remove('is-faded');
+      let revealed = false;
+      const onRevealed = (event) => {
+        if (event.target !== curtain || event.propertyName !== 'opacity') return;
+        if (revealed) return;
+        revealed = true;
+        curtain.removeEventListener('transitionend', onRevealed);
+        clearTimeout(this.fadeRevealFallback);
+        finish();
+      };
+      curtain.addEventListener('transitionend', onRevealed);
+      this.fadeRevealFallback = setTimeout(onRevealed, fadeMs(curtain) + 140);
+    };
+
+    // The screen swap: only ever reached once the curtain reads full black
+    const cover = () => {
+      if (this.fadePhase !== 'covering') return;
+      curtain.removeEventListener('transitionend', onCovered);
+      clearTimeout(this.fadeCoverFallback);
+      setPhase('covered');
+      run(action);
+      requestAnimationFrame(() => requestAnimationFrame(reveal));
+    };
+
+    const onCovered = (event) => {
+      if (event.target !== curtain || event.propertyName !== 'opacity') return;
+      cover();
+    };
+    curtain.addEventListener('transitionend', onCovered);
+    // Fallback: engines can skip the event when the layer is already at rest
+    this.fadeCoverFallback = setTimeout(cover, fadeMs(curtain) + 140);
   }
 
   init() {

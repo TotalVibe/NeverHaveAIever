@@ -488,6 +488,42 @@ body {
   transition: none;
 }
 
+/* ===== Screen fade-to-black transition curtain =====
+   Lies over everything during deck → game and pop-up → game handovers.
+   Its durations are read by fadeTransition() in app.js — keep them in sync
+   by editing only here. */
+
+.screen-fade-curtain {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  background-color: #06070c;
+  z-index: 99999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: opacity;
+}
+
+/* The whole transition swallows input — down, black hold and lift — so taps
+   can never land on a screen that is still half-covered or mid-swap */
+
+.screen-fade-curtain.is-running {
+  pointer-events: auto;
+}
+
+.screen-fade-curtain.is-faded {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .screen-fade-curtain {
+    transition-duration: 0.05s;
+  }
+}
+
 /* Temporary layer holding the card while it flips out for the customise pop-up.
    Sits above the modal overlay so the flip stays visible. */
 
