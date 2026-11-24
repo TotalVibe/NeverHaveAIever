@@ -30,7 +30,7 @@
   <!-- Styles split by component; mobile.css loads last so responsive overrides win -->
   <link rel="stylesheet" href="base.css?v=158">
   <link rel="stylesheet" href="cards.css?v=154">
-  <link rel="stylesheet" href="piles.css?v=195">
+  <link rel="stylesheet" href="piles.css?v=196">
   <link rel="stylesheet" href="mobile.css?v=164">
 </head>
 <body class="game-waiting">
@@ -358,7 +358,7 @@
             <kbd class="key-cue">ENTER</kbd>
           </button>
           <button class="btn-primary" id="info-lets-play-btn" type="button">
-            LET'S PLAY!
+            <span>LET'S PLAY!</span>
             <kbd class="key-cue">SPACE</kbd>
           </button>
         </div>
@@ -479,7 +479,7 @@
       <p class="customise-preview-note">Your group description is never saved or sent anywhere.</p>
       </div>
       <div class="customise-actions">
-        <button class="customise-skip-btn" type="button">Skip<kbd class="key-cue">SPACE</kbd></button>
+        <button class="customise-skip-btn" type="button"><span>Skip</span><kbd class="key-cue">SPACE</kbd></button>
         <button class="btn-primary customise-modal-done" type="button">
         <svg class="customise-save-sparkle" viewBox="0 0 24 24" aria-hidden="true">
           <path d="M12 2.8 13.9 9l6.3 2-6.3 2-1.9 6.2L10.1 13 3.8 11l6.3-2L12 2.8Z" />

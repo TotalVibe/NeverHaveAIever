@@ -1964,12 +1964,52 @@ body:has(.age-gate-card) .classic-keys {
   border-radius: 6px;
 }
 
-.info-customise-btn > span,
+/* Modal pop-ups: 3-column centering grid so the button LABEL stays dead-centre
+   of its container at every width — the spark pins to the button's left padding
+   edge and the key pill sits just right of the label, neither pulling the text
+   off-centre. (Source layout: [1fr | label | 1fr]) */
+
+#info-customise-btn,
+#info-lets-play-btn,
+.customise-actions .customise-skip-btn,
+.customise-actions .customise-modal-done {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 0;
+}
+
+#info-customise-btn > svg,
+.customise-actions .customise-modal-done > svg {
+  grid-column: 1;
+  grid-row: 1;
+  justify-self: start;
+  position: static;
+  left: auto;
+  top: auto;
+  transform: none;
+}
+
+#info-customise-btn > span,
+#info-lets-play-btn > span,
+.customise-actions .customise-skip-btn > span,
 .customise-actions .customise-modal-done > span:first-of-type {
+  grid-column: 2;
+  grid-row: 1;
   position: static;
   left: auto;
   transform: none;
   white-space: nowrap;
+  text-align: center;
+}
+
+#info-customise-btn > .key-cue,
+#info-lets-play-btn > .key-cue,
+.customise-actions .customise-skip-btn > .key-cue,
+.customise-actions .customise-modal-done > .key-cue {
+  grid-column: 3;
+  grid-row: 1;
+  justify-self: start;
 }
 
 /* Who's Most Likely: Next answers to Space (and →), so its SPACE cue
