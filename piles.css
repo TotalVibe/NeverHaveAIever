@@ -1163,6 +1163,11 @@
   /* Same fluid size as the home SELECT and the other game buttons (Revisions 52) */
   font-size: clamp(0.8rem, min(2.2vw, 2.6vh), 1.25rem);
   letter-spacing: normal;
+  /* two classes outrank mobile.css's global .customise-btn padding (loaded last):
+     its clamp(7px, 4cqi, 26px) vertical padding landed on this pill and pushed
+     CUSTOMIZE to 54px while START stayed at the fluid clamp — 0 vertical padding
+     keeps both pills on the same fluid height rule */
+  padding: 0 20px;
 }
 
 .shot-actions .shot-customise {
@@ -1180,6 +1185,16 @@
   /* Scales with the button label instead of staying at a fixed 16px */
   width: 1.1em;
   height: 1.1em;
+}
+
+/* The start-bar pill is narrow, so the spark's pinned position (cards.css pins it
+   absolutely to the left edge) lands under the centred CUSTOMIZE label. Inside the
+   bar the spark joins the flex row instead: spark, label, ENTER cue in one line. */
+
+.shot-actions .shot-customise > svg {
+  position: static;
+  transform: none;
+  flex: 0 0 auto;
 }
 
 .shot-action:hover {
