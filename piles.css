@@ -368,6 +368,13 @@
   display: inline-flex;
 }
 
+/* Level-up prompt: the pill answers NO / YES instead of Undo / Next,
+   glowing like the level-up card's purple edge shine */
+.next-pill.level-up-active {
+  border-color: rgba(184, 155, 255, 0.6);
+  box-shadow: 0 0 1em rgba(184, 155, 255, 0.35);
+}
+
 .next-arrow {
   height: 36px;
   padding: 0 14px;

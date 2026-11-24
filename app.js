@@ -108,7 +108,7 @@ function dareBackTilt() {
 }
 
 const AGE_GATE_KEY = 'never-have-ai-ever-age-confirmed';
-const LEVEL_UP_SWIPE_THRESHOLD = 15;
+const LEVEL_UP_SWIPE_THRESHOLD = 10;
 const LEVEL_UP_DONE_IT_THRESHOLD = 7;
 const SPICY_LEVEL_LABELS = {
   cheeky: 'Cheeky',
@@ -756,8 +756,9 @@ class NeverHaveIEverApp {
   }
 
   queueLevelUpPromptIfEligible() {
+    // Classic and Who most likely both deck from the spicy pool, so both offer to turn it up
     if (
-      this.gameMode === 'classic' &&
+      (this.gameMode === 'classic' || this.gameMode === 'most-likely') &&
       !this.levelUpPromptShown &&
       SPICY_LEVELS.indexOf(this.spicyLevel) < SPICY_LEVELS.length - 1 &&
       (this.swipeCount >= LEVEL_UP_SWIPE_THRESHOLD || this.doneItCount >= LEVEL_UP_DONE_IT_THRESHOLD)
@@ -769,6 +770,12 @@ class NeverHaveIEverApp {
   setLevelUpTargetMode(isActive) {
     const arena = document.querySelector('.game-arena');
     arena.classList.toggle('level-up-active', isActive);
+
+    // Who most likely has no arena buttons: the bottom pill answers NO / YES instead
+    if (this.gameMode === 'most-likely') {
+      this.setLevelUpPillMode(isActive);
+      return;
+    }
 
     const leftButton = this.targetButtons.left;
     const rightButton = this.targetButtons.right;
@@ -784,6 +791,28 @@ class NeverHaveIEverApp {
     rightButton.querySelector('.label').textContent = isActive ? 'Yes' : 'Party';
     rightButton.querySelector('.arrow-indicator').textContent = '►';
     rightButton.title = isActive ? 'Drag RIGHT or Tap Yes' : 'Drag RIGHT or Tap for Party & Chaos';
+  }
+
+  // Who most likely: the same NO / YES swap, but on the bottom pill (Undo / Next)
+  setLevelUpPillMode(isActive) {
+    const pill = this.nextPill;
+    if (!pill) return;
+    pill.classList.toggle('level-up-active', isActive);
+
+    const leftButton = pill.querySelector('.next-arrow[data-dir="left"]');
+    const rightButton = pill.querySelector('.next-arrow[data-dir="right"]');
+    const leftLabel = leftButton?.querySelector('span');
+    const rightLabel = rightButton?.querySelector('span');
+    if (leftLabel) leftLabel.textContent = isActive ? 'No' : 'Undo';
+    if (rightLabel) rightLabel.textContent = isActive ? 'Yes' : 'Next';
+    if (leftButton) {
+      leftButton.setAttribute('aria-label', isActive ? 'No, keep this level' : 'Undo');
+      leftButton.title = isActive ? 'Tap NO or ← to keep the deck as it is' : 'Undo';
+    }
+    if (rightButton) {
+      rightButton.setAttribute('aria-label', isActive ? 'Yes, turn it up' : 'Next card (Space or →)');
+      rightButton.title = isActive ? 'Tap YES, Space or → to turn it up' : 'Next card (Space or →)';
+    }
   }
 
   createLevelUpCardElement(data = {}) {
@@ -809,7 +838,9 @@ class NeverHaveIEverApp {
     card.querySelector('.prompt-text').classList.add('level-up-message');
     const choiceHint = card.querySelector('.card-hint-text');
     choiceHint.classList.add('level-up-choice-hint');
-    choiceHint.innerHTML = '<span>Swipe left ◄: NO</span><span>right: YES ►</span>';
+    choiceHint.innerHTML = this.gameMode === 'most-likely'
+      ? '<span>◄ NO (Undo)</span><span>YES (Next) ►</span>'
+      : '<span>Swipe left ◄: NO</span><span>right: YES ►</span>';
     card.querySelector('.done-it-btn').remove();
     card.querySelectorAll('.swipe-stamp').forEach(stamp => stamp.remove());
     card.querySelector('.customise-btn').remove();
@@ -914,13 +945,16 @@ class NeverHaveIEverApp {
     oldCard.style.opacity = '0';
 
     this.stackContainer.querySelectorAll('.game-card.next').forEach(card => card.remove());
-    const category = direction === 'right' ? 'spicy' : this.levelUpReturnCategory;
+    // Who most likely has no categories: both answers carry on with its own deck
+    const category = this.gameMode === 'most-likely'
+      ? 'most-likely'
+      : (direction === 'right' ? 'spicy' : this.levelUpReturnCategory);
     const nextCard = this.createCardElement({
       category,
       text: this.getRandomQuestion(category)
     }, 'current', true);
     nextCard.classList.add('card-entering');
-    const backgroundCategory = ['spicy', 'cringe', 'party', 'wholesome'][Math.floor(Math.random() * 4)];
+    const backgroundCategory = this.pickBackgroundCategory();
     const backgroundCard = this.createCardElement({
       category: backgroundCategory,
       text: this.getRandomQuestion(backgroundCategory)
@@ -2593,9 +2627,16 @@ class NeverHaveIEverApp {
       this.chooseMode();
     });
 
-    // Who most likely: the arrows move on, the same as a swipe left or right
+    // Who most likely: the arrows move on, the same as a swipe left or right.
+    // While the level-up prompt is up they answer NO / YES instead.
     document.querySelectorAll('#next-pill .next-arrow[data-dir]').forEach((arrow) => {
       arrow.addEventListener('click', () => {
+        if (this.gameMode === 'most-likely' && this.activeCard?.dataset.cardType === 'level-up') {
+          sounds.init();
+          sounds.playClick();
+          this.resolveLevelUp(arrow.dataset.dir === 'left' ? 'left' : 'right');
+          return;
+        }
         if (arrow.dataset.dir === 'left') this.undoLastCard();
         else this.handleTargetTap('right');
       });
@@ -3021,14 +3062,17 @@ class NeverHaveIEverApp {
         }
         if (e.key === 'ArrowLeft') {
           e.preventDefault();
-          this.undoLastCard();
+          // While the level-up prompt is up, ← answers NO instead of undoing
+          if (this.activeCard?.dataset.cardType === 'level-up') this.resolveLevelUp('left');
+          else this.undoLastCard();
           return;
         }
         if (e.key === ' ') {
           e.preventDefault();
-          // Space is Next (like →); Indeed is on the card via Enter
-          if (this.activeCard?.dataset.cardType === 'level-up') return;
-          this.handleTargetTap('right');
+          // Space is Next (like →); Indeed is on the card via Enter.
+          // On the level-up prompt, Space answers YES.
+          if (this.activeCard?.dataset.cardType === 'level-up') this.resolveLevelUp('right');
+          else this.handleTargetTap('right');
           return;
         }
       }
