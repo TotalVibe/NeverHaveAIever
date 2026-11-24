@@ -276,8 +276,6 @@ class NeverHaveIEverApp {
     topTarget.querySelector('.emoji').innerHTML = emojiMarkup(this.getCategoryEmoji('spicy'));
     topTarget.querySelector('.label').textContent = this.getCategoryName('spicy');
     topTarget.title = `Drag UP or Tap for ${this.getCategoryName('spicy')}`;
-    document.getElementById('guide-spicy-emoji').innerHTML = emojiMarkup(this.getCategoryEmoji('spicy'));
-    document.getElementById('guide-spicy-label').textContent = this.getCategoryName('spicy');
   }
 
   updateSpicyLevelPreview(level) {
