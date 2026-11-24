@@ -2824,7 +2824,9 @@ class NeverHaveIEverApp {
 
     // Typing owns the description box: Left/Right are caret movement and the
     // arrows only leave the box when the caret can't move further — on the
-    // first line going up, or the last line going down
+    // first line going up, or the last line going down.
+    // (The guard must spare the slider: it is an input too, but its own
+    // Left/Right / Up/Down / Space / Delete paths are handled right here.)
     if (active === description) {
       if (e.key !== 'ArrowUp' && e.key !== 'ArrowDown') return;
       const value = description.value;
@@ -2833,7 +2835,7 @@ class NeverHaveIEverApp {
         ? value.slice(0, pos).includes('\n')
         : value.slice(pos).includes('\n');
       if (caretCanMove) return;
-    } else if (active?.matches?.('input, textarea')) {
+    } else if (active !== slider && active?.matches?.('input, textarea')) {
       return;
     }
 
