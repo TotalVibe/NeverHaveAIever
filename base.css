@@ -27,9 +27,9 @@
   --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   /* Softer than a literal mobile-proportion match (~5% of card width on big
      screens); goes up from mobile but stays clearly less round than before */
-  --radius-card: clamp(22px, 3.4vmin, 100px);
+  --radius-card: clamp(22px, 3.4vmin, 80px);
   /* Prominent card/button stroke (~0.6% of a mobile card). Thin 1px accents stay in px */
-  --stroke-card: clamp(2px, 0.6vmin, 16px);
+  --stroke-card: clamp(2px, 0.5vmin, 12px);
   --radius-pill: 9999px;
   --shadow-card: 0 16px 40px -10px rgba(0, 0, 0, 0.75), 0 0 1px 1px rgba(255, 255, 255, 0.12);
 
@@ -267,7 +267,7 @@ body {
 }
 
 .target-btn .arrow-indicator {
-  font-size: clamp(0.65rem, 1.5vh, 2rem);
+  font-size: clamp(0.65rem, 1.5vh, 1.6rem);
   opacity: 0.6;
   color: var(--text-dim);
   transition: all 0.2s ease;
@@ -328,7 +328,7 @@ body {
   top: calc(50% - 24px);
   transform: translateY(-50%);
   width: clamp(52px, min(8vw, 13vh), 180px);
-  height: clamp(90px, 15vh, 560px);
+  height: clamp(90px, 14vh, 440px);
   padding: clamp(16px, 2.4vh, 56px) 4px;
   border-right: 2px solid rgba(255, 146, 43, 0.72);
   gap: 8px;
@@ -352,7 +352,7 @@ body {
   top: calc(50% - 24px);
   transform: translateY(-50%);
   width: clamp(52px, min(8vw, 13vh), 180px);
-  height: clamp(90px, 15vh, 560px);
+  height: clamp(90px, 14vh, 440px);
   padding: clamp(16px, 2.4vh, 56px) 4px;
   border-left: 2px solid rgba(32, 201, 151, 0.72);
   gap: 8px;
@@ -889,9 +889,9 @@ body {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  margin: clamp(9px, 1.8vmin, 36px);
-  border: clamp(1.5px, 0.34vmin, 7px) solid rgba(255, 255, 255, 0.16);
-  border-radius: calc(var(--radius-card) - clamp(9px, 1.8vmin, 36px));
+  margin: clamp(9px, 1.4vmin, 26px);
+  border: clamp(1.5px, 0.28vmin, 5px) solid rgba(255, 255, 255, 0.16);
+  border-radius: calc(var(--radius-card) - clamp(9px, 1.4vmin, 26px));
   padding: 25px 14px 23px;
   gap: 17px;
   background: radial-gradient(circle at 50% 50%, rgba(25, 29, 44, 0.65) 0%, rgba(13, 16, 26, 0.88) 100%);
@@ -1295,21 +1295,21 @@ body {
 
 @media (min-width: 768px) and (min-height: 760px) {
 .target-btn .emoji {
-    /* Fluid and generous on monitors/TVs: follows both axes so emojis stay large but never clip */
-    font-size: clamp(2.6rem, min(5vw, 7vh), 11rem);
+    /* Fluid on monitors/TVs, but a gentler step up than the first pass */
+    font-size: clamp(2.4rem, min(4.2vw, 5.8vh), 8rem);
   }
 }
 
 @media (min-width: 768px) and (min-height: 760px) {
 .target-btn .label {
-    font-size: clamp(0.8rem, 1.4vw, 2.4rem);
+    font-size: clamp(0.8rem, 1.2vw, 1.9rem);
   }
 }
 
 @media (min-width: 768px) and (min-height: 760px) {
 .target-btn.target-left,
   .target-btn.target-right {
-    width: clamp(76px, 9vw, 460px);
+    width: clamp(76px, 9vw, 320px);
   }
 }
 
