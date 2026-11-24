@@ -588,8 +588,8 @@
   background-color: #111420;
   background-image:
     radial-gradient(circle at 50% 40%, rgba(255, 45, 117, 0.18) 0%, transparent 70%),
-    repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.04) 0px, rgba(255, 255, 255, 0.04) 1.5px, transparent 1.5px, transparent 14px),
-    repeating-linear-gradient(-45deg, rgba(255, 255, 255, 0.04) 0px, rgba(255, 255, 255, 0.04) 1.5px, transparent 1.5px, transparent 14px);
+    repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.04) 0px, rgba(255, 255, 255, 0.04) clamp(1.5px, 0.25vmin, 6px), transparent clamp(1.5px, 0.25vmin, 6px), transparent clamp(14px, 2.2vmin, 40px)),
+    repeating-linear-gradient(-45deg, rgba(255, 255, 255, 0.04) 0px, rgba(255, 255, 255, 0.04) clamp(1.5px, 0.25vmin, 6px), transparent clamp(1.5px, 0.25vmin, 6px), transparent clamp(14px, 2.2vmin, 40px));
 }
 
 .shot-dare-back {
@@ -815,10 +815,10 @@
 
 .deck-frame {
   position: absolute;
-  inset: 9px;
+  inset: clamp(9px, 1.8vmin, 36px);
   z-index: 0;
-  border: 1.5px solid rgba(255, 255, 255, 0.18);
-  border-radius: calc(var(--radius-card) - 9px);
+  border: clamp(1.5px, 0.34vmin, 7px) solid rgba(255, 255, 255, 0.18);
+  border-radius: calc(var(--radius-card) - clamp(9px, 1.8vmin, 36px));
   pointer-events: none;
 }
 
@@ -905,10 +905,10 @@
 
 .dare-frame {
   position: absolute;
-  inset: 7px;
+  inset: clamp(7px, 1.4vmin, 30px);
   z-index: 0;
-  border: 1.5px solid rgba(255, 255, 255, 0.16);
-  border-radius: calc(var(--radius-card) - 9px);
+  border: clamp(1.5px, 0.34vmin, 7px) solid rgba(255, 255, 255, 0.16);
+  border-radius: calc(var(--radius-card) - clamp(7px, 1.4vmin, 30px));
   pointer-events: none;
 }
 
@@ -1192,15 +1192,15 @@
   border-radius: calc(var(--radius-card) - 2px);
 }
 
-/* Rotating edge: exactly over the 2px border, same outer corner radius */
+/* Rotating edge: exactly over the card border (same fluid stroke), same outer corner radius */
 
 .deck-option::before {
   content: '';
   position: absolute;
-  inset: -2px;
+  inset: calc(-1 * var(--stroke-card));
   z-index: 3;
   border-radius: var(--radius-card);
-  padding: 2px;
+  padding: var(--stroke-card);
   background: conic-gradient(
     from var(--deck-angle),
     transparent 0deg 200deg,
@@ -1250,7 +1250,7 @@
 
 .shot-dare-back,
 .shot-dare-front {
-  box-shadow: inset 0 0 0 5px rgba(0, 0, 0, 0.45);
+  box-shadow: inset 0 0 0 clamp(5px, 0.8vmin, 18px) rgba(0, 0, 0, 0.45);
 }
 
 /* ===== Revisions 5: glow by deck colour, pattern on the cards, stacks, larger mode screens ===== */
@@ -3202,8 +3202,8 @@ body:not(.mode-most-likely):not(.mode-shot-dare).game-waiting .shot-controls {
   border-color: hsla(var(--hue), 85%, 66%, 0.32);
   background-image:
     radial-gradient(circle at 50% 40%, hsla(var(--hue), 95%, 60%, 0.17) 0%, transparent 70%),
-    repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.04) 0px, rgba(255, 255, 255, 0.04) 1.5px, transparent 1.5px, transparent 14px),
-    repeating-linear-gradient(-45deg, rgba(255, 255, 255, 0.04) 0px, rgba(255, 255, 255, 0.04) 1.5px, transparent 1.5px, transparent 14px);
+    repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.04) 0px, rgba(255, 255, 255, 0.04) clamp(1.5px, 0.25vmin, 6px), transparent clamp(1.5px, 0.25vmin, 6px), transparent clamp(14px, 2.2vmin, 40px)),
+    repeating-linear-gradient(-45deg, rgba(255, 255, 255, 0.04) 0px, rgba(255, 255, 255, 0.04) clamp(1.5px, 0.25vmin, 6px), transparent clamp(1.5px, 0.25vmin, 6px), transparent clamp(14px, 2.2vmin, 40px));
 }
 
 /* The revealed face keeps the stronger accent the pink border had, but in the card's hue */
