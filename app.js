@@ -2368,9 +2368,18 @@ class NeverHaveIEverApp {
         this.customiseModal.classList.add('active');
       }
       this.flipModalIn();
-      // Focus starts on the first audience tick so pressing an arrow or Space
-      // begins in the pop-up's flow, not on the close ✕ in the corner
-      this.customiseModal.querySelector('.customise-audience-option')?.focus({ preventScroll: true });
+      // Focus starts on the first audience tick (Mostly men) so pressing an
+      // arrow or Space begins in the pop-up's flow, not on the close ✕ in the
+      // corner. The re-assert rides out the 160ms flip-in delay, which can
+      // still be settling when the first key lands.
+      const focusFirstTick = () => {
+        // Leave any focus that already moved inside the pop-up alone
+        if (this.customiseModal.contains(document.activeElement)) return;
+        this.customiseModal.querySelector('.customise-audience-option')?.focus({ preventScroll: true });
+        this.customiseKeyCol = 0;
+      };
+      focusFirstTick();
+      setTimeout(focusFirstTick, 180);
       this.updateSpicyLevelPreview(this.spicyLevel);
     };
     this.openCustomiseModal = openCustomiseModal;
@@ -2783,15 +2792,35 @@ class NeverHaveIEverApp {
     const modal = this.customiseModal;
     const slider = modal.querySelector('.customise-level-slider');
     const description = modal.querySelector('.customise-group-description');
-    const active = document.activeElement;
     // Most key events land on the focused element, but a slider that was
     // clicked (some browsers don't focus it) reports itself as the target
+    let active = document.activeElement;
+    let reanchored = false;
+    // A key press with nothing focused inside the pop-up (opening animation,
+    // a stray click) anchors itself on the first tick, Mostly men, first
+    if (!modal.contains(active)) {
+      active = modal.querySelector('.customise-audience-option');
+      active?.focus({ preventScroll: true });
+      this.customiseKeyCol = 0;
+      reanchored = true;
+    }
     const onSlider = active === slider || e.target === slider;
 
-    // The slider owns Left/Right (and Home/End): each press steps the heat
-    // natively and fires its input handler, which refreshes the preview.
-    // Up and Down push past it, to the chips above and the description below.
-    if (onSlider && (e.key === 'ArrowLeft' || e.key === 'ArrowRight' || e.key === 'Home' || e.key === 'End')) return;
+    // The slider steps the heat on Left/Right (stepped here, not natively, so
+    // it works whether or not the browser gave the range real focus) and
+    // pushes past itself on Up/Down, to the chips above and the box below
+    if (onSlider && (e.key === 'ArrowLeft' || e.key === 'ArrowRight')) {
+      e.preventDefault();
+      const direction = e.key === 'ArrowRight' ? 1 : -1;
+      const nextIndex = Math.min(SPICY_LEVELS.length - 1, Math.max(0, Number(slider.value) + direction));
+      if (String(nextIndex) !== slider.value) {
+        slider.value = String(nextIndex);
+        this.updateSpicyLevelPreview(SPICY_LEVELS[nextIndex]);
+        sounds.playClick();
+      }
+      return;
+    }
+    if (onSlider && (e.key === 'Home' || e.key === 'End')) return;
 
     // Typing owns the description box: Left/Right are caret movement and the
     // arrows only leave the box when the caret can't move further — on the
@@ -2810,16 +2839,18 @@ class NeverHaveIEverApp {
 
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
-      // Both press whatever is focused: an audience tick, the close ✕, Skip or Save.
-      // With nothing focused, Enter alone saves — Space deliberately does nothing
-      // so it can't skip by accident. The slider is left alone on Space
-      // (Enter there confirms the level by saving).
-      if (modal.contains(active) && active.matches?.('button')) {
+      // A focused control gets pressed: an audience tick, the close ✕, Skip or Save
+      if (!reanchored && modal.contains(active) && active.matches?.('button')) {
         active.click();
         return;
       }
+      // With nothing in focus: Enter saves (only Enter does, as the SAVE AND
+      // PLAY pill says); Space ticks Mostly men so the pop-up reacts at once.
+      // Space stays inert on the slider, which has nothing to press.
       if (e.key === 'Enter') {
         modal.querySelector('.customise-modal-done').click();
+      } else if (!onSlider) {
+        modal.querySelector('.customise-audience-option')?.click();
       }
       return;
     }
