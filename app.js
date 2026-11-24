@@ -2266,8 +2266,24 @@ class NeverHaveIEverApp {
     const depth = Math.max(1200, rect.width * 2.2);
     const box = document.createElement('div');
     box.style.cssText = `position:fixed;left:${rect.left}px;top:${rect.top}px;width:${rect.width}px;height:${rect.height}px;container-type:inline-size;perspective:${depth}px;pointer-events:none;`;
-    ghost.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;margin:0;transform:none;transition:none;pointer-events:none;';
+    // The clone has left its #info-modal / #customise-modal subtree, so ID-scoped sizing
+    // (width: clamp(480px, 86vmin, 1120px) at >=720px) no longer matches and the base
+    // .modal-content max-width: 480px cap snaps it small, anchored to the box's left edge —
+    // the "collapse into the left" on wide screens. Clear the maxes so the fixed box
+    // (sized from the measured rect) is the sole source of truth for the clone's geometry.
+    // Inline width can never beat a max-width cap, so max-width/max-height must go too.
+    ghost.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;margin:0;max-width:none;max-height:none;transform:none;transition:none;pointer-events:none;';
     box.append(ghost);
+    // Carry over scrolled content: the clone's scroll containers reset to the top, which
+    // would make a scrolled How to Play list visibly jump during the flip
+    const originalEls = [element, ...element.querySelectorAll('*')];
+    const cloneEls = [ghost, ...ghost.querySelectorAll('*')];
+    originalEls.forEach((el, i) => {
+      const copy = cloneEls[i];
+      if (!copy) return;
+      if (el.scrollTop) copy.scrollTop = el.scrollTop;
+      if (el.scrollLeft) copy.scrollLeft = el.scrollLeft;
+    });
     stage.append(box);
     document.body.append(stage);
     element.style.visibility = 'hidden';
