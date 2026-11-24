@@ -745,14 +745,24 @@
   min-height: clamp(46px, 5.5vmin, 76px);
   margin: 0;
   padding: 0 8px;
-  border-radius: 14px;
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  background: rgba(255, 255, 255, 0.06);
-  color: var(--text-soft);
+  /* Same dark glassmorphism pill as START, SELECT, LET'S PLAY! and SAVE AND PLAY */
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(18, 21, 32, 0.72);
+  color: var(--text-main);
   font-size: 0.85rem;
   font-weight: 700;
   text-decoration: none;
   cursor: pointer;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.customise-actions .customise-skip-btn:hover,
+.customise-actions .customise-skip-btn:focus-visible {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.26);
 }
 
 .customise-actions .customise-modal-done {

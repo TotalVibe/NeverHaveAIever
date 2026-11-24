@@ -1166,18 +1166,19 @@ body {
 
 .info-reverse:not(.customise-modal-content) .info-customise-btn {
   position: relative;
-  background: linear-gradient(135deg, #7453b8, #593b9a 55%, #463078);
-  border: 1px solid rgba(198, 173, 255, 0.48);
-  box-shadow: 0 0 16px rgba(164, 125, 255, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.12);
-  -webkit-backdrop-filter: blur(8px);
-  backdrop-filter: blur(8px);
+  /* Card style: the game card's dark surface, radius and white stroke */
+  border-radius: var(--radius-card);
+  border: var(--stroke-card) solid rgba(255, 255, 255, 0.28);
+  background: linear-gradient(150deg, #1c2233 0%, #131826 52%, #0d1019 100%);
+  box-shadow: 0 8px 20px -6px rgba(0, 0, 0, 0.6), 0 0 1px 1px rgba(255, 255, 255, 0.14);
   transition: background 0.35s ease, box-shadow 0.35s ease, transform 0.25s ease, opacity 0.25s ease;
 }
 
 .info-reverse:not(.customise-modal-content) .info-customise-btn:hover,
 .info-reverse:not(.customise-modal-content) .info-customise-btn:focus-visible {
-  background: linear-gradient(135deg, #8261c7, #6748a7 55%, #513986);
-  box-shadow: 0 10px 28px rgba(128, 83, 207, 0.58), 0 0 18px rgba(164, 125, 255, 0.34), inset 0 1px 0 rgba(255, 255, 255, 0.22);
+  background: linear-gradient(150deg, #262e44 0%, #1a2132 52%, #131724 100%);
+  border-color: rgba(255, 255, 255, 0.34);
+  box-shadow: 0 12px 28px -6px rgba(0, 0, 0, 0.7), 0 0 1px 1px rgba(255, 255, 255, 0.18);
 }
 
 .btn-primary {
@@ -1204,27 +1205,31 @@ body {
 
 .info-reverse:not(.customise-modal-content) .btn-primary:hover,
 .info-reverse:not(.customise-modal-content) .btn-primary:focus-visible {
-  background: linear-gradient(135deg, #8261c7, #6748a7 55%, #513986);
-  border-color: rgba(198, 173, 255, 0.48);
-  box-shadow: 0 10px 28px rgba(128, 83, 207, 0.58), 0 0 18px rgba(164, 125, 255, 0.34), inset 0 1px 0 rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.26);
+  box-shadow: none;
 }
 
-/* Red action buttons — keep red hue, add subtle elevation matching purple customise buttons */
+/* Action buttons: the dark glassmorphism pill used by START and SELECT */
 
 #info-lets-play-btn,
 .customise-modal-done {
-  border: 1px solid rgba(255, 45, 117, 0.45);
-  box-shadow: 0 0 16px rgba(255, 45, 117, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.12);
-  -webkit-backdrop-filter: blur(8px);
-  backdrop-filter: blur(8px);
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(18, 21, 32, 0.72);
+  color: #fff;
+  box-shadow: none;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
 }
 
-/* How to Play button: hover matches the purple buttons, not the red border and glow */
-
 #info-lets-play-btn:hover,
-#info-lets-play-btn:focus-visible {
-  border-color: rgba(198, 173, 255, 0.48);
-  box-shadow: 0 10px 28px rgba(128, 83, 207, 0.58), 0 0 18px rgba(164, 125, 255, 0.34), inset 0 1px 0 rgba(255, 255, 255, 0.22);
+#info-lets-play-btn:focus-visible,
+.customise-modal-done:hover,
+.customise-modal-done:focus-visible {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.26);
+  box-shadow: none;
 }
 
 /* Floating Confetti Canvas */
