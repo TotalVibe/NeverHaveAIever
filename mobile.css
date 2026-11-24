@@ -420,10 +420,11 @@ body.unhinged-screen-shake {
   transition: opacity 0.25s ease;
 }
 
-/* Widescreens and TVs: the How to Play pop-up grows with the viewport instead of
+/* Widescreens and TVs: the pop-ups grow with the viewport instead of
    stopping at phone width (phones keep filling the screen below 720px) */
 @media (min-width: 720px) {
-  #info-modal .modal-content {
+  #info-modal .modal-content,
+  #customise-modal .modal-content {
     width: clamp(480px, 86vmin, 1120px);
     max-width: min(92vw, 1120px);
     max-height: 88vh;
