@@ -2095,7 +2095,13 @@ class NeverHaveIEverApp {
       const back = card.querySelector('.dare-back-emoji');
       back.dataset.dareEmoji = DARE_CATEGORIES[key].emoji;
       back.innerHTML = dareCardPattern(DARE_CATEGORIES[key].emoji);
-      card.style.setProperty('--tilt', `${(Math.random() * 8 - 4).toFixed(1)}deg`);
+      // Toss landing: each card gets its own random tilt, plus small sideways and
+      // up-down offsets, so the stack never reads as neatly gridded rows. The CSS
+      // on mobile bakes these into the resting transform; the pixel amounts stay
+      // small so every card's frame (and the tap target) still fully shows.
+      card.style.setProperty('--tilt', `${(Math.random() * 16 - 8).toFixed(1)}deg`);
+      card.style.setProperty('--ax', `${(Math.random() * 32 - 16).toFixed(1)}px`);
+      card.style.setProperty('--ay', `${(Math.random() * 20 - 10).toFixed(1)}px`);
       const hue = (baseHue + index * 120 + Math.floor(Math.random() * 36) - 18 + 360) % 360;
       card.style.setProperty('--hue', String(hue));
     });

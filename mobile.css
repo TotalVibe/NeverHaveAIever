@@ -1163,9 +1163,10 @@ body.unhinged-screen-shake {
 }
 
 @media (max-width: 719px) {
-/* No pre-selected focus lift or glowing box-shadow on mobile */
+/* No pre-selected focus lift or glowing box-shadow on mobile; keep the tossed
+   offsets so a highlighted card doesn't snap back to a straight, gridded spot */
 .shot-dare.is-focus:not(.is-revealed) {
-    transform: translateX(-50%) rotate(var(--tilt, 0deg));
+    transform: translateX(calc(-50% + var(--ax, 0px))) translateY(var(--ay, 0px)) rotate(var(--tilt, 0deg));
     z-index: 1;
   }
 }

@@ -2058,7 +2058,9 @@ body:has(.age-gate-card) .classic-keys {
 }
 
 @media (max-width: 719px) {
-/* Each card is centred on the row, then tilted at its own random angle, as if laid on a table */
+/* Each card is centred on the row, then tossed: app.js gives each one a random
+   tilt plus small sideways/up-down offsets (--tilt/--ax/--ay), so the vertical
+   stack lands like cards thrown onto a table rather than a tidy grid */
 .shot-dare {
     position: absolute;
     left: 50%;
@@ -2067,7 +2069,7 @@ body:has(.age-gate-card) .classic-keys {
     height: 150px;
     aspect-ratio: auto;
     container-type: size;
-    transform: translateX(-50%) rotate(var(--tilt, 0deg));
+    transform: translateX(calc(-50% + var(--ax, 0px))) translateY(var(--ay, 0px)) rotate(var(--tilt, 0deg));
     z-index: 1;
     -webkit-tap-highlight-color: transparent;
     user-select: none;
