@@ -3243,8 +3243,9 @@ body:not(.mode-most-likely):not(.mode-shot-dare).game-waiting .shot-controls {
 
 /* Card back: a dense checkerboard of the category emoji, big and small
    alternating in a quincunx (the small ones fill the gaps between the big ones),
-   all upright. Sizing follows the inspiration pattern: big emoji ≈ 1/8 of the
-   card width's neighbour spacing, small ≈ half the big one. */
+   all upright. Big emojis are oversized well past their cell (grid spacing is
+   untouched) so neighbours touch and overlap, and each carries a double internal
+   stroke in the card's assigned hue (rule below). */
 
 .shot-dare-back .dare-back-emoji {
   position: absolute;
@@ -3258,20 +3259,61 @@ body:not(.mode-most-likely):not(.mode-shot-dare).game-waiting .shot-controls {
   font-size: 0; /* each cell sets its own size */
 }
 
-/* Every emoji keeps its cell centre (its "position") but is oversized so
-   neighbours overlap; --rot is the random tilt set per emoji in app.js */
+/* Every emoji keeps its cell centre (its "position") but is well oversized so
+   neighbours overlap and touch while the grid spacing stays put; --rot is the
+   random tilt set per emoji in app.js */
 .dare-pattern-big,
 .dare-pattern-small {
   transform: rotate(var(--rot, 0deg));
+  /* Double stroke in each card's assigned hue (--hue from app.js). Colour emoji
+     glyphs ignore -webkit-text-stroke, so the rings are traced the way sticker
+     outlines are in CSS: a stack of full-glyph silhouette shadows around the
+     edge, with the glyph fill painted over them. Inner ring: a solid bright
+     hairline. Outer ring: wider, more translucent — together they read as a
+     double internal stroke traced onto each emoji. */
+  text-shadow:
+    /* Inner ring — 12 directions, r ≈ 0.030em */
+    0.030em  0.000em 0 hsl(var(--hue, 340) 95% 74%),
+    0.026em  0.015em 0 hsl(var(--hue, 340) 95% 74%),
+    0.015em  0.026em 0 hsl(var(--hue, 340) 95% 74%),
+    0.000em  0.030em 0 hsl(var(--hue, 340) 95% 74%),
+   -0.015em  0.026em 0 hsl(var(--hue, 340) 95% 74%),
+   -0.026em  0.015em 0 hsl(var(--hue, 340) 95% 74%),
+   -0.030em  0.000em 0 hsl(var(--hue, 340) 95% 74%),
+   -0.026em -0.015em 0 hsl(var(--hue, 340) 95% 74%),
+   -0.015em -0.026em 0 hsl(var(--hue, 340) 95% 74%),
+    0.000em -0.030em 0 hsl(var(--hue, 340) 95% 74%),
+    0.015em -0.026em 0 hsl(var(--hue, 340) 95% 74%),
+    0.026em -0.015em 0 hsl(var(--hue, 340) 95% 74%),
+    /* Outer ring — 16 directions, r ≈ 0.060em */
+    0.0600em  0.0000em 0 hsl(var(--hue, 340) 90% 64% / 0.6),
+    0.0554em  0.0230em 0 hsl(var(--hue, 340) 90% 64% / 0.6),
+    0.0424em  0.0424em 0 hsl(var(--hue, 340) 90% 64% / 0.6),
+    0.0230em  0.0554em 0 hsl(var(--hue, 340) 90% 64% / 0.6),
+    0.0000em  0.0600em 0 hsl(var(--hue, 340) 90% 64% / 0.6),
+   -0.0230em  0.0554em 0 hsl(var(--hue, 340) 90% 64% / 0.6),
+   -0.0424em  0.0424em 0 hsl(var(--hue, 340) 90% 64% / 0.6),
+   -0.0554em  0.0230em 0 hsl(var(--hue, 340) 90% 64% / 0.6),
+   -0.0600em  0.0000em 0 hsl(var(--hue, 340) 90% 64% / 0.6),
+   -0.0554em -0.0230em 0 hsl(var(--hue, 340) 90% 64% / 0.6),
+   -0.0424em -0.0424em 0 hsl(var(--hue, 340) 90% 64% / 0.6),
+   -0.0230em -0.0554em 0 hsl(var(--hue, 340) 90% 64% / 0.6),
+    0.0000em -0.0600em 0 hsl(var(--hue, 340) 90% 64% / 0.6),
+    0.0230em -0.0554em 0 hsl(var(--hue, 340) 90% 64% / 0.6),
+    0.0424em -0.0424em 0 hsl(var(--hue, 340) 90% 64% / 0.6),
+    0.0554em -0.0230em 0 hsl(var(--hue, 340) 90% 64% / 0.6);
 }
 
+/* Big glyphs run at ~1.56× the cell width, so each emoji crosses into its
+   four diagonal neighbours; the small ones (half the big size) still sit
+   visible in the gaps between them. Grid spacing itself is unchanged. */
 .dare-back-emoji .dare-pattern-big {
-  font-size: 21cqw;
+  font-size: 26cqw;
   line-height: 1;
 }
 
 .dare-back-emoji .dare-pattern-small {
-  font-size: 10.5cqw;
+  font-size: 13cqw;
   line-height: 1;
 }
 
