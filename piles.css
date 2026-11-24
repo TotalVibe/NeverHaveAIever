@@ -3260,6 +3260,15 @@ body:not(.mode-most-likely):not(.mode-shot-dare).game-waiting .shot-controls {
 }
 
 @media (min-width: 720px) {
+.deck-text {
+    /* Base rule gives .deck-text flex:1 (deck-row layout); in the column layout that
+       makes it swallow all free space below the title. On wide cards it must hug its
+       content, so space-evenly distributes emoji / title / description from the centre. */
+    flex: 0 0 auto;
+  }
+}
+
+@media (min-width: 720px) {
 .deck-text .mode-desc {
     /* Spacing above the description now comes from the even distribution, not a margin */
     margin-top: 0;
@@ -3271,10 +3280,4 @@ body:not(.mode-most-likely):not(.mode-shot-dare).game-waiting .shot-controls {
     /* The name band keeps its fixed 2-line height so all three titles align */
     margin: 0;
   }
-}
-
-/* The description keeps exactly its two lines: the <br> splits them and nowrap
-   stops the first sentence re-wrapping on wide cards. */
-.deck-text .mode-desc {
-  white-space: nowrap;
 }
