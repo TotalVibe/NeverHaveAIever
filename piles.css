@@ -3239,15 +3239,23 @@ body:not(.mode-most-likely):not(.mode-shot-dare).game-waiting .shot-controls {
 
 /* ===== Revisions 61: deck cards — emoji, title and description spread evenly on wide screens ===== */
 
-/* On wide screens the card is a tall portrait, so the three content blocks no longer
-   bunch around the centre with leftover space at the bottom: spacing is distributed
-   evenly above, between and below them. Phones keep the centred slider layout. */
+/* All resolutions: symmetric breathing room inside the card, above the emoji and
+   below the description (earlier revisions leaned top-heavy, leaving the bottom bare). */
+
+.deck-option {
+  padding-top: clamp(16px, 3.4dvh, 54px);
+  padding-bottom: clamp(16px, 3.4dvh, 54px);
+}
+
+/* On wide screens the card is a tall portrait, so the three content blocks also
+   share the remaining height evenly between them. Phones keep the centred layout. */
 
 @media (min-width: 720px) {
 .deck-option {
     justify-content: space-evenly;
     gap: 0;
-    padding: clamp(10px, 2.5dvh, 36px) 12px;
+    padding-left: 12px;
+    padding-right: 12px;
   }
 }
 
