@@ -2119,8 +2119,24 @@ class NeverHaveIEverApp {
     if (!card || !card.classList.contains('face-down')) return;
     // The intro flourishes (blurb, customize button) live on the back; drop them
     // as the card joins play.
-    card.classList.remove('intro-card', 'face-down');
-    sounds.playSnapBack();
+    card.classList.remove('intro-card');
+
+    // Replay the same two-beat reveal the deck deals on every swipe:
+    // first the card-enter motion (lift and tilt)…
+    card.classList.remove('card-entering');
+    void card.offsetWidth; // restart the animation even if the class survived
+    card.classList.add('card-entering');
+    card.addEventListener('animationend', (event) => {
+      if (event.target === card && event.animationName === 'card-enter') {
+        card.classList.remove('card-entering');
+      }
+    }, { once: true });
+
+    // …then the 3D flip to the question face, on the same beat as in-game reveals.
+    setTimeout(() => {
+      card.classList.remove('face-down');
+      sounds.playSnapBack();
+    }, GAME_PACE.flipDelayMs);
     this.resetIdleHint();
   }
 
