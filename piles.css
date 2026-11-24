@@ -2058,9 +2058,7 @@ body:has(.age-gate-card) .classic-keys {
 }
 
 @media (max-width: 719px) {
-/* Each card is centred on the row, then tossed: app.js gives each one a random
-   tilt plus small sideways/up-down offsets (--tilt/--ax/--ay), so the vertical
-   stack lands like cards thrown onto a table rather than a tidy grid */
+/* Each card is centred on the row, then tilted at its own random angle, as if laid on a table */
 .shot-dare {
     position: absolute;
     left: 50%;
@@ -2069,7 +2067,7 @@ body:has(.age-gate-card) .classic-keys {
     height: 150px;
     aspect-ratio: auto;
     container-type: size;
-    transform: translateX(calc(-50% + var(--ax, 0px))) translateY(var(--ay, 0px)) rotate(var(--tilt, 0deg));
+    transform: translateX(-50%) rotate(var(--tilt, 0deg));
     z-index: 1;
     -webkit-tap-highlight-color: transparent;
     user-select: none;
@@ -3241,61 +3239,41 @@ body:not(.mode-most-likely):not(.mode-shot-dare).game-waiting .shot-controls {
   z-index: 5;
 }
 
-/* Card back: a mountain of the category emoji. Layout: app.js generates a
-   jittered hex-packed lattice of points and drops one emoji dead-centre on
-   every point (left/top, --sz, --rot all randomised) — positions are % of the
-   card, sizes in cqw, so the same math works on every card shape. Densities
-   are chosen in app.js so the emoji INK (≈72% of the em box, glyphs carry
-   transparent padding) covers the card at the minimum jittered size with full
-   scatter: the background cannot show. Emojis bleed off every edge and the
-   overflow clip keeps the pile inside the rounded corners. */
+/* Card back: a dense checkerboard of the category emoji, big and small
+   alternating in a quincunx (the small ones fill the gaps between the big ones),
+   all upright. Sizing follows the inspiration pattern: big emoji ≈ 1/8 of the
+   card width's neighbour spacing, small ≈ half the big one. */
 
 .shot-dare-back .dare-back-emoji {
   position: absolute;
-  inset: 0;
-  overflow: hidden;
+  inset: 0; /* full bleed: oversized emojis run off the card edge... */
+  overflow: hidden; /* ...and are clipped by the card's own rounded corners */
   border-radius: inherit;
-  /* Emoji em box at --sz 1 (portrait 33, phone 27 — sizes are ink-overlap-verified
-     in app.js for full-range rotations). Stacking order comes from app.js too: each
-     glyph gets a random z-index, so emojis bury each other like a real pile. */
-  --pattern-em: 30cqw;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: repeat(8, 1fr);
+  place-items: center;
+  font-size: 0; /* each cell sets its own size */
 }
 
-/* One emoji, dead-centre on its lattice point, randomly sized and tilted */
-.dare-pattern {
-  position: absolute;
-  transform: translate(-50%, -50%) rotate(var(--rot, 0deg));
-  font-size: calc(var(--sz, 1) * var(--pattern-em, 30cqw));
+/* Every emoji keeps its cell centre (its "position") but is oversized so
+   neighbours overlap; --rot is the random tilt set per emoji in app.js */
+.dare-pattern-big,
+.dare-pattern-small {
+  transform: rotate(var(--rot, 0deg));
+}
+
+.dare-back-emoji .dare-pattern-big {
+  font-size: 21cqw;
   line-height: 1;
-  /* Double stroke in each card's assigned hue (--hue from app.js). Colour emoji
-     glyphs ignore -webkit-text-stroke, so the rings are traced the way sticker
-     outlines are in CSS: a stack of full-glyph silhouette shadows around the
-     edge, with the glyph fill painted over them. Inner ring: a solid bright
-     hairline. Outer ring: wider, more translucent — together they read as a
-     double internal stroke traced onto each emoji. (8 + 8 directions is enough:
-     each ring copy is a whole glyph silhouette, so neighbours overlap heavily.) */
-  text-shadow:
-    /* Inner ring — 8 directions, r ≈ 0.030em */
-    0.030em 0.000em 0 hsl(var(--hue, 340) 95% 74%),
-    0.021em 0.021em 0 hsl(var(--hue, 340) 95% 74%),
-    0.000em 0.030em 0 hsl(var(--hue, 340) 95% 74%),
-   -0.021em 0.021em 0 hsl(var(--hue, 340) 95% 74%),
-   -0.030em 0.000em 0 hsl(var(--hue, 340) 95% 74%),
-   -0.021em -0.021em 0 hsl(var(--hue, 340) 95% 74%),
-    0.000em -0.030em 0 hsl(var(--hue, 340) 95% 74%),
-    0.021em -0.021em 0 hsl(var(--hue, 340) 95% 74%),
-    /* Outer ring — 8 directions, r ≈ 0.060em */
-    0.060em 0.000em 0 hsl(var(--hue, 340) 90% 64% / 0.6),
-    0.042em 0.042em 0 hsl(var(--hue, 340) 90% 64% / 0.6),
-    0.000em 0.060em 0 hsl(var(--hue, 340) 90% 64% / 0.6),
-   -0.042em 0.042em 0 hsl(var(--hue, 340) 90% 64% / 0.6),
-   -0.060em 0.000em 0 hsl(var(--hue, 340) 90% 64% / 0.6),
-   -0.042em -0.042em 0 hsl(var(--hue, 340) 90% 64% / 0.6),
-    0.000em -0.060em 0 hsl(var(--hue, 340) 90% 64% / 0.6),
-    0.042em -0.042em 0 hsl(var(--hue, 340) 90% 64% / 0.6);
 }
 
-/* ===== Revisions 60: dare cards — per-card hue tint + one-by-one jitter ===== */
+.dare-back-emoji .dare-pattern-small {
+  font-size: 10.5cqw;
+  line-height: 1;
+}
+
+/* ===== Revisions 60: dare cards — per-card hue tint ===== */
 
 /* Each dealt card gets its own --hue from app.js (three hues spread around the
    wheel). The faces, borders and frame lines pick it up subtly; layout untouched. */
@@ -3321,26 +3299,6 @@ body:not(.mode-most-likely):not(.mode-shot-dare).game-waiting .shot-controls {
 
 .shot-dare .dare-frame {
   border-color: hsla(var(--hue), 80%, 70%, 0.24);
-}
-
-/* Jitter: shivers through the individual translate/rotate properties, which
-   compose with (rather than override) each card's resting transform — the fan
-   offsets and the random --tilt stay exactly where they were. */
-@keyframes dare-card-jitter {
-  0%, 100% { translate: 0 0; rotate: 0deg; }
-  25% { translate: 1.6% -1.8%; rotate: 1.3deg; }
-  50% { translate: -1.4% 1.4%; rotate: -1.5deg; }
-  75% { translate: 1% 1.8%; rotate: 0.9deg; }
-}
-
-.shot-dare.is-jitter {
-  animation: dare-card-jitter 0.45s ease-in-out;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .shot-dare.is-jitter {
-    animation: none;
-  }
 }
 
 /* ===== Revisions 61: deck cards — emoji, title and description spread evenly on wide screens ===== */
@@ -3472,4 +3430,326 @@ body:not(.mode-most-likely):not(.mode-shot-dare).game-waiting .shot-controls {
        The minmax(0, ...) tracks give a few px back on tight widths. */
     gap: clamp(40px, 6vmin, 88px);
   }
+}
+
+/* ===== Revisions 64: dare cards — bright block colours, one giant contained emoji, tighter radius ===== */
+
+/* A full restyle of the pick-a-dare cards: tighter corner radius than the classic
+   card, and the per-card hue becomes a solid bright fill (front and back) instead
+   of a dark tint. The old dark inner frame, crosshatch pattern and glow bands are
+   all turned off — the card IS the colour. */
+
+.shot-dare {
+  --radius-dare: clamp(10px, 1.5vmin, 26px);
+}
+
+.shot-dare .shot-dare-back,
+.shot-dare .shot-dare-front {
+  border-radius: var(--radius-dare);
+  border-color: hsl(var(--hue), 85%, 24%);
+  background-image: none;
+  box-shadow: none;
+}
+
+.shot-dare .shot-dare-back {
+  background-color: hsl(var(--hue), 92%, 55%);
+  overflow: hidden;
+  /* The 3D flip (preserve-3d ancestor) can let a transformed child slip past
+     overflow + border-radius on some renderers; clip-path closes that gap */
+  clip-path: inset(0 round var(--radius-dare));
+}
+
+.shot-dare .shot-dare-front {
+  background-color: hsl(var(--hue), 96%, 70%);
+}
+
+.shot-dare.is-focus:not(.is-revealed) .shot-dare-back {
+  box-shadow: none;
+}
+
+/* Selector highlight: a rotating hue glow drawn OVER the giant emoji. It lives on
+   .shot-dare (the one layer without overflow clipping) and with a high z-index, so
+   the cropped emoji can never cover it. Same recipe as the deck tile's rotating
+   edge: conic arc in the card's hue, masked to just the border strip, spinning via
+   the shared --deck-angle property and deck-spin keyframes. */
+
+.shot-dare:hover:not(.is-revealed)::after,
+.shot-dare.is-focus:not(.is-revealed)::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 7;
+  border-radius: var(--radius-dare);
+  padding: var(--stroke-card);
+  background: conic-gradient(from var(--deck-angle), transparent 0deg, transparent 230deg, hsl(var(--hue), 95%, 62%) 300deg, transparent 360deg);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  animation: deck-spin 6s linear infinite;
+  pointer-events: none;
+}
+
+/* The rotating arc from the rule above is the selected card's edge; the glow
+   below does the rest of the work. */
+
+/* The dark inner frame and the watermark emoji belong to the old look */
+
+.shot-dare .dare-frame,
+.shot-dare .dare-watermark {
+  display: none;
+}
+
+/* The back's single emoji sits fully inside the card: big enough to own the face
+   of the card, but never cut by its edges or spilling past the rounded corners.
+   The wrapper is recentred on the back (older revisions stretched it into a
+   full-bleed grid), and the random tilt comes from --rot set per card in app.js. */
+
+.shot-dare .shot-dare-back .dare-back-emoji {
+  position: static;
+  display: block;
+  font-size: min(72cqh, 66cqw);
+  line-height: 1;
+  transform: rotate(var(--rot, 0deg));
+  pointer-events: none;
+}
+
+/* The dare sentence sits directly on the bright face: dark ink instead of the
+   light text the dark cards needed. */
+
+.shot-dare .shot-dare-text {
+  color: #17112b;
+  text-shadow: none;
+}
+
+/* The pick-again pill keeps its dark glass so it still reads on a bright card. */
+
+/* ===== Revisions 65: dare cards — borderless, floating, slight size-down ===== */
+
+/* All the dare cards shed their outlines: the bright blocks read as pure colours
+   floating on the dark screen. The selected card is picked out by its hovering
+   arc (Revisions 64) plus a soft hue glow, not by a border. */
+
+.shot-dare .shot-dare-back,
+.shot-dare .shot-dare-front {
+  border: none;
+}
+
+/* The idle loop: translate/rotate compose with the fan's transform, so the arc,
+   glow and emoji all ride along. A wide drift with a wobble in it — same speed
+   as before, more travel. */
+
+@keyframes dare-float {
+  0%, 100% { translate: 0 0; rotate: 0deg; }
+  25% { translate: 1.6% -3%; rotate: 1.8deg; }
+  50% { translate: -1.4% -5.2%; rotate: -2.6deg; }
+  75% { translate: 1.2% -2%; rotate: 1.2deg; }
+}
+
+.shot-dare {
+  animation: dare-float 3.8s ease-in-out infinite;
+}
+
+/* Negative delays stagger the loop, so the fan never bobs in lockstep */
+
+.shot-dare:nth-child(2) { animation-delay: -1.3s; }
+.shot-dare:nth-child(3) { animation-delay: -2.5s; }
+
+/* The selected card is the one not moving — paused mid-bob (no snap-back when
+   the highlight moves). The revealed card rests too. */
+
+.shot-dare.is-focus:not(.is-revealed),
+.shot-dare.is-revealed {
+  animation-play-state: paused;
+}
+
+/* Selection glow: a two-layer halo in the card's hue */
+
+.shot-dare.is-focus:not(.is-revealed) .shot-dare-back {
+  box-shadow: 0 0 30px -6px hsla(var(--hue), 95%, 62%, 0.9), 0 0 90px -18px hsla(var(--hue), 95%, 60%, 0.6);
+}
+
+/* Slightly smaller cards. Container-based text and the emoji scale down with
+   them. Same scoped selectors as Revisions 57 so these win there. */
+
+@media (min-width: 720px) {
+  body.mode-shot-dare .shot-dare { width: 40%; }
+  body.mode-shot-dare .shot-dare.is-revealed { width: 33%; }
+}
+
+@media (min-width: 1024px) {
+  body.mode-shot-dare .shot-dare { width: 48%; }
+  body.mode-shot-dare .shot-dare.is-revealed { width: 55%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shot-dare {
+    animation: none;
+  }
+}
+
+/* ===== Revisions 66: dare cards — bigger back emoji, figure-eight float ===== */
+
+/* The back emoji fills the card face: as large as it can sit while the whole
+   glyph — tilt included — stays inside the rounded corners. 88cqw leaves room
+   for the worst-case rotation of a square glyph in a portrait card; 90cqh is
+   the height limit for the flat phone cards. */
+
+.shot-dare .shot-dare-back .dare-back-emoji {
+  font-size: min(90cqh, 88cqw);
+}
+
+/* The float is a figure-eight (a lying lissajous): x traces one wide sway per
+   loop while y dips twice, so the card draws an 8 instead of bouncing between
+   hard peaks. Sampled every 36 degrees with a sine-like ease on each segment,
+   which smooths out the snappy direction changes of the old 4-stop path. A long,
+   slow roll keeps pace with the sway. */
+
+@keyframes dare-float {
+  0%, 100% { translate: 0% 0%; rotate: 2.4deg; animation-timing-function: cubic-bezier(0.37, 0, 0.63, 1); }
+  10% { translate: 1.9% 2.3%; rotate: 1.9deg; animation-timing-function: cubic-bezier(0.37, 0, 0.63, 1); }
+  20% { translate: 3% 1.4%; rotate: 0.7deg; animation-timing-function: cubic-bezier(0.37, 0, 0.63, 1); }
+  30% { translate: 3% -1.4%; rotate: -0.7deg; animation-timing-function: cubic-bezier(0.37, 0, 0.63, 1); }
+  40% { translate: 1.9% -2.3%; rotate: -1.9deg; animation-timing-function: cubic-bezier(0.37, 0, 0.63, 1); }
+  50% { translate: 0% 0%; rotate: -2.4deg; animation-timing-function: cubic-bezier(0.37, 0, 0.63, 1); }
+  60% { translate: -1.9% 2.3%; rotate: -1.9deg; animation-timing-function: cubic-bezier(0.37, 0, 0.63, 1); }
+  70% { translate: -3% 1.4%; rotate: -0.7deg; animation-timing-function: cubic-bezier(0.37, 0, 0.63, 1); }
+  80% { translate: -3% -1.4%; rotate: 0.7deg; animation-timing-function: cubic-bezier(0.37, 0, 0.63, 1); }
+  90% { translate: -1.9% -2.3%; rotate: 1.9deg; animation-timing-function: cubic-bezier(0.37, 0, 0.63, 1); }
+}
+
+.shot-dare {
+  animation-duration: 4.6s;
+}
+
+/* ===== Revisions 67: dare cards — shining rim, big soft oval float ===== */
+
+/* The selection rim becomes a shine: the strip is always lit (a faint pearl
+   tint, never a transparent gap that read as darkening the card), and a
+   white sparkle plus the card's own hue travel around it via --deck-angle. */
+
+.shot-dare:hover:not(.is-revealed)::after,
+.shot-dare.is-focus:not(.is-revealed)::after {
+  background: conic-gradient(from var(--deck-angle),
+    hsla(var(--hue), 95%, 72%, 0.28) 0deg,
+    #ffffff 85deg,
+    hsla(var(--hue), 95%, 72%, 0.28) 170deg,
+    hsla(var(--hue), 95%, 60%, 0.95) 285deg,
+    hsla(var(--hue), 95%, 72%, 0.28) 360deg);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+}
+
+/* The float is one wide lazy oval: a deep vertical drift with a gentle side
+   sway and a pendulum roll in step with it. Sinusoidal samples with a sine
+   ease per segment make the whole thing featureless and soft — no corners,
+   no reversals — and the long duration keeps the large travel calm. */
+
+@keyframes dare-float {
+  0%, 100% { translate: 0% -6.5%; rotate: 0deg; animation-timing-function: cubic-bezier(0.37, 0, 0.63, 1); }
+  10% { translate: 2% -5.3%; rotate: 1.3deg; animation-timing-function: cubic-bezier(0.37, 0, 0.63, 1); }
+  20% { translate: 3.2% -2%; rotate: 2.1deg; animation-timing-function: cubic-bezier(0.37, 0, 0.63, 1); }
+  30% { translate: 3.2% 2%; rotate: 2.1deg; animation-timing-function: cubic-bezier(0.37, 0, 0.63, 1); }
+  40% { translate: 2% 5.3%; rotate: 1.3deg; animation-timing-function: cubic-bezier(0.37, 0, 0.63, 1); }
+  50% { translate: 0% 6.5%; rotate: 0deg; animation-timing-function: cubic-bezier(0.37, 0, 0.63, 1); }
+  60% { translate: -2% 5.3%; rotate: -1.3deg; animation-timing-function: cubic-bezier(0.37, 0, 0.63, 1); }
+  70% { translate: -3.2% 2%; rotate: -2.1deg; animation-timing-function: cubic-bezier(0.37, 0, 0.63, 1); }
+  80% { translate: -3.2% -2%; rotate: -2.1deg; animation-timing-function: cubic-bezier(0.37, 0, 0.63, 1); }
+  90% { translate: -2% -5.3%; rotate: -1.3deg; animation-timing-function: cubic-bezier(0.37, 0, 0.63, 1); }
+}
+
+.shot-dare {
+  animation-duration: 6s;
+}
+
+/* ===== Revisions 68: dare cards — rim floats free of the edge, unclipped glow, seamless oval ===== */
+
+/* The rim no longer sits on the card: it is drawn just outside the edge, in a
+   band of its own, so the translucent shine never overlaps the card's clipped
+   corner edge (that overlap is what showed as a dark seam between rim and
+   card). Same conic shine, same spin. */
+
+.shot-dare:hover:not(.is-revealed)::after,
+.shot-dare.is-focus:not(.is-revealed)::after {
+  inset: calc(-1 * var(--stroke-card));
+  border-radius: calc(var(--radius-dare) + var(--stroke-card));
+}
+
+/* The hue glow lives on .shot-dare itself: the back's clip-path (the emoji
+   containment guard) was clipping its own box-shadow, so the glow never
+   rendered. Same two-layer halo, now on the unclipped button. The back's own
+   glow is switched off for good. */
+
+.shot-dare {
+  border-radius: var(--radius-dare);
+}
+
+.shot-dare:hover:not(.is-revealed),
+.shot-dare.is-focus:not(.is-revealed) {
+  box-shadow: 0 0 34px -6px hsla(var(--hue), 95%, 62%, 0.95), 0 0 110px -20px hsla(var(--hue), 95%, 60%, 0.65);
+}
+
+.shot-dare.is-focus:not(.is-revealed) .shot-dare-back {
+  box-shadow: none;
+}
+
+/* The clunky pulse came from a per-segment ease: every keyframe ended at zero
+   velocity, so the card nudged to a stop ten times per loop. The oval is now
+   sampled every 5 percent and timed straight through (linear), which keeps the
+   velocity continuous — one silent, soft circle. */
+
+.shot-dare {
+  animation-timing-function: linear;
+}
+
+@keyframes dare-float {
+  0% { translate: 0.00% -6.50%; rotate: 0.00deg; }
+  5% { translate: 0.99% -6.18%; rotate: 0.65deg; }
+  10% { translate: 1.88% -5.26%; rotate: 1.23deg; }
+  15% { translate: 2.59% -3.82%; rotate: 1.70deg; }
+  20% { translate: 3.04% -2.01%; rotate: 2.00deg; }
+  25% { translate: 3.20% -0.00%; rotate: 2.10deg; }
+  30% { translate: 3.04% 2.01%; rotate: 2.00deg; }
+  35% { translate: 2.59% 3.82%; rotate: 1.70deg; }
+  40% { translate: 1.88% 5.26%; rotate: 1.23deg; }
+  45% { translate: 0.99% 6.18%; rotate: 0.65deg; }
+  50% { translate: 0.00% 6.50%; rotate: 0.00deg; }
+  55% { translate: -0.99% 6.18%; rotate: -0.65deg; }
+  60% { translate: -1.88% 5.26%; rotate: -1.23deg; }
+  65% { translate: -2.59% 3.82%; rotate: -1.70deg; }
+  70% { translate: -3.04% 2.01%; rotate: -2.00deg; }
+  75% { translate: -3.20% 0.00%; rotate: -2.10deg; }
+  80% { translate: -3.04% -2.01%; rotate: -2.00deg; }
+  85% { translate: -2.59% -3.82%; rotate: -1.70deg; }
+  90% { translate: -1.88% -5.26%; rotate: -1.23deg; }
+  95% { translate: -0.99% -6.18%; rotate: -0.65deg; }
+  100% { translate: -0.00% -6.50%; rotate: -0.00deg; }
+}
+
+/* ===== Revisions 69: dare cards — rim back inside, matching radius, twin shine ===== */
+
+/* The rim hugs the inside of the card again: same inset, same radius as the
+   card (var(--radius-dare)), so the strip follows the card's rounded corners
+   exactly. The shine is twin sparks — two white flashes riding the ring —
+   with long transparent stretches between them, letting the card breathe. */
+
+.shot-dare:hover:not(.is-revealed)::after,
+.shot-dare.is-focus:not(.is-revealed)::after {
+  inset: 0;
+  padding: var(--stroke-card);
+  border-radius: var(--radius-dare);
+  background: conic-gradient(from var(--deck-angle),
+    transparent 0deg,
+    transparent 118deg,
+    #ffffff 148deg,
+    transparent 178deg,
+    #ffffff 208deg,
+    transparent 238deg,
+    transparent 360deg);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
 }
