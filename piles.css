@@ -269,9 +269,11 @@
   width: min(100%, 460px);
 }
 
-/* Wide screens: the SELECT pill grows with the roomier deck screen */
+/* Wide screens: the SELECT pill grows with the roomier deck screen. The ID target is
+   deliberate: on min-width: 1024px the :has(.key-cue) revision rules size the button
+   to max-content (hugging the SPACE pill text) and out-rank a plain class width. */
 @media (min-width: 720px) {
-.deck-play {
+#mode-start-btn.deck-play {
     width: min(100%, 640px);
   }
 }
