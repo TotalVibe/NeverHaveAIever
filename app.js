@@ -431,7 +431,6 @@ class NeverHaveIEverApp {
     this.bindInstallPrompt();
     this.updateSpicyLevelPresentation();
     this.updateSoundTogglePresentation(sounds.enabled);
-    this.renderInitialDeck();
     this.bindEvents();
     this.bindKeyboard();
     this.setupBackButton();
@@ -439,8 +438,12 @@ class NeverHaveIEverApp {
     this.modeModal.querySelectorAll('.deck-tile').forEach((tile) => tile.prepend(this.buildDeckLayers()));
     const deckTitle = document.querySelector('.deck-hero-title');
     if (deckTitle) this.addTitleSparkles(deckTitle);
-    // Returning visitors pick a game straight away; first-timers pick after the age question
+    // The classic intro card is where the first-time age question lives. Returning
+    // visitors start on the deck screen, and their first card is only dealt when a
+    // game is chosen — dealing it here put the classic card behind the fading deck
+    // backdrop, visible as a flash on every refresh.
     if (this.isAgeConfirmed()) this.openModeSelect();
+    else this.renderInitialDeck();
     document.querySelectorAll('.target-btn .emoji, .info-cat-emoji, .deck-emoji, .dare-watermark').forEach((el) => {
       if (!el.children.length) el.innerHTML = emojiMarkup(el.textContent);
     });
@@ -923,8 +926,9 @@ class NeverHaveIEverApp {
       this.fadeTransition(() => {
         this.ageGateActive = false;
         document.body.classList.remove('screen-age-gate');
-        const ageCard = this.stackContainer.querySelector('.age-gate-card');
-        if (ageCard) ageCard.remove();
+        // Empty the arena behind the deck screen: the dealt gate card would
+        // otherwise flash through the deck backdrop as it fades in
+        this.clearDealtDeck();
         // Next: pick a game. Its start shuffles the deck, so the right cards get dealt
         this.openModeSelect();
       });
@@ -951,6 +955,13 @@ class NeverHaveIEverApp {
       layersWrap.appendChild(layer);
     }
     return layersWrap;
+  }
+
+  // Removes the dealt cards and layers from the arena (used when the deck screen takes over)
+  clearDealtDeck() {
+    this.stackContainer.innerHTML = '';
+    this.stackContainer.classList.remove('shuffling', 'reshuffle-arriving');
+    this.activeCard = null;
   }
 
   renderInitialDeck() {
