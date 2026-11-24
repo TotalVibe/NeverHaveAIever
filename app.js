@@ -921,12 +921,14 @@ class NeverHaveIEverApp {
         <h2 class="age-gate-question">Are you 18 or older?</h2>
         <div class="age-gate-below">
           <div class="age-gate-buttons">
-            <button class="age-gate-btn age-gate-yes" type="button">Yes</button>
-            <button class="age-gate-btn age-gate-no" type="button">No</button>
+            <button class="age-gate-btn age-gate-no" type="button"><kbd class="key-cue">Esc</kbd><span class="btn-label">No</span></button>
+            <button class="age-gate-btn age-gate-yes" type="button"><kbd class="key-cue">Enter</kbd><span class="btn-label">Yes</span></button>
           </div>
           <p class="age-gate-denied">Sorry, this game is only for adults.</p>
         </div>
       </div>`;
+    // YES wears the sparkle border (like the card's Customize button) — no spark illustration
+    this.addBorderSparkles(front.querySelector('.age-gate-yes'), { inset: 3, count: 6, sizeMin: 5, sizeRange: 3, durMin: 7, durRange: 4 });
     front.querySelector('.age-gate-yes').addEventListener('click', () => {
       this.saveAgeConfirmed();
       sounds.init();
@@ -2708,7 +2710,15 @@ class NeverHaveIEverApp {
           this.closeCustomiseModal();
         } else if (this.infoModal.classList.contains('active')) {
           this.infoModal.classList.remove('active');
-        } else if (!this.modeModal.classList.contains('active') && !this.ageGateActive) {
+        } else if (this.ageGateActive) {
+          // On the age question Esc is the "No" answer (the pill on the button)
+          const noBtn = this.stackContainer.querySelector('.age-gate-no');
+          const yesBtn = this.stackContainer.querySelector('.age-gate-yes');
+          if (noBtn && yesBtn && !yesBtn.disabled) {
+            e.preventDefault();
+            noBtn.click();
+          }
+        } else if (!this.modeModal.classList.contains('active')) {
           this.goHome();
         }
         return;
@@ -2739,6 +2749,15 @@ class NeverHaveIEverApp {
       }
       if (this.modeModal.classList.contains('active')) {
         this.handleDeckKey(e);
+        return;
+      }
+      if (this.ageGateActive) {
+        // The age gate pills tell the truth: Enter or Space = Yes (Esc is "No", handled above)
+        const yesBtn = this.stackContainer.querySelector('.age-gate-yes');
+        if (yesBtn && !yesBtn.disabled && (e.key === 'Enter' || e.key === ' ')) {
+          e.preventDefault();
+          yesBtn.click();
+        }
         return;
       }
       if (this.isCelebrating || this.ageGateActive) return;

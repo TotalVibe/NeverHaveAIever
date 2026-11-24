@@ -1398,10 +1398,10 @@ body {
 .age-gate-kicker {
   grid-row: 1;
   align-self: end;
-  margin: 0 0 10px;
-  font-size: 0.75rem;
+  margin: 0 0 clamp(8px, 2.2cqi, 18px);
+  font-size: clamp(0.62rem, min(2.6cqi, 1.7vh), 1.16rem);
   font-weight: 700;
-  letter-spacing: 2px;
+  letter-spacing: clamp(1.5px, 0.6cqi, 4px);
   text-transform: uppercase;
   color: var(--text-dim, #a3b1c4);
 }
@@ -1423,48 +1423,122 @@ body {
   flex-direction: column;
   align-items: center;
   width: 100%;
-  margin-top: 18px;
+  margin-top: clamp(14px, 4cqi, 34px);
 }
 
 .age-gate-buttons {
   display: flex;
   justify-content: center;
-  gap: 10px;
+  gap: clamp(8px, 2.4cqi, 18px);
   width: 100%;
-  max-width: 240px;
+  max-width: clamp(240px, 62cqi, 460px);
 }
 
 .age-gate-btn {
   flex: 1 1 0;
   min-width: 0;
-  padding: 12px 10px;
+  position: relative;
+  min-height: clamp(44px, 8.5cqi, 72px);
+  padding: clamp(10px, 2.2cqi, 20px) clamp(10px, 2.6cqi, 24px);
   border-radius: var(--radius-pill);
   border: 1px solid rgba(255, 255, 255, 0.3);
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(18, 21, 32, 0.72);
   color: #fff;
   font: inherit;
+  /* Scales with the card so the label stays readable from 390px phones to 4K TVs */
+  font-size: clamp(1rem, 3.4cqi, 1.7rem);
   font-weight: 800;
-  letter-spacing: 1px;
+  letter-spacing: clamp(0.5px, 0.25cqi, 2px);
   cursor: pointer;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  transition: background 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
 }
 
+/* 3-column grid for true label centring: [1fr | label | 1fr]. The key pill sits in
+   column 3 without pulling the text off-centre (same pattern as the pop-up buttons)
+   — and the empty tracks keep the label centred on screens where cues are hidden. */
+
+.age-gate-btn {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 0;
+}
+
+.age-gate-btn > .btn-label {
+  grid-column: 2;
+  grid-row: 1;
+  white-space: nowrap;
+  text-align: center;
+}
+
+.age-gate-btn > .key-cue {
+  grid-column: 3;
+  grid-row: 1;
+  justify-self: start;
+  /* Breathing room between the label and its key pill */
+  margin-left: clamp(8px, 1.5cqi, 16px);
+  margin-right: 0;
+  padding: 0 clamp(5px, 0.8cqi, 10px);
+  border-radius: clamp(6px, 1cqi, 12px);
+  font-size: clamp(0.6rem, 1.7cqi, 1rem);
+  min-width: 2.2em;
+  height: 1.9em;
+}
+
+.age-gate-btn:hover,
+.age-gate-btn:focus-visible {
+  box-shadow: 0 0 1.2em rgba(198, 173, 255, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+
+.age-gate-btn:active {
+  transform: translateY(1px);
+}
+
+/* Yes: the CUSTOMIZE purple — a glass pill with lavender border and text, wearing
+   the sparkling border effect (added in JS); no spark illustration */
+
 .age-gate-yes {
-  background: linear-gradient(135deg, #7453b8, #593b9a 55%, #463078);
+  background: rgba(130, 96, 190, 0.18);
   border-color: rgba(198, 173, 255, 0.48);
+  color: #e4d7ff;
+}
+
+.age-gate-yes:hover,
+.age-gate-yes:focus-visible {
+  background: rgba(151, 111, 220, 0.32);
+  border-color: rgba(198, 173, 255, 0.7);
+  box-shadow: 0 0 24px rgba(164, 125, 255, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+
+/* No: quiet dark glass with a faint warm edge, so declining reads softer than YES */
+
+.age-gate-no {
+  border-color: rgba(255, 255, 255, 0.22);
+  color: var(--text-soft, #cbd5e1);
+}
+
+.age-gate-no:hover,
+.age-gate-no:focus-visible {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.34);
+  box-shadow: none;
 }
 
 .age-gate-btn:disabled {
   opacity: 0.5;
   cursor: default;
+  box-shadow: none;
 }
 
 /* Space for the message is always reserved below the buttons, so showing it doesn't move them */
 
 .age-gate-denied {
   min-height: 1.5em;
-  margin: 14px 0 0;
+  margin: clamp(10px, 2.6cqi, 22px) 0 0;
   color: #ff8a8a;
-  font-size: 0.95rem;
+  font-size: clamp(0.82rem, 2.7cqi, 1.4rem);
   visibility: hidden;
 }
 

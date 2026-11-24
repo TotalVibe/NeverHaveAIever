@@ -1286,3 +1286,41 @@ body.unhinged-screen-shake {
     font-size: 6.25cqw;
   }
 }
+
+/* Age gate on very short landscape cards: the question is still the star, but the
+   kicker, pills and message tighten up so everything fits and stays readable */
+
+@media (orientation: landscape) and (max-height: 520px) {
+  .age-gate-kicker {
+    margin: 0 0 4px;
+    font-size: 0.6rem;
+    letter-spacing: 1.5px;
+  }
+
+  .age-gate-below {
+    margin-top: 6px;
+  }
+
+  .age-gate-buttons {
+    max-width: clamp(210px, 58cqi, 340px);
+  }
+
+  .age-gate-btn {
+    min-height: 34px;
+    padding: 4px 10px;
+    font-size: 0.85rem;
+  }
+
+  .age-gate-btn > .key-cue {
+    margin-left: 6px;
+    font-size: 0.6rem;
+    min-width: 1.9em;
+    height: 1.6em;
+  }
+
+  .age-gate-denied {
+    margin-top: 4px;
+    min-height: 1.2em;
+    font-size: 0.75rem;
+  }
+}
