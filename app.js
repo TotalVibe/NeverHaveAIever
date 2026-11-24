@@ -1780,6 +1780,9 @@ class NeverHaveIEverApp {
 
   // Deck chosen: the customise pop-up comes next as an optional step
   chooseMode() {
+    // One entry at a time: a double click fires both the click and dblclick
+    // handlers, and a second call would run straight through the fade
+    if (this.isScreenFading || this.setupStep) return;
     // The customise step is asked once; after that, choosing a game goes straight in
     if (this.setupDone) {
       this.fadeTransition(() => {
@@ -2421,7 +2424,8 @@ class NeverHaveIEverApp {
       option.addEventListener('dblclick', (e) => {
         e.preventDefault();
         if (!this.modeModal.classList.contains('active')) return;
-        selectDeck(true);
+        // Same behaviour as pressing SELECT (its first click already previewed the deck)
+        this.modeModal.querySelector('.deck-play').click();
       });
     });
     document.getElementById('deck-info-btn').addEventListener('click', () => {

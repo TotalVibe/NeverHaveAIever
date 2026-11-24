@@ -266,7 +266,7 @@
 }
 
 .deck-play {
-  width: min(100%, 360px);
+  width: min(100%, 460px);
 }
 
 @media (min-width: 720px) {
