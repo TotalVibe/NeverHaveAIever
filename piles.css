@@ -282,9 +282,8 @@
 
 @media (min-width: 1024px) {
 #mode-start-btn.deck-play {
-    /* Widescreen: the pill spans generously under the deck row instead of hugging
-       SPACE SELECT; the cue's spacing comes from the Revisions 54 flex rules */
-    width: min(50vw, 640px);
+    /* Widescreen: wider than the text-hugging pill, but still a button, not a banner */
+    width: clamp(390px, 36vw, 480px);
     justify-content: center;
   }
 }
