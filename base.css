@@ -827,7 +827,9 @@ body {
 
 .customise-save-sparkle {
   position: absolute;
-  left: 12px;
+  left: clamp(10px, 1.4vmin, 20px);
+  top: 50%;
+  transform: translateY(-50%);
   width: clamp(24px, 2.8vmin, 42px);
   height: clamp(24px, 2.8vmin, 42px);
   fill: #f0e9ff;
@@ -1167,7 +1169,9 @@ body {
 
 .info-customise-btn svg {
   position: absolute;
-  left: 12px;
+  left: clamp(10px, 1.4vmin, 20px);
+  top: 50%;
+  transform: translateY(-50%);
   flex: 0 0 auto;
   width: clamp(18px, 2.2vmin, 30px);
   height: clamp(18px, 2.2vmin, 30px);

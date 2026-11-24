@@ -544,6 +544,20 @@ body.entry-instant .game-card.card-entering {
   height: clamp(13px, 2.4cqi, 30px);
 }
 
+/* Every button carrying the spark illustration pins the spark to the left edge,
+   with the label centred independently of it */
+
+.customise-btn {
+  position: relative;
+}
+
+.customise-btn > svg {
+  position: absolute;
+  left: clamp(10px, 4cqi, 20px);
+  top: 50%;
+  transform: translateY(-50%);
+}
+
 .customise-btn:hover,
 .customise-btn:focus-visible {
   background: rgba(151, 111, 220, 0.32);
