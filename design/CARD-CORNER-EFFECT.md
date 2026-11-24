@@ -125,7 +125,9 @@ smaller cards).
 The character of the effect comes from the **contrast** between the two:
 
 - **Outer** → less round than `--radius-card`. Cards that need a straighter edge
-  scope their own radius (e.g. `.deck-option { --radius-deck: clamp(14px, 2.2vmin, 40px); }`)
+  scope their own radius (e.g. `.deck-option { --radius-deck: clamp(24px, 2.2vmin, 40px); }` —
+  the raised floor keeps phones/tablets round while `2.2vmin` above ~1090px
+  smaller side keeps big screens unchanged)
   and re-point `border-radius`, the backing pattern and any border overlay at it —
   every layer of the card must share the same outer corner.
 - **Inner** → always very square. Use the `*-square` token variants for both the
