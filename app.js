@@ -2702,19 +2702,105 @@ class NeverHaveIEverApp {
     }
   }
 
-  // Who is playing pop-up: the keyboard works the way the controls look.
-  // Arrows rove between the controls, Enter or Space presses the focused one,
-  // the slider claims Left/Right to change the heat, and the description owns typing.
+  // Who is playing pop-up: the keyboard works the way the layout looks. Down from
+  // "Mostly women" lands on "Coworkers" (same column, one row below); the flow
+  // continues down through the slider, the description box and the footer.
+  // The cursor's column is remembered on the way down so Up returns where Down came from.
+  moveCustomiseFocus(key) {
+    const modal = this.customiseModal;
+    const slider = modal.querySelector('.customise-level-slider');
+    const description = modal.querySelector('.customise-group-description');
+    const active = document.activeElement;
+    const chips = Array.from(modal.querySelectorAll('.customise-audience-option'));
+    const focusEl = (el) => el?.focus({ preventScroll: true });
+
+    // Laid out as rows: -1 the close ✕ (top-right), 0-1 the audience chips in
+    // three columns, 2 the slider, 3 the description, 4 the Skip/Save footer
+    const chipIndex = chips.indexOf(active);
+    const isClose = modal.contains(active) && active.matches?.('.customise-modal-close');
+    const isSkip = modal.contains(active) && active.matches?.('.customise-skip-btn');
+    const isSave = modal.contains(active) && active.matches?.('.customise-modal-done');
+    let col;
+    let row;
+    if (chipIndex >= 0) {
+      row = Math.floor(chipIndex / 3);
+      col = chipIndex % 3;
+      this.customiseKeyCol = col;
+    } else if (isClose) {
+      row = -1;
+      col = 2;
+    } else if (active === slider) {
+      row = 2;
+      col = this.customiseKeyCol ?? 1;
+    } else if (active === description) {
+      row = 3;
+      col = this.customiseKeyCol ?? 1;
+    } else if (isSkip || isSave) {
+      row = 4;
+      col = isSave ? 2 : 0;
+      this.customiseKeyCol = col;
+    } else {
+      // Nothing focused yet (or focus lost): start on the first chip
+      row = 0;
+      col = 0;
+    }
+
+    if (key === 'ArrowDown') {
+      if (row >= 4) return; // the footer is the bottom edge
+      row += 1;
+    } else if (key === 'ArrowUp') {
+      if (row <= 0) {
+        // Up from the chip grid reaches the ✕ in the pop-up's top corner
+        focusEl(modal.querySelector('.customise-modal-close'));
+        return;
+      }
+      row -= 1;
+    } else if (key === 'ArrowLeft' || key === 'ArrowRight') {
+      // Horizontal moves stay inside the current row: the chips wrap around
+      // within their row and the footer toggles between Skip and Save
+      if (row === 0 || row === 1) {
+        col = ((col + (key === 'ArrowRight' ? 1 : -1)) % 3 + 3) % 3;
+        this.customiseKeyCol = col;
+        focusEl(chips[row * 3 + col]);
+      } else if (row === 4) {
+        focusEl(isSave ? modal.querySelector('.customise-skip-btn') : modal.querySelector('.customise-modal-done'));
+      }
+      return;
+    } else {
+      return;
+    }
+
+    if (row === -1) focusEl(modal.querySelector('.customise-modal-close'));
+    else if (row === 0 || row === 1) focusEl(chips[row * 3 + col]);
+    else if (row === 2) focusEl(slider);
+    else if (row === 3) focusEl(description);
+    else if (row === 4) focusEl(col >= 2 ? modal.querySelector('.customise-modal-done') : modal.querySelector('.customise-skip-btn'));
+  }
+
   handleCustomiseKey(e) {
     const modal = this.customiseModal;
     const slider = modal.querySelector('.customise-level-slider');
     const description = modal.querySelector('.customise-group-description');
     const active = document.activeElement;
 
-    // Typing owns the description box: arrows and Enter are text, Tab is the way out
-    if (active === description || active?.matches?.('input, textarea')) return;
-    // Arrow keys natively step the slider and fire its input handler, which refreshes the preview
+    // The slider owns Left/Right (and Home/End): each press steps the heat
+    // natively and fires its input handler, which refreshes the preview
     if (active === slider && (e.key.startsWith('Arrow') || e.key === 'Home' || e.key === 'End')) return;
+
+    // Typing owns the description box: Left/Right are caret movement and the
+    // arrows only leave the box when the caret can't move further — on the
+    // first line going up, or the last line going down
+    if (active === description) {
+      if (e.key !== 'ArrowUp' && e.key !== 'ArrowDown') return;
+      const value = description.value;
+      const pos = description.selectionStart ?? value.length;
+      const caretCanMove = e.key === 'ArrowUp'
+        ? value.slice(0, pos).includes('\n')
+        : value.slice(pos).includes('\n');
+      if (caretCanMove) return;
+    } else if (active?.matches?.('input, textarea')) {
+      return;
+    }
 
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
@@ -2731,14 +2817,7 @@ class NeverHaveIEverApp {
 
     if (e.key.startsWith('Arrow')) {
       e.preventDefault();
-      // The roving focus order matches the visual flow: close, the six audience
-      // ticks, the intensity slider, the description box, Skip, Save — wrapping
-      const focusables = Array.from(modal.querySelectorAll(
-        '.customise-modal-close, .customise-audience-option, .customise-level-slider, .customise-group-description, .customise-skip-btn, .customise-modal-done'
-      ));
-      const step = (e.key === 'ArrowDown' || e.key === 'ArrowRight') ? 1 : -1;
-      const index = Math.max(0, focusables.indexOf(active));
-      focusables[(index + step + focusables.length) % focusables.length]?.focus({ preventScroll: true });
+      this.moveCustomiseFocus(e.key);
     }
   }
 
