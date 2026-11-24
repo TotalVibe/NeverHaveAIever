@@ -272,9 +272,20 @@
 /* Wide screens: the SELECT pill grows with the roomier deck screen. The ID target is
    deliberate: on min-width: 1024px the :has(.key-cue) revision rules size the button
    to max-content (hugging the SPACE pill text) and out-rank a plain class width. */
+
 @media (min-width: 720px) {
 #mode-start-btn.deck-play {
-    width: min(100%, 640px);
+    /* Before the key cue appears (720-1023px) the pill stays column-sized */
+    width: min(100%, 460px);
+  }
+}
+
+@media (min-width: 1024px) {
+#mode-start-btn.deck-play {
+    /* Widescreen: the pill spans generously under the deck row instead of hugging
+       SPACE SELECT; the cue's spacing comes from the Revisions 54 flex rules */
+    width: min(50vw, 640px);
+    justify-content: center;
   }
 }
 
