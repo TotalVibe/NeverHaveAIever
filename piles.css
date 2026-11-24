@@ -962,7 +962,7 @@
 .customise-actions .customise-skip-btn {
   text-transform: none;
   min-width: 0;
-  font-size: clamp(0.8rem, min(3.4vw, 1.7vmin), 1.3rem);
+  font-size: calc(var(--popup-type-scale) * clamp(0.8rem, min(3.4vw, 1.7vmin), 1.3rem));
   letter-spacing: 0;
   white-space: nowrap;
 }
@@ -971,7 +971,7 @@
   min-width: 0;
   gap: 6px;
   padding: 10px 8px;
-  font-size: clamp(0.75rem, min(3.2vw, 1.7vmin), 1.3rem);
+  font-size: calc(var(--popup-type-scale) * clamp(0.75rem, min(3.2vw, 1.7vmin), 1.3rem));
   letter-spacing: 0.04em;
   white-space: nowrap;
   overflow: hidden;
@@ -1947,7 +1947,7 @@ body:has(.age-gate-card) .classic-keys {
 .customise-actions .customise-modal-done .key-cue {
   margin-right: 0;
   margin-left: clamp(8px, 1.1vmin, 14px);
-  font-size: clamp(0.62rem, 1.1vmin, 0.95rem);
+  font-size: calc(var(--popup-type-scale) * clamp(0.62rem, 1.1vmin, 0.95rem));
   min-width: max(22px, 2.2em);
   height: max(22px, 1.9em);
   padding: 0 6px;

@@ -33,6 +33,10 @@
   --radius-pill: 9999px;
   --shadow-card: 0 16px 40px -10px rgba(0, 0, 0, 0.75), 0 0 1px 1px rgba(255, 255, 255, 0.12);
 
+  /* Pop-up type scale: one knob for every pop-up font. Each font is
+     calc(var(--popup-type-scale) * clamp(...)); large screens breathe a bit more. */
+  --popup-type-scale: 1;
+
   /* Safe Area Support */
   --sat: env(safe-area-inset-top, 0px);
   --sab: env(safe-area-inset-bottom, 0px);
@@ -48,6 +52,16 @@
   -webkit-user-select: none;
   -webkit-touch-callout: none;
   -webkit-tap-highlight-color: transparent;
+}
+
+/* Pop-up type scale knob: slightly larger type on large screens and TVs.
+   Every pop-up font multiplies its clamp by this variable, so bumping the
+   knob retunes the whole pop-up type at once. */
+
+@media (min-width: 1280px) {
+  :root {
+    --popup-type-scale: 1.15;
+  }
 }
 
 html, body {
@@ -495,7 +509,7 @@ body {
 
 .customise-modal-header .modal-title {
   color: var(--text-main);
-  font-size: clamp(0.82rem, 1.5vmin, 1.25rem);
+  font-size: calc(var(--popup-type-scale) * clamp(0.82rem, 1.5vmin, 1.25rem));
   font-weight: 700;
 }
 
@@ -510,7 +524,7 @@ body {
 .customise-modal-message {
   margin-bottom: clamp(16px, 2.2vmin, 30px);
   color: var(--text-muted);
-  font-size: clamp(0.92rem, 1.7vmin, 1.4rem);
+  font-size: calc(var(--popup-type-scale) * clamp(0.92rem, 1.7vmin, 1.4rem));
   line-height: 1.55;
 }
 
@@ -528,7 +542,7 @@ body {
   border-radius: clamp(12px, 1.5vmin, 24px);
   background: rgba(130, 96, 190, 0.1);
   color: var(--text-muted);
-  font: 700 clamp(0.78rem, 1.5vmin, 1.25rem)/1.2 var(--font-sans);
+  font: 700 calc(var(--popup-type-scale) * clamp(0.78rem, 1.5vmin, 1.25rem))/1.2 var(--font-sans);
   cursor: pointer;
   transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
 }
@@ -562,7 +576,7 @@ body {
 
 .customise-level-heading label {
   color: var(--text-main);
-  font-size: clamp(0.82rem, 1.5vmin, 1.25rem);
+  font-size: calc(var(--popup-type-scale) * clamp(0.82rem, 1.5vmin, 1.25rem));
   font-weight: 700;
 }
 
@@ -732,7 +746,7 @@ body {
   position: relative;
   top: 4px;
   color: var(--text-dim);
-  font-size: clamp(0.68rem, 1.3vmin, 1.1rem);
+  font-size: calc(var(--popup-type-scale) * clamp(0.68rem, 1.3vmin, 1.1rem));
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -747,7 +761,7 @@ body {
   display: block;
   margin: 0 0 clamp(14px, 1.8vmin, 26px);
   color: var(--text-main);
-  font-size: clamp(0.82rem, 1.5vmin, 1.25rem);
+  font-size: calc(var(--popup-type-scale) * clamp(0.82rem, 1.5vmin, 1.25rem));
   font-weight: 700;
 }
 
@@ -763,7 +777,7 @@ body {
   outline: none;
   background: linear-gradient(135deg, rgba(130, 96, 190, 0.09), rgba(8, 10, 18, 0.55) 58%);
   color: var(--text-main);
-  font: 500 clamp(0.8rem, 1.5vmin, 1.25rem)/1.45 var(--font-sans);
+  font: 500 calc(var(--popup-type-scale) * clamp(0.8rem, 1.5vmin, 1.25rem))/1.45 var(--font-sans);
   box-shadow: 0 0 14px rgba(164, 125, 255, 0.09), inset 0 1px 0 rgba(255, 255, 255, 0.035);
   transition: border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
 }
@@ -781,7 +795,7 @@ body {
 .customise-preview-note {
   margin: 10px 0 6px;
   color: var(--text-dim);
-  font-size: clamp(0.72rem, 1.3vmin, 1.1rem);
+  font-size: calc(var(--popup-type-scale) * clamp(0.72rem, 1.3vmin, 1.1rem));
   line-height: 1.4;
 }
 
@@ -978,7 +992,7 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.3);
   background: rgba(255, 255, 255, 0.1);
   color: #ffffff;
-  font-size: clamp(0.8rem, 1.4vmin, 1.1rem);
+  font-size: calc(var(--popup-type-scale) * clamp(0.8rem, 1.4vmin, 1.1rem));
   font-weight: 700;
   letter-spacing: 0.4px;
   cursor: pointer;
@@ -1005,7 +1019,7 @@ body {
 .info-reverse-title {
   font-family: 'Great Vibes', 'Alex Brush', 'Dancing Script', cursive;
   font-weight: 400;
-  font-size: clamp(2.2rem, min(8vw, 6.5vmin), 6.2rem);
+  font-size: calc(var(--popup-type-scale) * clamp(2.2rem, min(8vw, 6.5vmin), 6.2rem));
   line-height: 1.05;
   color: #ffffff;
   text-shadow: 0 0 20px rgba(255, 255, 255, 0.5), 0 2px 10px rgba(0, 0, 0, 0.9);
@@ -1057,13 +1071,13 @@ body {
 }
 
 .info-cat-name {
-  font-size: clamp(0.95rem, 1.9vmin, 1.7rem);
+  font-size: calc(var(--popup-type-scale) * clamp(0.95rem, 1.9vmin, 1.7rem));
   font-weight: 800;
   color: #ffffff;
 }
 
 .info-cat-text p {
-  font-size: clamp(0.82rem, 1.6vmin, 1.4rem);
+  font-size: calc(var(--popup-type-scale) * clamp(0.82rem, 1.6vmin, 1.4rem));
   line-height: 1.4;
   color: var(--text-muted);
 }
@@ -1099,7 +1113,7 @@ body {
 }
 
 .info-cat-arrow span {
-  font-size: clamp(0.6rem, 1.1vmin, 0.9rem);
+  font-size: calc(var(--popup-type-scale) * clamp(0.6rem, 1.1vmin, 0.9rem));
   font-weight: 700;
   letter-spacing: 0.8px;
   line-height: 1.25;
@@ -1119,7 +1133,7 @@ body {
 .info-attribution {
   margin: clamp(20px, 2.6vmin, 40px) 0;
   color: var(--text-dim);
-  font-size: clamp(0.76rem, 1.2vmin, 1rem);
+  font-size: calc(var(--popup-type-scale) * clamp(0.76rem, 1.2vmin, 1rem));
   text-align: center;
 }
 
@@ -1148,7 +1162,7 @@ body {
   justify-content: center;
   gap: 7px;
   padding: clamp(10px, 1.4vmin, 16px) 8px;
-  font-size: clamp(0.75rem, min(3.2vw, 1.7vmin), 1.3rem);
+  font-size: calc(var(--popup-type-scale) * clamp(0.75rem, min(3.2vw, 1.7vmin), 1.3rem));
 }
 
 .info-customise-btn svg {
