@@ -269,6 +269,13 @@
   width: min(100%, 460px);
 }
 
+/* Wide screens: the SELECT pill grows with the roomier deck screen */
+@media (min-width: 720px) {
+.deck-play {
+    width: min(100%, 640px);
+  }
+}
+
 @media (min-width: 720px) {
 .deck-list {
     grid-template-columns: repeat(3, 240px);
