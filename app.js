@@ -2681,7 +2681,30 @@ class NeverHaveIEverApp {
         }
         return;
       }
-      if (this.customiseModal.classList.contains('active')) return;
+      if (this.customiseModal.classList.contains('active')) {
+        // Save and Play = Enter, Skip = Space. Esc is handled above.
+        if (e.target.matches?.('input, textarea')) return; // typing in the group description
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          sounds.playClick();
+          this.customiseModal.querySelector(e.key === 'Enter' ? '.customise-modal-done' : '.customise-skip-btn').click();
+        }
+        return;
+      }
+      if (this.infoModal.classList.contains('active')) {
+        // Customize = Enter, Let's Play = Space. Esc is handled above.
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          if (e.key === 'Enter') sounds.playClick();
+          // Enter activates Customize exactly like a click; Space reveals the game
+          if (e.key === 'Enter') {
+            document.getElementById('info-customise-btn').click();
+          } else {
+            this.infoModal.classList.remove('active');
+          }
+        }
+        return;
+      }
       if (this.modeModal.classList.contains('active')) {
         this.handleDeckKey(e);
         return;
