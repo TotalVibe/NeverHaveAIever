@@ -2846,10 +2846,12 @@ class NeverHaveIEverApp {
       }
       // With nothing in focus: Enter saves (only Enter does, as the SAVE AND
       // PLAY pill says); Space ticks Mostly men so the pop-up reacts at once.
-      // Space stays inert on the slider, which has nothing to press.
+      // On the slider Space jumps straight down to the description box.
       if (e.key === 'Enter') {
         modal.querySelector('.customise-modal-done').click();
-      } else if (!onSlider) {
+      } else if (onSlider) {
+        description?.focus({ preventScroll: true });
+      } else {
         modal.querySelector('.customise-audience-option')?.click();
       }
       return;
