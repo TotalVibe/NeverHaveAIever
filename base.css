@@ -41,7 +41,7 @@
   --corner-halo: 0 0 1px 1px rgba(255, 255, 255, 0.16);
   --corner-stitch-inset: clamp(6px, 1vmin, 16px);
   --corner-stitch-stroke: clamp(1px, 0.14vmin, 2px);
-  --corner-stitch-color: rgba(255, 255, 255, 0.12);
+  --corner-stitch-color: rgba(255, 255, 255, 0.05);
   --corner-stitch-radius: calc(var(--radius-card) - clamp(9px, 1.1vmin, 20px) - var(--corner-stitch-stroke) - 2 * clamp(4px, 0.6vmin, 11px));
   /* Square-corner variants: inner borders pinched into a near-square fit,
      like the stitched corner of a printed card */
@@ -49,6 +49,7 @@
   --corner-stitch-radius-square: clamp(2px, 0.6vmin, 8px);
   /* Thinner strokes for the recipe's inner lines and for deck-screen cards */
   --stroke-deck: clamp(1.5px, 0.22vmin, 4px);
+  --stroke-deck-pile: clamp(1px, 0.15vmin, 2.5px);
   --corner-frame-stroke: clamp(1px, 0.15vmin, 2.5px);
 
   /* Pop-up type scale: one knob for every pop-up font. Each font is

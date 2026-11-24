@@ -56,6 +56,10 @@ background-image:
 
 Source of truth: cards.css → `.vector-pattern`.
 
+On the deck tiles the pattern layer carries `opacity: 0.55` — the tile's own
+background is the same colour, so only the diagonal lines (and the pink tint)
+soften while the base stays solid. Reuse that trick when a texture feels loud.
+
 ## Layer 3 — Faint solid frame
 
 A translucent dark "glass" panel inset from the card edge, with a thin faint
@@ -110,7 +114,8 @@ smaller cards).
 | `--corner-stitch-stroke` | `clamp(1px, 0.14vmin, 2px)` | dashed stroke width, kept thin |
 | `--corner-frame-stroke` | `clamp(1px, 0.15vmin, 2.5px)` | faint solid frame stroke, kept thin |
 | `--stroke-deck` | `clamp(1.5px, 0.22vmin, 4px)` | thinner outer stroke for deck-screen cards and their pile layers |
-| `--corner-stitch-color` | `rgba(255,255,255,0.12)` | dash colour |
+| `--stroke-deck-pile` | `clamp(1px, 0.15vmin, 2.5px)` | even thinner stroke for the pile layers stacked behind the deck cards |
+| `--corner-stitch-color` | `rgba(255,255,255,0.05)` | dash colour, almost transparent |
 | `--corner-stitch-radius` | `calc(var(--radius-card) - clamp(9px,1.1vmin,20px) - var(--corner-stitch-stroke) - 2 * clamp(4px,0.6vmin,11px))` | the pinched, near-square corner (inset subtracted twice, matching the classic card's pinch) |
 | `--corner-frame-radius-square` | `clamp(4px, 0.9vmin, 12px)` | solid frame corners, square variant |
 | `--corner-stitch-radius-square` | `clamp(2px, 0.6vmin, 8px)` | dashed stitch corners, near-square variant |

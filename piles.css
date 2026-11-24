@@ -3386,10 +3386,13 @@ body:not(.mode-most-likely):not(.mode-shot-dare).game-waiting .shot-controls {
 }
 
 /* The backing pattern and the rotating deck-colour edge follow the new radius
-   and stroke, so every layer of the tile shares the same outer corner */
+   and stroke, so every layer of the tile shares the same outer corner.
+   The crosshatch reads through at reduced opacity: the tile's own background is
+   the same colour, so only the diagonal lines and the tint soften, not the base. */
 
 .deck-option-bg {
   border-radius: calc(var(--radius-deck) - var(--stroke-deck));
+  opacity: 0.55;
 }
 
 .deck-option::before {
@@ -3410,13 +3413,13 @@ body:not(.mode-most-likely):not(.mode-shot-dare).game-waiting .shot-controls {
   box-shadow: var(--corner-halo), 0 0 0 1px var(--deck-color), 0 0 30px -6px var(--deck-color);
 }
 
-/* Pile of cards under each selector: same less round radius and same thinner
-   stroke, so the stack reads as copies of the tile in front of it */
+/* Pile of cards under each selector: same less round radius, and lighter, thinner
+   borders (--stroke-deck-pile) so the stack reads as a quiet shadow of the tile */
 
 .deck-tile .deck-card-layer {
   border-radius: var(--radius-deck);
-  border-width: var(--stroke-deck);
-  border-bottom-width: calc(var(--stroke-deck) + 0.5px);
+  border-width: var(--stroke-deck-pile);
+  border-bottom-width: calc(var(--stroke-deck-pile) + 0.5px);
 }
 
 /* Discontinuous stitch line: a dashed border just inside the faint solid frame,
