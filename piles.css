@@ -1610,7 +1610,8 @@
 /* Each dare card keeps the selector's portrait proportion (the deck tile is 0.756 wide to tall) */
 
 .shot-dare {
-  container-type: inline-size;
+  /* size (not inline-size) so the emoji pattern can size glyphs by cqh too */
+  container-type: size;
   aspect-ratio: 0.756;
   height: auto;
   width: 44%;
@@ -3095,5 +3096,126 @@ body:not(.mode-most-likely):not(.mode-shot-dare).game-waiting .shot-controls {
 @media (max-width: 719px) {
   .mode-shot-dare .shot-wrap {
     transform: translateY(-80px);
+  }
+}
+
+/* ===== Revisions 59: dare screen — fan always centred, title on top, emoji pattern ===== */
+
+/* While the dare choice is on screen, the wrap drops its intro lift and top margin,
+   so the three cards sit at the exact vertical centre of the screen. The intro and
+   sentence cards (wrap's other phase) keep their original lift. */
+.mode-shot-dare .shot-wrap:has(.shot-dares:not([hidden])) {
+  margin: auto;
+  transform: none;
+}
+
+/* The dare area shrinks to the fan itself (the widescreen 80dvh cap and its
+   flex-start would otherwise park the cards above the centre) */
+.mode-shot-dare .shot-wrap:has(.shot-dares:not([hidden])) .shot-dares {
+  height: auto;
+  justify-content: center;
+}
+
+/* Widescreen: rise by half the header's height, so the fan sits at the true
+   vertical centre of the screen (the arena centres it below the in-flow header).
+   The lift goes on the row, not the wrap: the wrap must stay transform-free, or
+   the absolutely-positioned title would anchor to it instead of the arena. */
+@media (min-width: 720px) {
+  .mode-shot-dare .shot-wrap:has(.shot-dares:not([hidden])) .shot-dare-row {
+    transform: translateY(clamp(-45px, -4dvh, -24px));
+  }
+}
+
+/* "Pick a dare" lives on its own at the top of the screen, clear of the centred fan.
+   (No ancestor between it and .game-arena is positioned here, so it anchors to the arena.) */
+.mode-shot-dare .shot-wrap:has(.shot-dares:not([hidden])) .shot-dares-title {
+  position: absolute;
+  top: clamp(10px, 3dvh, 36px);
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
+  white-space: nowrap;
+  z-index: 5;
+}
+
+/* Card back: a dense checkerboard of the category emoji, big and small
+   alternating in a quincunx (the small ones fill the gaps between the big ones),
+   all upright. Sizing follows the inspiration pattern: big emoji ≈ 1/8 of the
+   card width's neighbour spacing, small ≈ half the big one. */
+
+.shot-dare-back .dare-back-emoji {
+  position: absolute;
+  inset: 0; /* full bleed: oversized emojis run off the card edge... */
+  overflow: hidden; /* ...and are clipped by the card's own rounded corners */
+  border-radius: inherit;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: repeat(8, 1fr);
+  place-items: center;
+  font-size: 0; /* each cell sets its own size */
+}
+
+/* Every emoji keeps its cell centre (its "position") but is oversized so
+   neighbours overlap; --rot is the random tilt set per emoji in app.js */
+.dare-pattern-big,
+.dare-pattern-small {
+  transform: rotate(var(--rot, 0deg));
+}
+
+.dare-back-emoji .dare-pattern-big {
+  font-size: 21cqw;
+  line-height: 1;
+}
+
+.dare-back-emoji .dare-pattern-small {
+  font-size: 10.5cqw;
+  line-height: 1;
+}
+
+/* ===== Revisions 60: dare cards — per-card hue tint + one-by-one jitter ===== */
+
+/* Each dealt card gets its own --hue from app.js (three hues spread around the
+   wheel). The faces, borders and frame lines pick it up subtly; layout untouched. */
+
+.shot-dare {
+  --hue: 340;
+}
+
+.shot-dare .shot-dare-back,
+.shot-dare .shot-dare-front {
+  border-color: hsla(var(--hue), 85%, 66%, 0.32);
+  background-image:
+    radial-gradient(circle at 50% 40%, hsla(var(--hue), 95%, 60%, 0.17) 0%, transparent 70%),
+    repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.04) 0px, rgba(255, 255, 255, 0.04) 1.5px, transparent 1.5px, transparent 14px),
+    repeating-linear-gradient(-45deg, rgba(255, 255, 255, 0.04) 0px, rgba(255, 255, 255, 0.04) 1.5px, transparent 1.5px, transparent 14px);
+}
+
+/* The revealed face keeps the stronger accent the pink border had, but in the card's hue */
+.shot-dare .shot-dare-front {
+  border-color: hsla(var(--hue), 85%, 66%, 0.75);
+  box-shadow: 0 0 22px -6px hsla(var(--hue), 95%, 60%, 0.6);
+}
+
+.shot-dare .dare-frame {
+  border-color: hsla(var(--hue), 80%, 70%, 0.24);
+}
+
+/* Jitter: shivers through the individual translate/rotate properties, which
+   compose with (rather than override) each card's resting transform — the fan
+   offsets and the random --tilt stay exactly where they were. */
+@keyframes dare-card-jitter {
+  0%, 100% { translate: 0 0; rotate: 0deg; }
+  25% { translate: 1.6% -1.8%; rotate: 1.3deg; }
+  50% { translate: -1.4% 1.4%; rotate: -1.5deg; }
+  75% { translate: 1% 1.8%; rotate: 0.9deg; }
+}
+
+.shot-dare.is-jitter {
+  animation: dare-card-jitter 0.45s ease-in-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shot-dare.is-jitter {
+    animation: none;
   }
 }

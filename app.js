@@ -100,6 +100,29 @@ function emojiMarkup(text) {
   return html;
 }
 
+// The dare card back: a checkerboard of the category emoji, big and small
+// alternating like a quincunx pattern (sizes live in piles.css). The cell count
+// follows the card's shape — portrait cards on desktop use fewer, much bigger
+// cells; the flat phone cards need twice the columns to keep cells near-square.
+// Every emoji keeps its grid position but is oversized so neighbours overlap,
+// and each gets its own random tilt (rotate around its centre, --rot).
+function dareCardPattern(emojiText) {
+  const emoji = emojiMarkup(emojiText);
+  const flat = window.matchMedia('(max-width: 719px)').matches;
+  const cols = flat ? 10 : 6;
+  const rows = flat ? 5 : 8;
+  const tilt = () => (Math.random() * 24 - 12).toFixed(1);
+  let html = '';
+  for (let r = 0; r < rows; r += 1) {
+    for (let c = 0; c < cols; c += 1) {
+      html += (r + c) % 2 === 0
+        ? `<span class="dare-pattern-big" style="--rot: ${tilt()}deg">${emoji}</span>`
+        : `<span class="dare-pattern-small" style="--rot: ${tilt()}deg">${emoji}</span>`;
+    }
+  }
+  return html;
+}
+
 const AGE_GATE_KEY = 'never-have-ai-ever-age-confirmed';
 const LEVEL_UP_SWIPE_THRESHOLD = 15;
 const LEVEL_UP_DONE_IT_THRESHOLD = 7;
@@ -1941,18 +1964,55 @@ class NeverHaveIEverApp {
   showShotDares() {
     // Three different categories, and a different dare from each. Picking a card reveals its own dare.
     const categories = Object.keys(DARE_CATEGORIES).sort(() => Math.random() - 0.5).slice(0, 3);
+    // Three hues spread around the colour wheel (with a little drift), one per card:
+    // the faces, borders and frame lines tint subtly with the card's own hue.
+    const baseHue = Math.floor(Math.random() * 360);
     this.shotDareCards.forEach((card, index) => {
       const key = categories[index];
       const pool = SHOT_DARES.filter((dare) => dare.category === key);
       const dare = pool[Math.floor(Math.random() * pool.length)];
       card.classList.remove('is-revealed', 'is-dimmed');
       card.querySelector('.shot-dare-text').textContent = dare.text;
-      card.querySelector('.dare-back-emoji').innerHTML = emojiMarkup(DARE_CATEGORIES[key].emoji);
+      const back = card.querySelector('.dare-back-emoji');
+      back.dataset.dareEmoji = DARE_CATEGORIES[key].emoji;
+      back.innerHTML = dareCardPattern(DARE_CATEGORIES[key].emoji);
       card.style.setProperty('--tilt', `${(Math.random() * 8 - 4).toFixed(1)}deg`);
+      const hue = (baseHue + index * 120 + Math.floor(Math.random() * 36) - 18 + 360) % 360;
+      card.style.setProperty('--hue', String(hue));
     });
     this.setShotPhase('dare');
     this.setDareFocus(1);
     this.setAmbientGlow('rgba(255, 45, 117, 0.45)');
+    this.queueDareJitters();
+  }
+
+  // Re-renders every dare card back's emoji pattern (used when the viewport
+  // crosses the mobile breakpoint, where the pattern uses a different grid).
+  applyDarePatterns() {
+    this.shotDares.querySelectorAll('.dare-back-emoji').forEach((back) => {
+      if (back.dataset.dareEmoji) back.innerHTML = dareCardPattern(back.dataset.dareEmoji);
+    });
+  }
+
+  // Each card shivers for a beat, one after another, in a random order — a small
+  // "pick me" jiggle each time the three-card fan appears.
+  queueDareJitters() {
+    if (!this.jitterTimers) this.jitterTimers = [];
+    this.jitterTimers.forEach((timer) => clearTimeout(timer));
+    const order = [0, 1, 2].sort(() => Math.random() - 0.5);
+    this.jitterTimers = order.flatMap((cardIndex, step) => {
+      const delay = 400 + step * 520;
+      const card = this.shotDareCards[cardIndex];
+      // Fallback in case animationend never fires (e.g. the animation is off)
+      const fallback = setTimeout(() => card.classList.remove('is-jitter'), delay + 700);
+      const start = setTimeout(() => {
+        card.classList.remove('is-jitter');
+        void card.offsetWidth; // restart the animation even if the class survived
+        card.classList.add('is-jitter');
+        card.addEventListener('animationend', () => card.classList.remove('is-jitter'), { once: true });
+      }, delay);
+      return [start, fallback];
+    });
   }
 
   // Moves the highlight between the three dare cards (arrow keys, or a swipe on phones)
@@ -2334,6 +2394,8 @@ class NeverHaveIEverApp {
       this.soundToggleBtn.click();
     });
     window.addEventListener('resize', () => this.positionDeckTrack());
+    // The dare card pattern re-flows to the card shape when crossing the phone breakpoint
+    window.matchMedia('(max-width: 719px)').addEventListener('change', () => this.applyDarePatterns());
     // Phones: swipe sideways on the decks to change the selection
     const deckTrack = this.modeModal.querySelector('.deck-list');
     let deckStartX = null;
