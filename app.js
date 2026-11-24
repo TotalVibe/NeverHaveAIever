@@ -100,39 +100,42 @@ function emojiMarkup(text) {
   return html;
 }
 
-// The dare card back: a solid mountain of the category emoji — big and small
-// alternating like a quincunx, packed so tightly that NO card background shows
-// (sizes live in piles.css). Emoji glyphs carry transparent padding inside
-// their em box, so the sizing there is done on the INK circle (≈72% of the em)
-// with the worst lattice points accounted for: the big glyphs' ink alone must
-// cover the corner points between four cells, the small glyphs' ink the edge
-// midpoints — both with ≥10% margin, on top of which each cell is pulled
-// toward the pattern's centre (--gx/--gy × --pull in CSS) and jittered in size
-// (--sz). Grid counts follow the card's shape (portrait 8×12, flat phones 10×8).
-function dareCardPattern(emojiText) {
+// The dare card back: a mountain of the category emoji. No CSS grid table —
+// this generates a jittered lattice of POINTS (hex-packed in JS: every second
+// row shifts half a pitch) and drops one emoji dead-centre on every point,
+// with position scatter, size and rotation all randomised. Densities are
+// chosen so the emoji INK (glyph PNGs carry transparent padding inside the em
+// box — ink ≈72% of it, less for figure-shaped ones like 💃, whose shortfall
+// the three hex neighbours' union covers) tiles the whole card even at the
+// MINIMUM jittered size with the full position scatter: ink radius must be
+// ≥ the hex covering radius (0.577 × pitch) + the scatter. On portrait cards:
+// pitch 12.5cqw needs 8.71cqw of radius, the 30cqw em box delivers 9.18; on
+// the flat phone cards: pitch 10cqw needs 6.97, the 26cqw box delivers 7.96 —
+// so no card background can show anywhere. The card's real aspect is measured
+// at draw time (cards are display-toggled, so the caller paints the pattern
+// only after the dare screen is visible); points run past all four edges and
+// the overflow clip keeps the bleed inside the rounded corners.
+function dareCardPattern(emojiText, cardEl) {
   const emoji = emojiMarkup(emojiText);
   const flat = window.matchMedia('(max-width: 719px)').matches;
-  const cols = flat ? 10 : 8;
-  const rows = flat ? 8 : 12;
-  const midC = (cols - 1) / 2; // centre of the grid, in cells
-  const midR = (rows - 1) / 2;
-  const tilt = () => (Math.random() * 24 - 12).toFixed(1);
-  // Slight per-glyph size jitter, so the wall reads as a natural mound rather
-  // than a uniform stamp (CSS sizes carry the ≥10% ink-coverage margin this
-  // keeps inside). Both big and small vary by ±8% around their base.
-  const szJitter = () => (0.92 + Math.random() * 0.16).toFixed(2);
+  const pitch = flat ? 10 : 12.5;            // horizontal spacing between points (cqw)
+  const base = flat ? 26 : 30;               // emoji em box at --sz 1 (cqw)
+  const aspect = cardEl && cardEl.offsetHeight > 0
+    ? cardEl.offsetHeight / cardEl.offsetWidth
+    : 0.756;                                 // fallback if the card is still hidden
+  const heightCqw = 100 / aspect;
+  const py = pitch * 0.866;                  // hex packing: vertical spacing 0.866 × pitch
+  const cols = Math.ceil(100 / pitch) + 1;   // +1: bleed past both side edges
+  const rows = Math.ceil(heightCqw / py) + 1;
+  const scatter = 0.12 * pitch;              // ±12% of the pitch around each point
+  const szJitter = () => (0.85 + Math.random() * 0.3).toFixed(2);
+  const tilt = () => (Math.random() * 28 - 14).toFixed(1);
   let html = '';
-  for (let r = 0; r < rows; r += 1) {
-    for (let c = 0; c < cols; c += 1) {
-      // Signed distance from the pattern's centre, in cells (negative up/left of
-      // centre; .5 values at even grid edges are kept exact so the pull stays
-      // symmetric around the middle)
-      const gx = (c - midC).toFixed(1);
-      const gy = (r - midR).toFixed(1);
-      const sz = szJitter();
-      html += (r + c) % 2 === 0
-        ? `<span class="dare-pattern-big" style="--rot: ${tilt()}deg; --gx: ${gx}; --gy: ${gy}; --sz: ${sz}">${emoji}</span>`
-        : `<span class="dare-pattern-small" style="--rot: ${tilt()}deg; --gx: ${gx}; --gy: ${gy}; --sz: ${sz}">${emoji}</span>`;
+  for (let j = -1; j < rows; j += 1) {
+    for (let i = -1; i < cols; i += 1) {
+      const x = (i + 0.5) * pitch + (j % 2) * pitch / 2 + (Math.random() * 2 - 1) * scatter;
+      const y = (j + 0.5) * py + (Math.random() * 2 - 1) * scatter;
+      html += `<span class="dare-pattern" style="--rot: ${tilt()}deg; --sz: ${szJitter()}; left: ${x.toFixed(2)}%; top: ${((y / heightCqw) * 100).toFixed(2)}%">${emoji}</span>`;
     }
   }
   return html;
@@ -2107,9 +2110,7 @@ class NeverHaveIEverApp {
       const dare = pool[Math.floor(Math.random() * pool.length)];
       card.classList.remove('is-revealed', 'is-dimmed');
       card.querySelector('.shot-dare-text').textContent = dare.text;
-      const back = card.querySelector('.dare-back-emoji');
-      back.dataset.dareEmoji = DARE_CATEGORIES[key].emoji;
-      back.innerHTML = dareCardPattern(DARE_CATEGORIES[key].emoji);
+      card.querySelector('.dare-back-emoji').dataset.dareEmoji = DARE_CATEGORIES[key].emoji;
       // Toss landing: each card gets its own random tilt, plus small sideways and
       // up-down offsets, so the stack never reads as neatly gridded rows. The CSS
       // on mobile bakes these into the resting transform; the pixel amounts stay
@@ -2120,17 +2121,28 @@ class NeverHaveIEverApp {
       const hue = (baseHue + index * 120 + Math.floor(Math.random() * 36) - 18 + 360) % 360;
       card.style.setProperty('--hue', String(hue));
     });
+    // Phase first: the phone dare cards are display-toggled, and the emoji
+    // mountain is laid out against the card's real rendered box.
     this.setShotPhase('dare');
+    // Then paint the mountain on every back — one emoji per lattice point,
+    // with a fresh scatter, sizes and tilts each round.
+    this.shotDareCards.forEach((card) => {
+      const back = card.querySelector('.dare-back-emoji');
+      back.innerHTML = dareCardPattern(back.dataset.dareEmoji, card);
+    });
     this.setDareFocus(1);
     this.setAmbientGlow('rgba(255, 45, 117, 0.45)');
     this.queueDareJitters();
   }
 
-  // Re-renders every dare card back's emoji pattern (used when the viewport
-  // crosses the mobile breakpoint, where the pattern uses a different grid).
+  // Re-renders every dare card back's emoji mountain (used when the viewport
+  // crosses the mobile breakpoint, and also corrects the lattice after a
+  // device rotation, since the points are laid out against the real card box).
   applyDarePatterns() {
     this.shotDares.querySelectorAll('.dare-back-emoji').forEach((back) => {
-      if (back.dataset.dareEmoji) back.innerHTML = dareCardPattern(back.dataset.dareEmoji);
+      if (back.dataset.dareEmoji) {
+        back.innerHTML = dareCardPattern(back.dataset.dareEmoji, back.closest('.shot-dare'));
+      }
     });
   }
 
@@ -2709,6 +2721,9 @@ class NeverHaveIEverApp {
       if (level) this.updateSpicyLevelPreview(level);
       // Classic widescreen keeps the swipe targets aligned with the surrounding UI
       this.syncClassicTargetAlignment();
+      // The emoji mountain is laid out against the card's real box, so a device
+      // rotation (which changes the box without crossing the breakpoint) needs a redraw
+      this.applyDarePatterns();
     });
     // Tapping a level's name selects it, the same as dragging the slider to it
     this.customiseModal.querySelectorAll('.customise-level-option').forEach((option) => {

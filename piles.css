@@ -3241,99 +3241,56 @@ body:not(.mode-most-likely):not(.mode-shot-dare).game-waiting .shot-controls {
   z-index: 5;
 }
 
-/* Card back: a solid wall of the category emoji, big and small
-   alternating in a quincunx, packed like a collage — the reference look has no
-   background showing between the emojis at all. Emoji glyphs carry transparent
-   padding inside their em box, so sizes are computed from the INK circle
-   (≈72% of the em) against the grid pitch: the ink of every neighbouring pair
-   overlaps past touching (see app.js for the grid counts per card shape). */
+/* Card back: a mountain of the category emoji. Layout: app.js generates a
+   jittered hex-packed lattice of points and drops one emoji dead-centre on
+   every point (left/top, --sz, --rot all randomised) — positions are % of the
+   card, sizes in cqw, so the same math works on every card shape. Densities
+   are chosen in app.js so the emoji INK (≈72% of the em box, glyphs carry
+   transparent padding) covers the card at the minimum jittered size with full
+   scatter: the background cannot show. Emojis bleed off every edge and the
+   overflow clip keeps the pile inside the rounded corners. */
 
 .shot-dare-back .dare-back-emoji {
   position: absolute;
-  inset: 0; /* full bleed: the overlapping emojis run off the card edge... */
-  overflow: hidden; /* ...and are clipped by the card's own rounded corners */
+  inset: 0;
+  overflow: hidden;
   border-radius: inherit;
-  display: grid;
-  grid-template-columns: repeat(8, 1fr);
-  grid-template-rows: repeat(12, 1fr);
-  place-items: center;
-  font-size: 0; /* each cell sets its own size */
-  /* How hard each glyph is pulled toward the pattern's centre: a negative
-     offset per cell of distance (--gx/--gy from app.js). -1.2cqw per cell
-     shortens the grid pitch by ~19% on top of the ink overlap, so the wall
-     reads as a tight pile — and squeezes hardest at the edges, since those
-     cells sit farthest from the centre. */
-  --pull: -1.2cqw;
+  /* Emoji em box at --sz 1 — ink-overlap-verified in app.js (portrait 30, phone 26) */
+  --pattern-em: 30cqw;
 }
 
-/* Every emoji keeps its cell position, rotated at its own random tilt, and is
-   pulled inward by --pull per cell of signed distance from the centre. */
-.dare-pattern-big,
-.dare-pattern-small {
-  transform:
-    translate(calc(var(--gx, 0) * var(--pull, -1.2cqw)), calc(var(--gy, 0) * var(--pull, -1.2cqw)))
-    rotate(var(--rot, 0deg));
+/* One emoji, dead-centre on its lattice point, randomly sized and tilted */
+.dare-pattern {
+  position: absolute;
+  transform: translate(-50%, -50%) rotate(var(--rot, 0deg));
+  font-size: calc(var(--sz, 1) * var(--pattern-em, 30cqw));
+  line-height: 1;
   /* Double stroke in each card's assigned hue (--hue from app.js). Colour emoji
      glyphs ignore -webkit-text-stroke, so the rings are traced the way sticker
      outlines are in CSS: a stack of full-glyph silhouette shadows around the
      edge, with the glyph fill painted over them. Inner ring: a solid bright
      hairline. Outer ring: wider, more translucent — together they read as a
-     double internal stroke traced onto each emoji. */
+     double internal stroke traced onto each emoji. (8 + 8 directions is enough:
+     each ring copy is a whole glyph silhouette, so neighbours overlap heavily.) */
   text-shadow:
-    /* Inner ring — 12 directions, r ≈ 0.030em */
-    0.030em  0.000em 0 hsl(var(--hue, 340) 95% 74%),
-    0.026em  0.015em 0 hsl(var(--hue, 340) 95% 74%),
-    0.015em  0.026em 0 hsl(var(--hue, 340) 95% 74%),
-    0.000em  0.030em 0 hsl(var(--hue, 340) 95% 74%),
-   -0.015em  0.026em 0 hsl(var(--hue, 340) 95% 74%),
-   -0.026em  0.015em 0 hsl(var(--hue, 340) 95% 74%),
-   -0.030em  0.000em 0 hsl(var(--hue, 340) 95% 74%),
-   -0.026em -0.015em 0 hsl(var(--hue, 340) 95% 74%),
-   -0.015em -0.026em 0 hsl(var(--hue, 340) 95% 74%),
+    /* Inner ring — 8 directions, r ≈ 0.030em */
+    0.030em 0.000em 0 hsl(var(--hue, 340) 95% 74%),
+    0.021em 0.021em 0 hsl(var(--hue, 340) 95% 74%),
+    0.000em 0.030em 0 hsl(var(--hue, 340) 95% 74%),
+   -0.021em 0.021em 0 hsl(var(--hue, 340) 95% 74%),
+   -0.030em 0.000em 0 hsl(var(--hue, 340) 95% 74%),
+   -0.021em -0.021em 0 hsl(var(--hue, 340) 95% 74%),
     0.000em -0.030em 0 hsl(var(--hue, 340) 95% 74%),
-    0.015em -0.026em 0 hsl(var(--hue, 340) 95% 74%),
-    0.026em -0.015em 0 hsl(var(--hue, 340) 95% 74%),
-    /* Outer ring — 16 directions, r ≈ 0.060em */
-    0.0600em  0.0000em 0 hsl(var(--hue, 340) 90% 64% / 0.6),
-    0.0554em  0.0230em 0 hsl(var(--hue, 340) 90% 64% / 0.6),
-    0.0424em  0.0424em 0 hsl(var(--hue, 340) 90% 64% / 0.6),
-    0.0230em  0.0554em 0 hsl(var(--hue, 340) 90% 64% / 0.6),
-    0.0000em  0.0600em 0 hsl(var(--hue, 340) 90% 64% / 0.6),
-   -0.0230em  0.0554em 0 hsl(var(--hue, 340) 90% 64% / 0.6),
-   -0.0424em  0.0424em 0 hsl(var(--hue, 340) 90% 64% / 0.6),
-   -0.0554em  0.0230em 0 hsl(var(--hue, 340) 90% 64% / 0.6),
-   -0.0600em  0.0000em 0 hsl(var(--hue, 340) 90% 64% / 0.6),
-   -0.0554em -0.0230em 0 hsl(var(--hue, 340) 90% 64% / 0.6),
-   -0.0424em -0.0424em 0 hsl(var(--hue, 340) 90% 64% / 0.6),
-   -0.0230em -0.0554em 0 hsl(var(--hue, 340) 90% 64% / 0.6),
-    0.0000em -0.0600em 0 hsl(var(--hue, 340) 90% 64% / 0.6),
-    0.0230em -0.0554em 0 hsl(var(--hue, 340) 90% 64% / 0.6),
-    0.0424em -0.0424em 0 hsl(var(--hue, 340) 90% 64% / 0.6),
-    0.0554em -0.0230em 0 hsl(var(--hue, 340) 90% 64% / 0.6);
-}
-
-/* Ink-derived sizes for the 8 × 12 portrait grid (Wv = card width; pitch
-   12.5cqw across, 11cqw down). Emoji glyphs carry transparent padding, so the
-   math runs on the ink circle (≈72% of the em) at the worst lattice points,
-   and both sizes carry ≥10% margin ON TOP of the centre-pull:
-   - Corner points between four cells (the empty diamonds the old small sizes
-     kept leaking) sit ≈8.3cqw from the two adjacent BIG glyph centres → big
-     ink radius must be ≥ 9.2cqw → 27cqw em box (27 × 0.36 = 9.7). Jittered
-     down 8% it still clears: 24.8 × 0.36 = 8.9.
-   - Edge midpoints between a big and a small sit ≈5.5–6.25cqw from each →
-     small ink radius must be ≥ 6.9cqw → 19cqw em box (19 × 0.36 = 6.8 at base,
-     covers even the 12.5cqw half-pitch after jitter: 17.5 × 0.36 = 6.3 ≈ 6.25).
-   Result: big ink alone tiles the plane corner-to-corner — the card background
-   mathematically cannot show through, exactly like the packed-collage look. */
-
-.dare-back-emoji .dare-pattern-big {
-  font-size: calc(var(--sz, 1) * 27cqw);
-  line-height: 1;
-}
-
-.dare-back-emoji .dare-pattern-small {
-  font-size: calc(var(--sz, 1) * 19cqw);
-  line-height: 1;
+    0.021em -0.021em 0 hsl(var(--hue, 340) 95% 74%),
+    /* Outer ring — 8 directions, r ≈ 0.060em */
+    0.060em 0.000em 0 hsl(var(--hue, 340) 90% 64% / 0.6),
+    0.042em 0.042em 0 hsl(var(--hue, 340) 90% 64% / 0.6),
+    0.000em 0.060em 0 hsl(var(--hue, 340) 90% 64% / 0.6),
+   -0.042em 0.042em 0 hsl(var(--hue, 340) 90% 64% / 0.6),
+   -0.060em 0.000em 0 hsl(var(--hue, 340) 90% 64% / 0.6),
+   -0.042em -0.042em 0 hsl(var(--hue, 340) 90% 64% / 0.6),
+    0.000em -0.060em 0 hsl(var(--hue, 340) 90% 64% / 0.6),
+    0.042em -0.042em 0 hsl(var(--hue, 340) 90% 64% / 0.6);
 }
 
 /* ===== Revisions 60: dare cards — per-card hue tint + one-by-one jitter ===== */
