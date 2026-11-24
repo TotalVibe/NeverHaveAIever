@@ -95,7 +95,7 @@ body.unhinged-screen-shake {
   flex-direction: row;
   padding: clamp(6px, 1vh, 8px) clamp(14px, 3vw, 20px);
   gap: 8px;
-  border-top: 2px solid rgba(116, 143, 252, 0.72);
+  border-top: var(--stroke-target) solid rgba(116, 143, 252, 0.72);
 }
 
 /* =========================================================
