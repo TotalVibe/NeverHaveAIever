@@ -1917,7 +1917,7 @@ body.entry-instant .shot-arch svg {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  /* 48px tall on widescreen: the same height as the card's DONE IT button */
+  /* Compact pill that sits level with the card's DONE IT button */
   padding: 11px 12px 11px 5px;
   border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: 999px;
@@ -1938,6 +1938,13 @@ body.entry-instant .shot-arch svg {
   min-width: 26px;
   height: 26px;
   padding: 0 7px;
+}
+
+/* Widescreen: even side padding, so the SPACE pill stops hugging the left edge */
+@media (min-width: 1024px) {
+  .classic-random {
+    padding: 11px 18px;
+  }
 }
 
 @media (min-width: 768px) {
@@ -2040,15 +2047,20 @@ body:has(.age-gate-card) .classic-keys {
   }
 }
 
-/* The card's own DONE IT / INDEED button: pill sits beside the label */
+/* The card's own DONE IT / INDEED button: pill sits beside the label.
+   Widescreen keeps it a step smaller: the card itself is already huge at
+   >=1024px, so the button's clamps are capped lower than the shared base. */
 @media (min-width: 1024px) {
   .card-hint .done-it-btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 12px;
-    padding-left: 20px;
-    padding-right: 20px;
+    gap: 10px;
+    padding-top: clamp(8px, 1cqi, 13px);
+    padding-bottom: clamp(8px, 1cqi, 13px);
+    padding-left: 16px;
+    padding-right: 16px;
+    font-size: clamp(0.78rem, 2.2cqi, 1.1rem);
   }
 }
 
@@ -2056,6 +2068,12 @@ body:has(.age-gate-card) .classic-keys {
   margin: 0;
   position: static;
   transform: none;
+  /* Same pill as the SPACE cue on the Next pill: fixed 0.7rem so the
+     viewport-scaled key-cue clamp cannot grow it past a 30px pill */
+  font-size: 0.7rem;
+  min-width: max(30px, 2.4em);
+  height: max(30px, 2.2em);
+  padding: 0 8px;
 }
 
 /* Shots & Dares buttons: the same letter spacing as the intro's PLAY, and room for the key cue */
