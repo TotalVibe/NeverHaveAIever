@@ -1238,17 +1238,16 @@ class NeverHaveIEverApp {
   }
 
   emblemFooterMarkup() {
-    const hue = DECK_COLORS[this.gameMode];
     if (this.gameMode === 'shot-dare') {
-      return `<div class="shot-arch" style="--arch-hue: ${hue}" aria-hidden="true">${SHOT_GLASS_SVG.repeat(5)}</div>`;
+      return `<div class="shot-arch" aria-hidden="true">${SHOT_GLASS_SVG.repeat(5)}</div>`;
     }
     if (this.gameMode === 'classic') {
       // Mug on the left (mirrored, handle outward), then a raised cocktail and a mug close together
-      return `<div class="beer-arch" style="--arch-hue: ${hue}" aria-hidden="true"><span class="arch-flip">${BEER_MUG_SVG}</span><span class="beer-pair">${COCKTAIL_SVG}${BEER_MUG_SVG}</span></div><div class="emblem-sub">Swipe to Reveal</div>`;
+      return `<div class="beer-arch" aria-hidden="true"><span class="arch-flip">${BEER_MUG_SVG}</span><span class="beer-pair">${COCKTAIL_SVG}${BEER_MUG_SVG}</span></div><div class="emblem-sub">Swipe to Reveal</div>`;
     }
     if (this.gameMode === 'most-likely') {
       // Man and woman hands alternating on the arch; the left two are mirrored
-      return `<div class="point-arch" style="--arch-hue: ${hue}" aria-hidden="true"><span class="arch-flip">${MAN_HAND_SVG}</span><span class="arch-flip">${WOMAN_HAND_SVG}</span>${WOMAN_HAND_SVG}${MAN_HAND_SVG}</div><div class="emblem-sub">Swipe to Reveal</div>`;
+      return `<div class="point-arch" aria-hidden="true"><span class="arch-flip">${MAN_HAND_SVG}</span><span class="arch-flip">${WOMAN_HAND_SVG}</span>${WOMAN_HAND_SVG}${MAN_HAND_SVG}</div><div class="emblem-sub">Swipe to Reveal</div>`;
     }
     return '<div class="emblem-sub">Swipe to Reveal</div>';
   }
