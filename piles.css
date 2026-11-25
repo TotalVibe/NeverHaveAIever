@@ -4152,3 +4152,41 @@ body.entry-instant .point-arch svg {
 .arch-sparkles {
   overflow: visible;
 }
+
+/* ===== Revisions 77: watermark emoji per deck — bigger classic, right-peek
+   most likely, gigantic centred shot ===== */
+
+/* The category watermark (cards.css) peeks from the LEFT edge on every deck at
+   clamp(14rem, 82cqi, 44rem). Level-up and intro (age-gate) cards are special:
+   they keep the untouched shared watermark, so they are excluded everywhere
+   below. Sizes are in cqi, so the emoji scales with the deck on every screen. */
+
+/* Classic: same home on the left edge, but the illustration reads bigger */
+
+.mode-classic .game-card:not(.level-up-card):not(.intro-card) .cat-tag-emoji {
+  font-size: clamp(16rem, 100cqi, 56rem);
+}
+
+/* Who's Most Likely: bigger, mirrored — anchored right so it peeks in from the
+   right edge instead of the left */
+
+.mode-most-likely .game-card:not(.level-up-card):not(.intro-card) .category-watermark {
+  justify-content: flex-end;
+}
+
+.mode-most-likely .game-card:not(.level-up-card):not(.intro-card) .cat-tag-emoji {
+  font-size: clamp(16rem, 100cqi, 56rem);
+  transform: translateX(34%);
+}
+
+/* Shots & Dares: gigantic and centred, the glyph filling the whole card face;
+   the watermark's overflow:hidden crops the spill at the rounded corners */
+
+.mode-shot-dare .game-card:not(.intro-card) .category-watermark {
+  justify-content: center;
+}
+
+.mode-shot-dare .game-card:not(.intro-card) .cat-tag-emoji {
+  font-size: clamp(20rem, 150cqi, 80rem);
+  transform: none;
+}
