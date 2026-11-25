@@ -3908,7 +3908,12 @@ body.game-entering .shot-controls {
 .beer-pair {
   display: flex;
   align-items: flex-start;
-  gap: clamp(0px, 0.25cqi, 2px);
+  gap: 0;
+}
+
+/* The cocktail leans into the beer: the beer pulls a couple of pixels left */
+.beer-pair svg:nth-of-type(2) {
+  margin-left: clamp(-4px, -0.5cqi, -2px);
 }
 
 .beer-arch svg,
@@ -4077,6 +4082,13 @@ body.entry-instant .point-arch svg {
 .point-arch > :nth-child(2) svg,
 .point-arch > :nth-child(3) {
   --arch-y: clamp(-13px, -2.4cqi, -5px);
+}
+
+/* The man hands on the outer ends sit a touch lower, widening the gap to the women */
+
+.point-arch > :nth-child(1) svg,
+.point-arch > :nth-child(4) {
+  --arch-y: clamp(5px, 1.1cqi, 12px);
 }
 
 /* The 3s delay holds the first keyframe (the repose fan) via `backwards`,
