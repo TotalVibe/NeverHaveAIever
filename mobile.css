@@ -1444,3 +1444,32 @@ body.game-entering .shot-slot {
     animation: none;
   }
 }
+
+/* ===== Zoom: the Who's Most Likely & Shots & Dares decks fill the phone ===== */
+
+/* Desktop shares (piles.css) hand these decks 46vw, which resolves to their 300px
+   floor on phones. Both modes hide the side target buttons, so on portrait phones
+   the clamp's vw term takes over instead: 90vw fills the screen with the deck,
+   while the 420px cap keeps tablets from over-inflating. The height share rises
+   with it (70dvh) so the cards grow in both axes and keep their portrait look —
+   card text and patterns are sized in cqi, so they scale along automatically. */
+
+@media (max-width: 719px) and (orientation: portrait) {
+  .mode-most-likely .card-stack,
+  .mode-shot-dare .shot-wrap {
+    width: min(clamp(300px, 90vw, 420px), calc(100vw - 16px));
+  }
+
+  .mode-most-likely .card-stack {
+    height: clamp(360px, 70dvh, 540px);
+  }
+
+  .mode-shot-dare .shot-slot {
+    height: clamp(360px, 70dvh, 540px);
+  }
+
+  /* The start-bar pill under the Shots & Dares deck follows the deck's width */
+  .mode-shot-dare .shot-controls {
+    width: min(clamp(300px, 90vw, 420px), calc(100vw - 16px));
+  }
+}
