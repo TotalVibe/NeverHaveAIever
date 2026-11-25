@@ -4015,26 +4015,27 @@ body.entry-instant .point-arch svg {
 /* ===== Revisions 74: intro back spacing like Shots & Dares; finger sweep eased with bounce ===== */
 
 /* Classic & Who's Most Likely: replicate the Shots & Dares intro back — the title is
-   centred and the two-line description is pinned low, breathing just above CUSTOMIZE,
-   instead of floating under the title with dead space below it */
+   centred and the two-line description floats in the middle of the flexible space
+   between the title and CUSTOMIZE, so on tall screens it never snaps to the title */
 
 .game-card.intro-card .card-back-emblem {
-  grid-template-rows: 1fr auto 1fr;
+  grid-template-rows: 1fr auto 1fr auto 1fr;
 }
 
 .game-card.intro-card .card-back-emblem > .customise-btn {
-  grid-row: auto;
+  grid-row: 5;
   align-self: end;
   margin-top: 0;
   margin-bottom: calc(clamp(12px, 3.4vh, 28px) + 30px);
 }
 
-.game-card.intro-card .card-blurb {
-  position: absolute;
-  left: 50%;
-  bottom: calc(clamp(12px, 3.4vh, 28px) + 84px);
-  transform: translateX(-50%);
-  width: 86%;
+.game-card.intro-card .card-back-emblem > .card-blurb {
+  position: static;
+  bottom: auto;
+  transform: none;
+  grid-row: auto;
+  align-self: center;
+  width: 84%;
   margin: 0;
   line-height: 1.45;
 }
@@ -4069,4 +4070,22 @@ body.entry-instant .point-arch svg {
   91% { --point: var(--p2, 135deg); }
   96% { --point: calc(var(--p0, -45deg) - 6deg); }
   100% { --point: var(--p0, -45deg); }
+}
+
+/* ===== Revisions 75: Swipe to Reveal returns for Classic & Who's Most Likely ===== */
+
+/* It is back on the card bottom (above the game's bottom pill), fades in very slowly
+   from 2s after the game opens, then keeps the gentle swipe-nudge cue. The doubled
+   .game-card class out-specifics the mobile.css cue rule so both animations can stack */
+
+.game-card.game-card.current.face-down:not(.level-up-card) .emblem-sub {
+  opacity: 0;
+  animation:
+    swipe-reveal-fade 2.6s ease 2s forwards,
+    swipe-direction-cue 20s ease-in-out 6s infinite;
+}
+
+@keyframes swipe-reveal-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }

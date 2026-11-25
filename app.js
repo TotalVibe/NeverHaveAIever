@@ -1217,11 +1217,11 @@ class NeverHaveIEverApp {
     }
     if (this.gameMode === 'classic') {
       // Mug on the left (mirrored, handle outward), then a raised cocktail and a mug close together
-      return `<div class="beer-arch" aria-hidden="true"><span class="arch-flip">${BEER_MUG_SVG}</span><span class="beer-pair">${COCKTAIL_SVG}${BEER_MUG_SVG}</span></div>`;
+      return `<div class="beer-arch" aria-hidden="true"><span class="arch-flip">${BEER_MUG_SVG}</span><span class="beer-pair">${COCKTAIL_SVG}${BEER_MUG_SVG}</span></div><div class="emblem-sub">Swipe to Reveal</div>`;
     }
     if (this.gameMode === 'most-likely') {
       // Four pointing hands on an arch; the left two are mirrored
-      return `<div class="point-arch" aria-hidden="true"><span class="arch-flip">${POINTING_HAND_SVG}</span><span class="arch-flip">${POINTING_HAND_SVG}</span>${POINTING_HAND_SVG}${POINTING_HAND_SVG}</div>`;
+      return `<div class="point-arch" aria-hidden="true"><span class="arch-flip">${POINTING_HAND_SVG}</span><span class="arch-flip">${POINTING_HAND_SVG}</span>${POINTING_HAND_SVG}${POINTING_HAND_SVG}</div><div class="emblem-sub">Swipe to Reveal</div>`;
     }
     return '<div class="emblem-sub">Swipe to Reveal</div>';
   }
