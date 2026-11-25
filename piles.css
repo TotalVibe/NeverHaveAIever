@@ -4014,37 +4014,62 @@ body.entry-instant .point-arch svg {
 
 /* ===== Revisions 74: intro back spacing like Shots & Dares; finger sweep eased with bounce ===== */
 
-/* Classic & Who's Most Likely: replicate the Shots & Dares intro back — the title is
-   centred and the two-line description floats in the middle of the flexible space
-   between the title and CUSTOMIZE, so on tall screens it never snaps to the title */
+/* The title block (crest + cursive title) is the ONLY element in the emblem grid's
+   flow, so the big title sits exactly centre-centre at every resolution. Everything
+   else is pinned to the edges: the description low above CUSTOMIZE, Swipe to Reveal
+   at the bottom edge, the illustrations' arches at the top. */
 
 .game-card.intro-card .card-back-emblem {
-  grid-template-rows: 1fr auto 1fr auto 1fr;
+  grid-template-rows: 1fr auto 1fr;
 }
 
-.game-card.intro-card .card-back-emblem > .customise-btn {
-  grid-row: 5;
-  align-self: end;
-  margin-top: 0;
-  margin-bottom: calc(clamp(12px, 3.4vh, 28px) + 30px);
+.card-back-emblem .emblem-center {
+  grid-row: 2;
+  position: relative;
 }
 
-.game-card.intro-card .card-back-emblem > .card-blurb {
-  position: static;
-  bottom: auto;
-  transform: none;
-  grid-row: auto;
-  align-self: center;
+/* The crest hangs off the title's real rendered height, so it follows the centre
+   block instead of pushing it off centre */
+.card-back-emblem .crest-diamond {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + clamp(4px, 1vh, 10px));
+  transform: translateX(-50%);
+  margin: 0;
+}
+
+/* Classic & Who's Most Likely: the two-liner pinned low and detached from the title,
+   breathing above CUSTOMIZE whose height scales with the card (cqi), like the blurb */
+
+.game-card.intro-card .card-blurb {
+  position: absolute;
+  left: 50%;
+  bottom: calc(clamp(12px, 3.4vh, 28px) + 42px + clamp(24px, 8.3cqi, 76px));
+  transform: translateX(-50%);
   width: 84%;
   margin: 0;
   line-height: 1.45;
 }
 
+.game-card.intro-card .card-back-emblem > .customise-btn {
+  position: absolute;
+  left: 50%;
+  bottom: calc(clamp(12px, 3.4vh, 28px) + 30px);
+  transform: translateX(-50%);
+  margin: 0;
+}
+
+.game-card.intro-card .card-back-emblem > .customise-btn:active {
+  transform: translateX(-50%) scale(0.95);
+}
+
 /* Hands: the inner two float a touch higher than the outer ones */
+
+/* Hands: the inner two float clearly higher than the outer ones */
 
 .point-arch > :nth-child(2) svg,
 .point-arch > :nth-child(3) {
-  --arch-y: clamp(-7px, -1.4cqi, -2px);
+  --arch-y: clamp(-13px, -2.4cqi, -5px);
 }
 
 /* The animation-delay left a snap from resting straight up into the first corner;

@@ -1318,14 +1318,16 @@ class NeverHaveIEverApp {
           <div class="vector-pattern"></div>
           <div class="card-back-frame">
             <div class="card-back-emblem">
-              <div class="crest-diamond" aria-hidden="true">
-                <svg viewBox="0 0 24 24">
-                  <path d="M12 2.8 13.9 9l6.3 2-6.3 2-1.9 6.2L10.1 13 3.8 11l6.3-2L12 2.8Z" />
-                  <path d="m19 14 .9 2.4 2.3.8-2.3.8L19 20.5l-.8-2.5-2.4-.8 2.4-.8.8-2.4Z" />
-                </svg>
-              </div>
-              <div class="emblem-title">
-                ${this.emblemTitleMarkup()}
+              <div class="emblem-center">
+                <div class="crest-diamond" aria-hidden="true">
+                  <svg viewBox="0 0 24 24">
+                    <path d="M12 2.8 13.9 9l6.3 2-6.3 2-1.9 6.2L10.1 13 3.8 11l6.3-2L12 2.8Z" />
+                    <path d="m19 14 .9 2.4 2.3.8-2.3.8L19 20.5l-.8-2.5-2.4-.8 2.4-.8.8-2.4Z" />
+                  </svg>
+                </div>
+                <div class="emblem-title">
+                  ${this.emblemTitleMarkup()}
+                </div>
               </div>
               ${this.blurbMarkup(Boolean(data.showCustomise))}
               <button class="customise-btn" type="button" aria-label="Customize cards with AI">
