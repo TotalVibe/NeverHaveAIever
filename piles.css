@@ -3885,3 +3885,86 @@ body.game-entering .shot-controls {
   visibility: hidden;
   transition: opacity 0s linear, visibility 0s linear;
 }
+
+/* ===== Revisions 73: Classic beer mugs and Who's Most Likely pointing hands above the title ===== */
+
+/* The same spot and styling language as the shots arch: small white line icons, sized with the card */
+
+.beer-arch,
+.point-arch {
+  position: absolute;
+  top: clamp(28px, 8%, 56px);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: flex-start;
+}
+
+.beer-arch {
+  /* A wider gap around the lone left mug, so the pair on the right reads as one group */
+  gap: clamp(14px, 4cqi, 36px);
+}
+
+.beer-pair {
+  display: flex;
+  gap: clamp(6px, 1.8cqi, 16px);
+}
+
+.beer-arch svg,
+.point-arch svg {
+  width: clamp(17px, 5cqi, 56px);
+  height: clamp(17px, 5cqi, 56px);
+  fill: none;
+  stroke: #ffffff;
+  stroke-width: clamp(1.8px, 0.35cqi, 4px);
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+/* The left mug and the left hand face the other way */
+.arch-flip {
+  display: inline-block;
+  transform: scaleX(-1);
+}
+
+/* Beers: the left mug cheers first, then the two on the right in turn — the same jump as the shots */
+
+.beer-arch svg {
+  animation: shot-jump 2.6s ease-in-out calc(2s + var(--i, 0) * 0.25s) infinite;
+}
+
+.beer-arch > .arch-flip svg { --i: 0; }
+
+.beer-pair svg:nth-of-type(1) { --i: 1; }
+
+.beer-pair svg:nth-of-type(2) { --i: 2; }
+
+/* Hands: each sways from its wrist like pointing around the table, taking turns */
+
+.point-arch {
+  gap: clamp(24px, 6cqi, 56px);
+}
+
+.point-arch svg {
+  transform-origin: 50% 88%;
+  animation: point-sway 1.9s ease-in-out calc(2s + var(--i, 0) * 0.45s) infinite;
+}
+
+.point-arch > .arch-flip svg { --i: 0; }
+
+.point-arch > :last-child svg { --i: 1; }
+
+@keyframes point-sway {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-13deg); }
+  75% { transform: rotate(13deg); }
+}
+
+/* Fade handover into the game: every illustration holds still underneath the black curtain
+   (see app.js startGame instantEntry) */
+
+body.entry-instant .shot-arch svg,
+body.entry-instant .beer-arch svg,
+body.entry-instant .point-arch svg {
+  animation: none;
+}

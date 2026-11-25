@@ -48,6 +48,12 @@ const INFO_TEXT = {
 // Five small white shot glasses for the Shots & Dares card back
 const SHOT_GLASS_SVG = '<svg viewBox="0 0 24 24"><path d="M5 4h14l-2 17H7z" /><path d="M6.3 9.5h11.4" /></svg>';
 
+// Beer mug, handle on the right, for the Classic card back (the left mug is mirrored in CSS)
+const BEER_MUG_SVG = '<svg viewBox="0 0 24 24"><path d="M7 8h9.5l-.9 12.1a1.1 1.1 0 0 1-1.1 1H9a1.1 1.1 0 0 1-1.1-1z" /><path d="M7 8c-.3-1.5.9-2.9 2.4-2.9.4-1 1.3-1.6 2.3-1.6 1 0 2 .6 2.3 1.6 1.5 0 2.7 1.4 2.5 2.9" /><path d="M16.5 11h1.6a2 2 0 0 1 2 2v2.4a2 2 0 0 1-2 2h-1.6" /></svg>';
+
+// Pointing hand, index finger up, for the Who's Most Likely card back (the left hand is mirrored in CSS)
+const POINTING_HAND_SVG = '<svg viewBox="0 0 24 24"><path d="M7.6 11.2V4.5a1.2 1.2 0 0 1 2.4 0v6.7" /><path d="M10 11.2V7.6a1.2 1.2 0 0 1 2.4 0v3.6" /><path d="M12.4 11.4V8.9a1.2 1.2 0 0 1 2.4 0v2.7" /><path d="M15.6 12V9.9a1.1 1.1 0 0 1 2.2 0v2.3" /><path d="M7.6 11.2V15c0 3 2.2 5.2 5.1 5.2 2.9 0 5.1-2.2 5.1-5.2v-2.8" /><path d="M7.6 12.8 5.7 15.1a1.5 1.5 0 0 0 2.3 1.9l1.5-1.5" /></svg>';
+
 // Swaps first-person words, e.g. "I've" → "you've". Used to reword the existing sentences per game.
 function swapPersonWords(text, forms) {
   return text.replace(/\b(I'm|I've|I'd|I'll|I|myself|my|mine|me)\b/g, (match) => forms[match] ?? match);
@@ -1202,6 +1208,14 @@ class NeverHaveIEverApp {
   emblemFooterMarkup() {
     if (this.gameMode === 'shot-dare') {
       return `<div class="shot-arch" aria-hidden="true">${SHOT_GLASS_SVG.repeat(5)}</div>`;
+    }
+    if (this.gameMode === 'classic') {
+      // One mug on the left (mirrored, handle outward), two on the right close together
+      return `<div class="beer-arch" aria-hidden="true"><span class="arch-flip">${BEER_MUG_SVG}</span><span class="beer-pair">${BEER_MUG_SVG}${BEER_MUG_SVG}</span></div>`;
+    }
+    if (this.gameMode === 'most-likely') {
+      // Two pointing hands, the left one mirrored so they point opposite ways
+      return `<div class="point-arch" aria-hidden="true"><span class="arch-flip">${POINTING_HAND_SVG}</span>${POINTING_HAND_SVG}</div>`;
     }
     return '<div class="emblem-sub">Swipe to Reveal</div>';
   }
