@@ -118,7 +118,7 @@
   padding: 0;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
-  background: #0a0b10;
+  background: #0a0a0c;
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
 }
@@ -187,7 +187,7 @@
   text-align: left;
   cursor: pointer;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
-  --deck-color: #9b5de5;
+  --deck-color: #22d3ee;
 }
 
 .deck-option[data-mode="most-likely"] {
@@ -1178,14 +1178,14 @@
 }
 
 .shot-actions .shot-customise {
-  border-color: rgba(198, 173, 255, 0.48);
-  background: rgba(130, 96, 190, 0.18);
-  color: #e4d7ff;
+  border-color: hsla(var(--game-hue), 100%, 84%, 0.48);
+  background: hsla(var(--game-hue), 42%, 56%, 0.18);
+  color: hsl(var(--game-hue), 100%, 92%);
 }
 
 .shot-actions .shot-customise:hover,
 .shot-actions .shot-customise:focus-visible {
-  background: rgba(151, 111, 220, 0.32);
+  background: hsla(var(--game-hue), 61%, 65%, 0.32);
 }
 
 .shot-customise svg {
@@ -1301,7 +1301,7 @@
 @property --deck-glow {
   syntax: '<color>';
   inherits: true;
-  initial-value: #9b5de5;
+  initial-value: #22d3ee;
 }
 
 /* The screen glows in the selected deck's colour; the colour eases between decks */
@@ -1311,8 +1311,8 @@
 }
 
 .deck-bg {
-  background-color: #0a0b10;
-  background-image: radial-gradient(circle at 50% 42%, color-mix(in srgb, var(--deck-glow) 55%, transparent) 0%, rgba(10, 11, 16, 0.4) 55%, transparent 75%);
+  background-color: #0a0a0c;
+  background-image: radial-gradient(circle at 50% 42%, color-mix(in srgb, var(--deck-glow) 55%, transparent) 0%, rgba(10, 10, 12, 0.4) 55%, transparent 75%);
 }
 
 /* Each card carries the same pattern as the pop-ups (the default .vector-pattern) */
@@ -1400,11 +1400,12 @@
 /* The crest and the title sparkles take the selected deck's colour */
 
 .deck-screen .deck-crest {
-  color: var(--deck-glow);
+  /* Bright core in the deck's colour; the halo keeps the full deck colour */
+  color: color-mix(in srgb, var(--deck-glow) 55%, white);
 }
 
 .deck-screen .deck-hero-title .card-sparkle {
-  background: var(--deck-glow);
+  background: color-mix(in srgb, var(--deck-glow) 55%, white);
   filter: drop-shadow(0 0 3px var(--deck-glow));
 }
 
@@ -1636,7 +1637,13 @@ body.entry-instant .shot-arch svg {
 /* The crest and the title sparkles glow in the selected deck's colour */
 
 .deck-screen .crest-diamond {
-  color: var(--deck-glow);
+  color: color-mix(in srgb, var(--deck-glow) 55%, white);
+  filter: drop-shadow(0 0 10px var(--deck-glow));
+}
+
+/* cards.css pins the svg's own drop-shadow to --game-hue (teal on the home
+   screen); the spark must glow in the selected deck's colour instead */
+.deck-screen .crest-diamond svg {
   filter: drop-shadow(0 0 10px var(--deck-glow));
 }
 
@@ -3127,9 +3134,9 @@ body:not(.mode-most-likely):not(.mode-shot-dare).game-waiting .shot-controls {
    fluid clamp), but tinted in the button's own purple */
 
 .shot-customise .key-cue {
-  background: rgba(130, 96, 190, 0.22);
-  border-color: rgba(198, 173, 255, 0.4);
-  color: #e4d7ff;
+  background: hsla(var(--game-hue), 42%, 56%, 0.22);
+  border-color: hsla(var(--game-hue), 100%, 84%, 0.4);
+  color: hsl(var(--game-hue), 100%, 92%);
   margin: 0;
   font-size: 0.7rem;
   min-width: 30px;
@@ -4144,8 +4151,8 @@ body.entry-instant .point-arch svg {
 }
 
 .card-back .card-sparkle {
-  background: var(--sparkle-color, #c9a9ff);
-  filter: drop-shadow(0 0 3px color-mix(in srgb, var(--sparkle-color, #c9a9ff) 80%, transparent));
+  background: var(--sparkle-color, hsl(var(--game-hue), 100%, 83%));
+  filter: drop-shadow(0 0 3px color-mix(in srgb, var(--sparkle-color, hsl(var(--game-hue), 100%, 83%)) 80%, transparent));
 }
 
 /* The arch sparkle layer may spill past the icons like the title's does */
@@ -4189,4 +4196,40 @@ body.entry-instant .point-arch svg {
 .mode-shot-dare .game-card:not(.intro-card) .cat-tag-emoji {
   font-size: clamp(20rem, 150cqi, 80rem);
   transform: none;
+}
+
+/* ===== Revisions 77: starter cards wear their game's colour ===== */
+
+/* The intro card's rotating border keeps the deck's own colours (cyan / yellow /
+   pink, full saturation). The CUSTOMIZE pills, sparkles, sparks and glows follow
+   the softer --game-hue system instead (base.css): each element dragged to the
+   deck's hue while keeping its own saturation and lightness. */
+
+body.mode-most-likely .game-card.intro-card::after {
+  --level-up-edge-dim: rgba(255, 212, 59, 0.12);
+  --level-up-edge-glow: rgba(255, 212, 59, 0.72);
+  --level-up-edge-hot: rgba(255, 255, 255, 0.82);
+  --level-up-edge-shadow: rgba(255, 212, 59, 0.4);
+}
+
+body.mode-shot-dare .game-card.intro-card::after {
+  --level-up-edge-dim: rgba(255, 45, 117, 0.12);
+  --level-up-edge-glow: rgba(255, 45, 117, 0.72);
+  --level-up-edge-hot: rgba(255, 255, 255, 0.82);
+  --level-up-edge-shadow: rgba(255, 45, 117, 0.4);
+}
+
+/* ===== Revisions 78: greyscale surfaces behind the game ===== */
+
+/* The .vector-pattern base went near-greyscale (#101014, a faint blue lift,
+   white centre lift) for the pop-ups and the in-game card backs. The home
+   tiles keep the original navy base and pink tint: they are the look every
+   other surface now mimics. */
+
+.deck-option > .vector-pattern {
+  background-color: #111420;
+  background-image:
+    radial-gradient(circle at 50% 50%, rgba(255, 45, 117, 0.14) 0%, transparent 68%),
+    repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.04) 0px, rgba(255, 255, 255, 0.04) clamp(1.5px, 0.14vmin, 3px), transparent clamp(1.5px, 0.14vmin, 3px), transparent clamp(14px, 1.4vmin, 24px)),
+    repeating-linear-gradient(-45deg, rgba(255, 255, 255, 0.04) 0px, rgba(255, 255, 255, 0.04) clamp(1.5px, 0.14vmin, 3px), transparent clamp(1.5px, 0.14vmin, 3px), transparent clamp(14px, 1.4vmin, 24px));
 }

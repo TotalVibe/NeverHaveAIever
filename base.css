@@ -7,13 +7,22 @@
 /* Modern Tinder-style UI for Never Have I Ever • Clean Minimalist Mobile-First Edition */
 
 :root {
-  --bg-dark: #0a0b10;
-  --bg-card: #151824;
+  --bg-dark: #0a0a0c;
+  --bg-card: #111420;
   --bg-card-border: rgba(255, 255, 255, 0.22);
   --text-main: #f8fafc;
   --text-muted: #94a3b8;
   --text-dim: #64748b;
-  
+
+  /* Deck hues (H only). The colour elements inside each game share — sparkles,
+     spark illustrations, CUSTOMIZE pills, glows, particles — expressed as
+     hsla(var(--game-hue), S%, L%, A) so each keeps its own saturation and
+     lightness and only the hue follows the assigned deck. */
+  --hue-classic: 188;
+  --hue-most-likely: 47;
+  --hue-shot-dare: 340;
+  --game-hue: var(--hue-classic);
+
   /* Category Colors */
   --color-spicy: #ff2d75;
   --color-spicy-glow: rgba(255, 45, 117, 0.45);
@@ -113,6 +122,22 @@ body {
   padding-right: var(--sar);
 }
 
+/* The deck's hue follows the game chosen on the home screen; class-free = Classic */
+
+body.mode-most-likely {
+  --game-hue: var(--hue-most-likely);
+}
+
+body.mode-shot-dare {
+  --game-hue: var(--hue-shot-dare);
+}
+
+/* The deck (home) screen and everything opened from it — how-to-play included —
+   always wears classic's teal, regardless of which game was last played */
+body.screen-deck {
+  --game-hue: var(--hue-classic);
+}
+
 @keyframes unhinged-screen-shake {
   0%, 100% { transform: translate3d(0, 0, 0); }
   12% { transform: translate3d(-7px, 2px, 0); }
@@ -136,11 +161,21 @@ body {
   height: 90vmin;
   max-height: 1200px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 45, 117, 0.16) 0%, rgba(32, 201, 151, 0.08) 50%, transparent 75%);
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.04) 50%, transparent 75%);
   filter: blur(85px);
   pointer-events: none;
   z-index: 0;
   transition: background 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* Age gate and the classic welcome card: the page's background gradient glows
+   in the Classic deck's teal. Game play after START follows the category
+   colours set from JS; other games keep their own glow. */
+
+body.screen-age-gate .ambient-glow,
+body:not(.mode-most-likely):not(.mode-shot-dare).game-waiting .ambient-glow {
+  /* Same shape and strength updateAmbientGlow paints inline, so no flash when JS takes over */
+  background: radial-gradient(circle, rgba(34, 211, 238, 0.45) 0%, rgba(10, 11, 16, 0.4) 60%, transparent 75%);
 }
 
 #info-btn svg {
@@ -480,6 +515,9 @@ body {
 .modal-overlay.active {
   opacity: 1;
   pointer-events: auto;
+  /* Visible immediately on open: visibility flips in 0s, opacity shares its own fade */
+  visibility: visible;
+  transition: opacity 0.25s ease, visibility 0s linear;
 }
 
 /* Used only for instant backdrop handoffs (How to Play to Customize) */
@@ -596,10 +634,11 @@ body {
 .customise-audience-option {
   min-height: clamp(48px, 5.6vmin, 82px);
   padding: clamp(8px, 1.1vmin, 16px) clamp(6px, 0.9vmin, 14px);
-  border: 1px solid rgba(198, 173, 255, 0.24);
+  /* Idle: quiet neutral glass, the SKIP button's grey family — no hue */
+  border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: clamp(12px, 1.5vmin, 24px);
-  background: rgba(130, 96, 190, 0.1);
-  color: var(--text-muted);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-dim);
   font: 700 calc(var(--popup-type-scale) * clamp(0.78rem, 1.5vmin, 1.25rem))/1.2 var(--font-sans);
   cursor: pointer;
   transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
@@ -607,16 +646,16 @@ body {
 
 .customise-audience-option:hover,
 .customise-audience-option:focus-visible {
-  border-color: rgba(198, 173, 255, 0.6);
-  background: rgba(130, 96, 190, 0.2);
-  color: #e4d7ff;
+  border-color: hsla(var(--game-hue), 100%, 84%, 0.6);
+  background: hsla(var(--game-hue), 42%, 56%, 0.2);
+  color: hsl(var(--game-hue), 100%, 92%);
 }
 
 .customise-audience-option[aria-pressed="true"] {
-  border-color: rgba(198, 173, 255, 0.76);
-  background: rgba(130, 96, 190, 0.3);
-  color: #f0e9ff;
-  box-shadow: 0 0 14px rgba(164, 125, 255, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  border-color: hsla(var(--game-hue), 100%, 84%, 0.76);
+  background: hsla(var(--game-hue), 42%, 56%, 0.3);
+  color: hsl(var(--game-hue), 100%, 96%);
+  box-shadow: 0 0 14px hsla(var(--game-hue), 100%, 75%, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 /* Selected fields wear the golden-ratio sparkle border. The layers always
@@ -652,9 +691,9 @@ body {
 /* Filled description stays highlighted after the field loses focus */
 .customise-description-wrap:has(.customise-group-description:not(:placeholder-shown)) .customise-group-description,
 .customise-description-wrap.has-text .customise-group-description {
-  border-color: rgba(198, 173, 255, 0.6);
-  background: linear-gradient(135deg, rgba(130, 96, 190, 0.14), rgba(8, 10, 18, 0.6) 58%);
-  box-shadow: 0 0 14px rgba(164, 125, 255, 0.14), 0 0 22px rgba(164, 125, 255, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  border-color: hsla(var(--game-hue), 100%, 84%, 0.6);
+  background: linear-gradient(135deg, hsla(var(--game-hue), 42%, 56%, 0.14), rgba(8, 10, 18, 0.6) 58%);
+  box-shadow: 0 0 14px hsla(var(--game-hue), 100%, 75%, 0.14), 0 0 22px hsla(var(--game-hue), 100%, 75%, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
 .customise-description-wrap {
@@ -872,14 +911,15 @@ body {
   resize: none;
   overflow: hidden;
   padding: clamp(15px, 2vmin, 30px) clamp(12px, 1.6vmin, 24px);
-  border: 1px solid rgba(198, 173, 255, 0.26);
+  /* Idle matches the SKIP button's quiet grey glass; hue arrives on focus/fill */
+  border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: clamp(12px, 1.5vmin, 24px);
   outline: none;
-  background: linear-gradient(135deg, rgba(130, 96, 190, 0.09), rgba(8, 10, 18, 0.55) 58%);
+  background: rgba(255, 255, 255, 0.03);
   color: var(--text-main);
   /* A step larger than the label: the description is the pop-up's main input */
   font: 500 calc(var(--popup-type-scale) * clamp(0.95rem, 2.1vmin, 1.7rem))/1.4 var(--font-sans);
-  box-shadow: 0 0 14px rgba(164, 125, 255, 0.09), inset 0 1px 0 rgba(255, 255, 255, 0.035);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.035);
   transition: border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
 }
 
@@ -888,9 +928,9 @@ body {
 }
 
 .customise-group-description:focus {
-  border-color: rgba(198, 173, 255, 0.78);
-  background: linear-gradient(135deg, rgba(130, 96, 190, 0.16), rgba(8, 10, 18, 0.62) 58%);
-  box-shadow: 0 0 0 3px rgba(164, 125, 255, 0.13), 0 0 20px rgba(164, 125, 255, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  border-color: hsla(var(--game-hue), 100%, 84%, 0.78);
+  background: linear-gradient(135deg, hsla(var(--game-hue), 42%, 56%, 0.16), rgba(8, 10, 18, 0.62) 58%);
+  box-shadow: 0 0 0 3px hsla(var(--game-hue), 100%, 75%, 0.13), 0 0 20px hsla(var(--game-hue), 100%, 75%, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
 .customise-preview-note {
@@ -910,16 +950,16 @@ body {
   padding: clamp(10px, 1.4vmin, 16px) clamp(12px, 1.6vmin, 24px);
   /* The starter cards' CUSTOMIZE purple: glass pill with the lavender border and text */
   border-radius: var(--radius-pill);
-  border: 1px solid rgba(198, 173, 255, 0.48);
-  background: rgba(130, 96, 190, 0.18);
-  color: #e4d7ff;
+  border: 1px solid hsla(var(--game-hue), 100%, 84%, 0.48);
+  background: hsla(var(--game-hue), 42%, 56%, 0.18);
+  color: hsl(var(--game-hue), 100%, 92%);
   box-shadow: none;
 }
 
 .customise-modal-done:hover,
 .customise-modal-done:focus-visible {
-  background: rgba(151, 111, 220, 0.32);
-  box-shadow: 0 0 24px rgba(164, 125, 255, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  background: hsla(var(--game-hue), 61%, 65%, 0.32);
+  box-shadow: 0 0 24px hsla(var(--game-hue), 100%, 75%, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.18);
 }
 
 .btn-primary.customise-modal-done {
@@ -933,8 +973,8 @@ body {
   transform: translateY(-50%);
   width: clamp(24px, 2.8vmin, 42px);
   height: clamp(24px, 2.8vmin, 42px);
-  fill: #f0e9ff;
-  filter: drop-shadow(0 0 7px rgba(231, 217, 255, 0.62));
+  fill: hsl(var(--game-hue), 100%, 96%);
+  filter: drop-shadow(0 0 7px hsla(var(--game-hue), 100%, 93%, 0.62));
 }
 
 .customise-modal-done > span:first-of-type {
@@ -1009,7 +1049,7 @@ body {
   outline: none;
   background: rgba(255, 255, 255, 0.2);
   color: #fff;
-  box-shadow: 0 0 0 2px rgba(198, 173, 255, 0.6);
+  box-shadow: 0 0 0 2px hsla(var(--game-hue), 100%, 84%, 0.6);
 }
 
 .info-reverse-frame {
@@ -1025,7 +1065,7 @@ body {
   border-radius: calc(var(--radius-card) - clamp(9px, 1.1vmin, 20px));
   padding: clamp(25px, 3.2vmin, 52px) clamp(14px, 2.2vmin, 34px) clamp(23px, 3vmin, 48px);
   gap: clamp(14px, 2vmin, 30px);
-  background: radial-gradient(circle at 50% 50%, rgba(25, 29, 44, 0.65) 0%, rgba(13, 16, 26, 0.88) 100%);
+  background: radial-gradient(circle at 50% 50%, rgba(15, 16, 21, 0.65) 0%, rgba(11, 12, 16, 0.88) 100%);
 }
 
 /* Fixed top (title + intro), scrollable list, fixed buttons at the bottom */
@@ -1234,11 +1274,12 @@ body {
   top: 50%;
   transform: translateY(-50%);
   flex: 0 0 auto;
-  width: clamp(18px, 2.2vmin, 30px);
-  height: clamp(18px, 2.2vmin, 30px);
+  /* Same spark size as the customise pop-up's SAVE & PLAY button */
+  width: clamp(24px, 2.8vmin, 42px);
+  height: clamp(24px, 2.8vmin, 42px);
   fill: currentColor;
   /* Same glowing crest as the starter cards' CUSTOMIZE button */
-  filter: drop-shadow(0 0 10px rgba(180, 145, 255, 0.72));
+  filter: drop-shadow(0 0 10px hsla(var(--game-hue), 100%, 78%, 0.72));
 }
 
 .info-customise-btn > span {
@@ -1250,19 +1291,19 @@ body {
 
 .info-reverse:not(.customise-modal-content) .info-customise-btn {
   position: relative;
-  /* The starter cards' CUSTOMIZE purple: glass pill with the lavender border and text */
+  /* The starter cards' CUSTOMIZE pill: glass with the deck-hued border and text */
   border-radius: var(--radius-pill);
-  border: 1px solid rgba(198, 173, 255, 0.48);
-  background: rgba(130, 96, 190, 0.18);
-  color: #e4d7ff;
+  border: 1px solid hsla(var(--game-hue), 100%, 84%, 0.48);
+  background: hsla(var(--game-hue), 42%, 56%, 0.18);
+  color: hsl(var(--game-hue), 100%, 92%);
   box-shadow: none;
   transition: background 0.35s ease, box-shadow 0.35s ease, transform 0.25s ease, opacity 0.25s ease;
 }
 
 .info-reverse:not(.customise-modal-content) .info-customise-btn:hover,
 .info-reverse:not(.customise-modal-content) .info-customise-btn:focus-visible {
-  background: rgba(151, 111, 220, 0.32);
-  box-shadow: 0 0 24px rgba(164, 125, 255, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  background: hsla(var(--game-hue), 61%, 65%, 0.32);
+  box-shadow: 0 0 24px hsla(var(--game-hue), 100%, 75%, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.18);
 }
 
 .btn-primary {
@@ -1316,17 +1357,17 @@ body {
 
 .info-reverse .customise-modal-done {
   border-radius: var(--radius-pill);
-  border: 1px solid rgba(198, 173, 255, 0.48);
-  background: rgba(130, 96, 190, 0.18);
-  color: #e4d7ff;
+  border: 1px solid hsla(var(--game-hue), 100%, 84%, 0.48);
+  background: hsla(var(--game-hue), 42%, 56%, 0.18);
+  color: hsl(var(--game-hue), 100%, 92%);
   box-shadow: none;
 }
 
 .info-reverse .customise-modal-done:hover,
 .info-reverse .customise-modal-done:focus-visible {
-  background: rgba(151, 111, 220, 0.32);
-  border-color: rgba(198, 173, 255, 0.6);
-  box-shadow: 0 0 24px rgba(164, 125, 255, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  background: hsla(var(--game-hue), 61%, 65%, 0.32);
+  border-color: hsla(var(--game-hue), 100%, 84%, 0.6);
+  box-shadow: 0 0 24px hsla(var(--game-hue), 100%, 75%, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.18);
 }
 
 /* Floating Confetti Canvas */
@@ -1437,7 +1478,7 @@ body {
 .age-gate-kicker {
   grid-row: 1;
   align-self: end;
-  margin: 0 0 clamp(8px, 2.2cqi, 18px);
+  margin: 0 0 clamp(14px, 3.4cqi, 30px);
   font-size: clamp(0.62rem, min(2.6cqi, 1.7vh), 1.16rem);
   font-weight: 700;
   letter-spacing: clamp(1.5px, 0.6cqi, 4px);
@@ -1462,13 +1503,13 @@ body {
   flex-direction: column;
   align-items: center;
   width: 100%;
-  margin-top: clamp(14px, 4cqi, 34px);
+  margin-top: clamp(24px, 7cqi, 60px);
 }
 
 .age-gate-buttons {
   display: flex;
   justify-content: center;
-  gap: clamp(8px, 2.4cqi, 18px);
+  gap: clamp(12px, 3cqi, 24px);
   width: 100%;
   max-width: clamp(240px, 62cqi, 460px);
 }
@@ -1528,27 +1569,27 @@ body {
 
 .age-gate-btn:hover,
 .age-gate-btn:focus-visible {
-  box-shadow: 0 0 1.2em rgba(198, 173, 255, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  box-shadow: 0 0 1.2em hsla(var(--game-hue), 100%, 84%, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.18);
 }
 
 .age-gate-btn:active {
   transform: translateY(1px);
 }
 
-/* Yes: the CUSTOMIZE purple — a glass pill with lavender border and text, wearing
-   the sparkling border effect (added in JS); no spark illustration */
+/* Yes: the customize pill, dragged to the game's hue — a glass border and text
+   wearing the sparkling border effect (added in JS); no spark illustration */
 
 .age-gate-yes {
-  background: rgba(130, 96, 190, 0.18);
-  border-color: rgba(198, 173, 255, 0.48);
-  color: #e4d7ff;
+  background: hsla(var(--game-hue), 42%, 56%, 0.18);
+  border-color: hsla(var(--game-hue), 100%, 84%, 0.48);
+  color: hsl(var(--game-hue), 100%, 92%);
 }
 
 .age-gate-yes:hover,
 .age-gate-yes:focus-visible {
-  background: rgba(151, 111, 220, 0.32);
-  border-color: rgba(198, 173, 255, 0.7);
-  box-shadow: 0 0 24px rgba(164, 125, 255, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  background: hsla(var(--game-hue), 61%, 65%, 0.32);
+  border-color: hsla(var(--game-hue), 100%, 84%, 0.7);
+  box-shadow: 0 0 24px hsla(var(--game-hue), 100%, 75%, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.18);
 }
 
 /* No: quiet dark glass with a faint warm edge, so declining reads softer than YES */
@@ -1608,7 +1649,7 @@ body {
     linear-gradient(to top, rgba(0, 0, 0, var(--shade-bottom, 0)), transparent 40%);
 }
 
-/* Intro card sparkles: small purple stars that flash rarely and at random-looking intervals */
+/* Intro card sparkles: small teal stars that flash rarely and at random-looking intervals */
 
 .card-sparkles {
   position: absolute;

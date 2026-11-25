@@ -270,7 +270,7 @@ body.unhinged-screen-shake {
 .card-back {
   --card-back-frame-inset: clamp(20px, 2.4cqi, 46px);
   --card-back-inner-inset: clamp(4px, 0.65cqi, 11px);
-  background: #111420;
+  background: #101014;
   transform: rotateY(180deg);
   display: flex;
   align-items: center;
@@ -293,7 +293,7 @@ body.unhinged-screen-shake {
   align-items: center;
   justify-content: center;
   padding: clamp(20px, 3.8cqi, 64px) clamp(16px, 3cqi, 52px);
-  background: radial-gradient(circle at 50% 50%, rgba(25, 29, 44, 0.65) 0%, rgba(13, 16, 26, 0.88) 100%);
+  background: radial-gradient(circle at 50% 50%, rgba(15, 16, 21, 0.65) 0%, rgba(11, 12, 16, 0.88) 100%);
 }
 
 /* Fancy Cursive 2-Line Title ("Never Have" / "AI Ever") */
@@ -342,7 +342,9 @@ body.unhinged-screen-shake {
   justify-content: center;
   width: clamp(24px, 4.6vh, 90px);
   height: clamp(24px, 4.6vh, 90px);
-  color: #d7c8ff;
+  /* The spark illustration wears the game's hue at the same brightness as the
+     deck screen's spark (bright core, 55% colour + 45% white) */
+  color: color-mix(in srgb, hsl(var(--game-hue), 100%, 58%) 55%, white);
 }
 
 .customise-btn {
@@ -352,10 +354,10 @@ body.unhinged-screen-shake {
   gap: 8px;
   margin-top: 16px;
   padding: clamp(7px, 4cqi, 26px) clamp(12px, 6.5cqi, 40px);
-  border: 1px solid rgba(198, 173, 255, 0.48);
+  border: 1px solid hsla(var(--game-hue), 100%, 84%, 0.48);
   border-radius: var(--radius-pill);
-  background: rgba(130, 96, 190, 0.18);
-  color: #e4d7ff;
+  background: hsla(var(--game-hue), 42%, 56%, 0.18);
+  color: hsl(var(--game-hue), 100%, 92%);
   font-family: var(--font-sans);
   font-size: clamp(0.6rem, 4.3cqi, 1.5rem);
   font-weight: 800;
@@ -364,7 +366,7 @@ body.unhinged-screen-shake {
   cursor: pointer;
   -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
-  box-shadow: 0 0 16px rgba(164, 125, 255, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  box-shadow: 0 0 16px hsla(var(--game-hue), 100%, 75%, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.12);
   transition: background 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
 }
 
@@ -417,7 +419,11 @@ body.unhinged-screen-shake {
   padding: clamp(12px, 2.5vmin, 40px);
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.25s ease;
+  /* Hidden overlays leave rendering entirely: a full-screen blurred backdrop
+     left at opacity:0 can still composite its backdrop-filter and blip through
+     the fade-to-black curtain during deck-to-game handovers */
+  visibility: hidden;
+  transition: opacity 0.25s ease, visibility 0s linear 0.25s;
 }
 
 /* Widescreens and TVs: the pop-ups grow with the viewport instead of
@@ -442,7 +448,7 @@ body.unhinged-screen-shake {
   max-height: 85vh;
   max-height: 85dvh;
   padding: 0;
-  background: #111420;
+  background: #101014;
   border: var(--stroke-card) solid rgba(255, 255, 255, 0.28);
   border-radius: var(--radius-card);
   box-shadow: 0 20px 48px -10px rgba(0, 0, 0, 0.75), 0 0 1px 1px rgba(255, 255, 255, 0.16);
@@ -865,9 +871,9 @@ body.unhinged-screen-shake {
   height: var(--sparkle-size, 5px);
   /* Centre each star on its point */
   margin: calc(var(--sparkle-size, 5px) / -2) 0 0 calc(var(--sparkle-size, 5px) / -2);
-  background: #c9a9ff;
+  background: hsl(var(--game-hue), 100%, 83%);
   clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%);
-  filter: drop-shadow(0 0 3px rgba(180, 140, 255, 0.9));
+  filter: drop-shadow(0 0 3px hsla(var(--game-hue), 100%, 77%, 0.9));
   opacity: 0;
   animation: card-sparkle-flash var(--sparkle-duration, 9s) ease-in-out var(--sparkle-delay, 0s) infinite;
 }

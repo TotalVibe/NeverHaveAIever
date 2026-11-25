@@ -28,7 +28,7 @@ const KEY_CUE = '<kbd class="key-cue">SPACE</kbd>';
 // Order of the deck screen, left to right
 const DECK_ORDER = ['classic', 'most-likely', 'shot-dare'];
 // Each deck's colour: the deck screen glows in the colour of the selected deck
-const DECK_COLORS = { classic: '#9b5de5', 'most-likely': '#ffd43b', 'shot-dare': '#ff2d75' };
+const DECK_COLORS = { classic: '#22d3ee', 'most-likely': '#ffd43b', 'shot-dare': '#ff2d75' };
 // How-to-play text for each context: the deck screen, or the game being played
 const INFO_TEXT = {
   tap: {
@@ -471,7 +471,13 @@ class NeverHaveIEverApp {
       clearTimeout(this.fadeCoverFallback);
       setPhase('covered');
       run(action);
-      requestAnimationFrame(() => requestAnimationFrame(reveal));
+      // Two rAFs only schedule the new screen's paint; a heavy swap (the blurred
+      // deck emerge, the big ambient glow) can still be rasterising when the
+      // curtain lifts, and the compositor then shows a stale frame — a one-frame
+      // blip of the home screen. Hold the full-black cover a beat before lifting.
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        this.fadeRevealHold = setTimeout(reveal, 140);
+      }));
     };
 
     const onCovered = (event) => {
@@ -990,6 +996,13 @@ class NeverHaveIEverApp {
   }
 
   updateAmbientGlow(category) {
+    // Classic starts on the deck's teal through the 18+ gate and the welcome
+    // screen, then once actual prompts show, the glow follows each card's
+    // category colour like the other decks do.
+    if (this.gameMode === 'classic' && (this.ageGateActive || this.awaitingStart)) {
+      this.setAmbientGlow('rgba(34, 211, 238, 0.45)');
+      return;
+    }
     const catData = this.getCategoryData(category);
     if (catData && this.ambientGlow) {
       this.ambientGlow.style.background = `radial-gradient(circle, ${catData.glow} 0%, rgba(10, 11, 16, 0.4) 60%, transparent 75%)`;
@@ -1991,6 +2004,8 @@ class NeverHaveIEverApp {
     if (!this.setupStep) return;
     this.setupStep = false;
     this.setupDone = true;
+    // The game's own mode classes own --game-hue from here on
+    this.customiseModal.style.removeProperty('--game-hue');
     this.fadeTransition(() => {
       this.customiseModal.classList.remove('active', 'is-setup');
       this.modeModal.classList.remove('active');
@@ -2003,6 +2018,7 @@ class NeverHaveIEverApp {
   cancelSetup() {
     this.setupStep = false;
     this.customiseModal.classList.remove('active', 'is-setup');
+    this.customiseModal.style.removeProperty('--game-hue');
     this.returnFlippedPanel({ animate: false });
     try {
       history.pushState({ screen: 'home' }, '');
@@ -2517,6 +2533,9 @@ class NeverHaveIEverApp {
         'has-text', descriptionField.value.trim().length > 0
       );
       if (from === 'setup') {
+        // The setup pop-up opens over the deck screen, whose --game-hue pin is
+        // classic teal: hand the pop-up the pending deck's hue instead
+        this.customiseModal.style.setProperty('--game-hue', `var(--hue-${this.pendingMode})`);
         // First game: the pop-up comes in over the still-open deck screen; the fade
         // to black waits until Skip or Save and Play
         this.customiseModal.classList.add('is-setup');
