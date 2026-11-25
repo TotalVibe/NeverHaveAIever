@@ -795,7 +795,7 @@
 }
 
 .shot-blurb {
-  bottom: clamp(18px, 5.5vh, 40px);
+  bottom: clamp(14px, 3.8vh, 30px);
   width: 86%;
   font-size: 0.84rem;
 }
@@ -2280,7 +2280,7 @@ body:has(.age-gate-card) .classic-keys {
 .mode-shot-dare .card-back .card-blurb {
   position: absolute;
   left: 50%;
-  bottom: clamp(18px, 5.5vh, 40px);
+  bottom: clamp(14px, 3.8vh, 30px);
   transform: translateX(-50%);
   grid-row: auto;
   width: 84%;
@@ -4050,7 +4050,7 @@ body.entry-instant .point-arch svg {
 .game-card.intro-card .card-blurb {
   position: absolute;
   left: 50%;
-  bottom: calc(clamp(12px, 3.4vh, 28px) + 42px + clamp(24px, 8.3cqi, 76px));
+  bottom: calc(clamp(12px, 3.4vh, 28px) + clamp(32px, 4vh, 42px) + clamp(24px, 8.3cqi, 76px));
   transform: translateX(-50%);
   width: 84%;
   margin: 0;
