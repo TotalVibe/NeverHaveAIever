@@ -1455,12 +1455,13 @@
   line-height: 1.45;
 }
 
-/* The five shot glasses: each rises in turn, ending slightly higher */
+/* The five shot glasses: always present, then the arch drinks in a loop —
+   starting 2s after the screen loads, the glasses jump a bit one after
+   another (left to right), like a round of shots */
 
 .shot-arch svg {
   transform: translateY(var(--arch-y, 0px)) rotate(var(--arch-r, 0deg));
-  animation: arch-in 0.7s cubic-bezier(0.2, 0.85, 0.25, 1) both;
-  animation-delay: calc(0.25s + var(--i, 0) * 0.14s);
+  animation: shot-jump 2.6s ease-in-out calc(2s + var(--i, 0) * 0.3s) infinite;
 }
 
 /* The arch rise/tilt scales with the card, matching the glasses' growth */
@@ -1475,18 +1476,23 @@
 
 .shot-arch svg:nth-child(5) { --i: 4; --arch-y: clamp(10px, 2.9cqi, 34px); --arch-r: 16deg; }
 
-@keyframes arch-in {
-  from {
-    opacity: 0;
-    transform: translateY(calc(var(--arch-y, 0px) + 12px)) rotate(var(--arch-r, 0deg));
+/* One drink per 2.6s cycle: a quick lift and drop, then the glass idles until
+   its next turn. The stagger (--i * 0.3s) keeps the five drinking in order;
+   the jump height scales with the card, matching the glasses' growth. */
+
+@keyframes shot-jump {
+  0%, 16%, 100% {
+    transform: translateY(var(--arch-y, 0px)) rotate(var(--arch-r, 0deg));
   }
-  to {
-    opacity: 1;
-    transform: translateY(calc(var(--arch-y, 0px) - 5px)) rotate(var(--arch-r, 0deg));
+  6% {
+    transform: translateY(calc(var(--arch-y, 0px) - clamp(9px, 2.2cqi, 22px))) rotate(var(--arch-r, 0deg));
+  }
+  11% {
+    transform: translateY(calc(var(--arch-y, 0px) - clamp(2px, 0.6cqi, 6px))) rotate(var(--arch-r, 0deg));
   }
 }
 
-/* Fade handover into the game: the glasses stand in place instead of rising
+/* Fade handover into the game: the glasses hold still
    underneath the black curtain (see app.js startGame instantEntry) */
 
 body.entry-instant .shot-arch svg {
