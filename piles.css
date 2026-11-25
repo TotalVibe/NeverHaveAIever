@@ -3971,7 +3971,8 @@ body.game-entering .shot-controls {
 .point-arch svg {
   width: clamp(32px, 10cqi, 104px);
   height: clamp(32px, 10cqi, 104px);
-  transform: translateY(var(--arch-y, 0px)) rotate(var(--point, 0deg));
+  /* --rest is the hand's repose fan angle; --point adds the sweep on top of it */
+  transform: translateY(var(--arch-y, 0px)) rotate(calc(var(--rest, 0deg) + var(--point, 0deg)));
   transform-origin: 50% 60%;
   animation: point-corners 7.4s ease-in-out 2s infinite;
 }
@@ -4065,38 +4066,40 @@ body.entry-instant .point-arch svg {
 
 /* Hands: the inner two float a touch higher than the outer ones */
 
-/* Hands: the inner two float clearly higher than the outer ones */
+/* Repose fan: each hand starts facing its own outward angle (screen terms —
+   the flipped hands carry the mirrored value), and the cycle returns to it */
+
+.point-arch > :nth-child(1) svg { --rest: 50deg; }
+.point-arch > :nth-child(2) svg { --rest: 18deg; }
+.point-arch > :nth-child(3) { --rest: 18deg; }
+.point-arch > :nth-child(4) { --rest: 50deg; }
 
 .point-arch > :nth-child(2) svg,
 .point-arch > :nth-child(3) {
   --arch-y: clamp(-13px, -2.4cqi, -5px);
 }
 
-/* The animation-delay left a snap from resting straight up into the first corner;
-   `backwards` holds the first keyframe through the delay, so the hands already
-   sit on the opening pose and every cycle eases in from it */
+/* The 3s delay holds the first keyframe (the repose fan) via `backwards`,
+   so the first corner approach eases out of the resting pose — no snap */
 
 .point-arch svg {
-  animation: point-corners 11s ease-in-out 2s infinite backwards;
+  animation: point-corners 13s ease-in-out 3s infinite backwards;
 }
 
-/* Bouncier, less snappy: each corner gets an overshoot just past it, then a settle
-   before the hold; the fourth corner waits the longest before the sweep comes back */
-
-/* Longer waits: ~1.5s held at each corner, ~0.7s between; the wait before the
-   fourth corner and at it is the longest, then the sweep bounces back */
+/* Long and unhurried: EVERY leg is a second or more, and the --pN targets are the
+   per-hand corner angles MINUS the repose angle (app.js), so the fan measures the
+   sweep from each hand's own resting pose. The cycle ends back at repose. */
 
 @keyframes point-corners {
-  0%, 14% { --point: var(--p0, -45deg); }
-  22% { --point: calc(var(--p1, 45deg) + 6deg); }
-  26%, 36% { --point: var(--p1, 45deg); }
-  44% { --point: calc(var(--p2, 135deg) + 6deg); }
-  48%, 58% { --point: var(--p2, 135deg); }
-  66% { --point: calc(var(--p3, 225deg) + 6deg); }
-  70%, 82% { --point: var(--p3, 225deg); }
-  90% { --point: calc(var(--p2, 135deg) - 6deg); }
-  93% { --point: var(--p2, 135deg); }
-  100% { --point: var(--p0, -45deg); }
+  0%, 8% { --point: 0deg; }
+  18% { --point: var(--p0, -20deg); }
+  26%, 34% { --point: var(--p0, -20deg); }
+  44% { --point: var(--p1, 30deg); }
+  52% { --point: var(--p1, 30deg); }
+  62% { --point: var(--p2, 45deg); }
+  70% { --point: var(--p2, 45deg); }
+  80%, 92% { --point: var(--p3, -30deg); }
+  100% { --point: 0deg; }
 }
 
 /* ===== Revisions 75: Swipe to Reveal returns for Classic & Who's Most Likely ===== */

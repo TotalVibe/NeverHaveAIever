@@ -1254,26 +1254,31 @@ class NeverHaveIEverApp {
 
   // Who's Most Likely: aim each arch hand at a real corner of the viewport. With the
   // hand's centre at (hx, hy) and the icon's finger pointing up, the screen rotation
-  // that aims it at corner (cx, cy) is atan2(dx, -dy). Mirrored hands take the negative
-  // (their flip reverses rotation), so the shared keyframes still land on the corner.
+  // that aims it at corner (cx, cy) is atan2(dx, -dy). Each hand rests on its own
+  // outward fan angle (REST), so the keyframed --point values are stored relative to
+  // that repose; mirrored hands carry the negated css values (their flip reverses
+  // rotation), keeping the shared keyframes accurate for the whole arch.
   computePointArchAngles() {
     const arch = document.querySelector('.game-card.current .point-arch');
     if (!arch) return;
+    // Repose fan, screen degrees: outer hands point out, inner hands near vertical
+    const REPOSE = [-50, -18, 18, 50];
     const corners = [
       [0, 0],
       [window.innerWidth, 0],
       [window.innerWidth, window.innerHeight],
       [0, window.innerHeight]
     ];
-    arch.querySelectorAll('svg').forEach((svg) => {
+    [...arch.querySelectorAll('svg')].forEach((svg, index) => {
       const box = svg.getBoundingClientRect();
       if (!box.width && !box.height) return;
       const hx = box.left + box.width / 2;
       const hy = box.top + box.height / 2;
       const sign = svg.closest('.arch-flip') ? -1 : 1;
+      const rest = REPOSE[index] ?? 0;
       corners.forEach(([cx, cy], j) => {
         const angle = Math.atan2(cx - hx, hy - cy) * 180 / Math.PI;
-        svg.style.setProperty(`--p${j}`, `${(sign * angle).toFixed(2)}deg`);
+        svg.style.setProperty(`--p${j}`, `${(sign * (angle - rest)).toFixed(2)}deg`);
       });
     });
   }
