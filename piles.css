@@ -4088,7 +4088,7 @@ body.entry-instant .point-arch svg {
 
 .point-arch > :nth-child(1) svg,
 .point-arch > :nth-child(4) {
-  --arch-y: clamp(5px, 1.1cqi, 12px);
+  --arch-y: clamp(11px, 2.4cqi, 26px);
 }
 
 /* The 3s delay holds the first keyframe (the repose fan) via `backwards`,
