@@ -4011,3 +4011,62 @@ body.entry-instant .beer-arch svg,
 body.entry-instant .point-arch svg {
   animation: none;
 }
+
+/* ===== Revisions 74: intro back spacing like Shots & Dares; finger sweep eased with bounce ===== */
+
+/* Classic & Who's Most Likely: replicate the Shots & Dares intro back — the title is
+   centred and the two-line description is pinned low, breathing just above CUSTOMIZE,
+   instead of floating under the title with dead space below it */
+
+.game-card.intro-card .card-back-emblem {
+  grid-template-rows: 1fr auto 1fr;
+}
+
+.game-card.intro-card .card-back-emblem > .customise-btn {
+  grid-row: auto;
+  align-self: end;
+  margin-top: 0;
+  margin-bottom: calc(clamp(12px, 3.4vh, 28px) + 30px);
+}
+
+.game-card.intro-card .card-blurb {
+  position: absolute;
+  left: 50%;
+  bottom: calc(clamp(12px, 3.4vh, 28px) + 84px);
+  transform: translateX(-50%);
+  width: 86%;
+  margin: 0;
+  line-height: 1.45;
+}
+
+/* Hands: the inner two float a touch higher than the outer ones */
+
+.point-arch > :nth-child(2) svg,
+.point-arch > :nth-child(3) {
+  --arch-y: clamp(-7px, -1.4cqi, -2px);
+}
+
+/* The animation-delay left a snap from resting straight up into the first corner;
+   `backwards` holds the first keyframe through the delay, so the hands already
+   sit on the opening pose and every cycle eases in from it */
+
+.point-arch svg {
+  animation: point-corners 7.4s ease-in-out 2s infinite backwards;
+}
+
+/* Bouncier, less snappy: each corner gets an overshoot just past it, then a settle
+   before the hold; the fourth corner waits the longest before the sweep comes back */
+
+@keyframes point-corners {
+  0%, 12% { --point: var(--p0, -45deg); }
+  21% { --point: calc(var(--p1, 45deg) + 6deg); }
+  26%, 33% { --point: var(--p1, 45deg); }
+  42% { --point: calc(var(--p2, 135deg) + 6deg); }
+  47%, 55% { --point: var(--p2, 135deg); }
+  64% { --point: calc(var(--p3, 225deg) + 6deg); }
+  69%, 78% { --point: var(--p3, 225deg); }
+  86% { --point: calc(var(--p2, 135deg) - 6deg); }
+  91% { --point: var(--p2, 135deg); }
+  96% { --point: calc(var(--p0, -45deg) - 6deg); }
+  100% { --point: var(--p0, -45deg); }
+}
