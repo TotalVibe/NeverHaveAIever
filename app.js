@@ -34,13 +34,13 @@ const INFO_TEXT = {
   tap: {
     deck: 'Swipe sideways across the decks, or tap one. SELECT starts the game.',
     classic: 'Press an emoji button, or drag the card toward one.',
-    'most-likely': 'Swipe the card in any direction to go on. Use the arrows and Indeed at the bottom.',
+    'most-likely': 'Swipe the card in any direction to go on. Use the arrows and INDEED at the bottom.',
     'shot-dare': 'Tap the buttons below the card. Pick a dare by tapping or swiping the three cards.'
   },
   keys: {
     deck: '← → choose a game, Space to play.',
     classic: 'Arrow keys (↑ Spicy, ← Cringe, → Party, ↓ Wholesome), Spacebar to shuffle, Z to undo.',
-    'most-likely': '→ goes on, ← undoes, Space is Indeed. ↑ and ↓ do nothing.',
+    'most-likely': '→ goes on, ← undoes, Space is INDEED. ↑ and ↓ do nothing.',
     'shot-dare': 'Enter or Space presses the button, ← → picks a dare, Enter or Space reveals it.'
   }
 };
