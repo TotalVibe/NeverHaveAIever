@@ -4135,6 +4135,17 @@ body.entry-instant .point-arch svg {
   filter: drop-shadow(0 0 clamp(5px, 1.1vmin, 16px) color-mix(in srgb, var(--arch-hue, #ffffff) 40%, transparent));
 }
 
+/* Hands stay fine on big screens: flatter stroke growth with a low cap, and a
+   much softer glow, so the yellow hue never reads as an extra border */
+
+.point-arch svg {
+  stroke-width: clamp(1.3px, 0.15cqi, 2px);
+}
+
+.point-arch {
+  filter: drop-shadow(0 0 clamp(3px, 0.6vmin, 9px) color-mix(in srgb, var(--arch-hue, #ffffff) 22%, transparent));
+}
+
 /* Sparkles over the arches take the deck hue too; --sparkle-color comes in from
    app.js (addArchSparkles), everything without it keeps the card's violet */
 
