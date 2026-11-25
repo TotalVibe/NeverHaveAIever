@@ -3908,7 +3908,7 @@ body.game-entering .shot-controls {
 .beer-pair {
   display: flex;
   align-items: flex-start;
-  gap: clamp(6px, 1.8cqi, 16px);
+  gap: clamp(3px, 1cqi, 8px);
 }
 
 .beer-arch svg,
@@ -3917,7 +3917,8 @@ body.game-entering .shot-controls {
   height: clamp(26px, 8cqi, 88px);
   fill: none;
   stroke: #ffffff;
-  stroke-width: clamp(1.8px, 0.35cqi, 4px);
+  /* Thinner line style than the shot glasses */
+  stroke-width: clamp(1.3px, 0.25cqi, 2.75px);
   stroke-linejoin: round;
   stroke-linecap: round;
 }
@@ -3936,7 +3937,7 @@ body.game-entering .shot-controls {
   animation: beer-cheer 3.6s ease-in-out var(--cheer-delay, 3.1s) infinite;
 }
 
-.beer-arch > .arch-flip svg { --arch-y: clamp(10px, 2.9cqi, 34px); --arch-r: -6deg; --cheer-delay: 2s; }
+.beer-arch > .arch-flip svg { --arch-y: clamp(10px, 2.9cqi, 34px); --arch-r: -10deg; --cheer-delay: 2s; }
 
 .beer-pair svg:nth-of-type(1) { --arch-y: clamp(3px, 0.9cqi, 10px); --arch-r: 4deg; --cheer-delay: 3.1s; }
 
@@ -3953,25 +3954,40 @@ body.game-entering .shot-controls {
   }
 }
 
-/* Hands: each sways from its wrist like pointing around the table, taking turns */
+/* Hands: larger, thinner; both sweep in sync through the screen's four corners in
+   clockwise order (top-left, top-right, bottom-right, bottom-left), holding at each */
 
 .point-arch {
-  gap: clamp(24px, 6cqi, 56px);
+  gap: clamp(28px, 7cqi, 64px);
 }
 
 .point-arch svg {
-  transform-origin: 50% 88%;
-  animation: point-sway 1.9s ease-in-out calc(2s + var(--i, 0) * 0.45s) infinite;
+  width: clamp(32px, 10cqi, 104px);
+  height: clamp(32px, 10cqi, 104px);
+  transform: rotate(calc(var(--point, 0deg) * var(--point-dir, 1)));
+  transform-origin: 50% 60%;
+  animation: point-corners 5.2s ease-in-out 2s infinite;
 }
 
-.point-arch > .arch-flip svg { --i: 0; }
+/* The mirrored hand negates the angle so it still aims at the same screen corner */
+.point-arch > .arch-flip svg { --point-dir: -1; }
 
-.point-arch > :last-child svg { --i: 1; }
+/* Animate the pointing angle as a registered custom property, so the mirrored
+   hand can negate it and the two still point together */
+@property --point {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
 
-@keyframes point-sway {
-  0%, 100% { transform: rotate(0deg); }
-  25% { transform: rotate(-13deg); }
-  75% { transform: rotate(13deg); }
+/* 5.2s loop: ~0.9s held at each corner, ~0.4s sweeping to the next */
+
+@keyframes point-corners {
+  0%, 18% { --point: -45deg; }   /* top-left */
+  26%, 43% { --point: 45deg; }   /* top-right */
+  51%, 68% { --point: 135deg; }  /* bottom-right */
+  76%, 93% { --point: 225deg; }  /* bottom-left */
+  100% { --point: 315deg; }      /* back to top-left for the seamless loop */
 }
 
 /* Fade handover into the game: every illustration holds still underneath the black curtain
