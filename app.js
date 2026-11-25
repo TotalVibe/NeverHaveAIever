@@ -1099,6 +1099,9 @@ class NeverHaveIEverApp {
     this.stackContainer.appendChild(card2);
     this.stackContainer.appendChild(card1);
 
+    // Most-likely: the pointing hands aim at the real screen corners, which needs layout
+    if (this.gameMode === 'most-likely') this.computePointArchAngles();
+
     this.activeCard = card1;
     this.activeCardCategory = initialCategory;
     if (this.isAgeConfirmed()) {
@@ -1217,10 +1220,36 @@ class NeverHaveIEverApp {
       return `<div class="beer-arch" aria-hidden="true"><span class="arch-flip">${BEER_MUG_SVG}</span><span class="beer-pair">${COCKTAIL_SVG}${BEER_MUG_SVG}</span></div>`;
     }
     if (this.gameMode === 'most-likely') {
-      // Two pointing hands, the left one mirrored so they point opposite ways
-      return `<div class="point-arch" aria-hidden="true"><span class="arch-flip">${POINTING_HAND_SVG}</span>${POINTING_HAND_SVG}</div>`;
+      // Four pointing hands on an arch; the left two are mirrored
+      return `<div class="point-arch" aria-hidden="true"><span class="arch-flip">${POINTING_HAND_SVG}</span><span class="arch-flip">${POINTING_HAND_SVG}</span>${POINTING_HAND_SVG}${POINTING_HAND_SVG}</div>`;
     }
     return '<div class="emblem-sub">Swipe to Reveal</div>';
+  }
+
+  // Who's Most Likely: aim each arch hand at a real corner of the viewport. With the
+  // hand's centre at (hx, hy) and the icon's finger pointing up, the screen rotation
+  // that aims it at corner (cx, cy) is atan2(dx, -dy). Mirrored hands take the negative
+  // (their flip reverses rotation), so the shared keyframes still land on the corner.
+  computePointArchAngles() {
+    const arch = document.querySelector('.game-card.current .point-arch');
+    if (!arch) return;
+    const corners = [
+      [0, 0],
+      [window.innerWidth, 0],
+      [window.innerWidth, window.innerHeight],
+      [0, window.innerHeight]
+    ];
+    arch.querySelectorAll('svg').forEach((svg) => {
+      const box = svg.getBoundingClientRect();
+      if (!box.width && !box.height) return;
+      const hx = box.left + box.width / 2;
+      const hy = box.top + box.height / 2;
+      const sign = svg.closest('.arch-flip') ? -1 : 1;
+      corners.forEach(([cx, cy], j) => {
+        const angle = Math.atan2(cx - hx, hy - cy) * 180 / Math.PI;
+        svg.style.setProperty(`--p${j}`, `${(sign * angle).toFixed(2)}deg`);
+      });
+    });
   }
 
   createCardElement(data, stackClass = 'next', isFaceDown = true) {
@@ -2721,6 +2750,8 @@ class NeverHaveIEverApp {
       if (level) this.updateSpicyLevelPreview(level);
       // Classic widescreen keeps the swipe targets aligned with the surrounding UI
       this.syncClassicTargetAlignment();
+      // Most-likely: re-aim the pointing hands at the moved screen corners
+      this.computePointArchAngles();
     });
     // Tapping a level's name selects it, the same as dragging the slider to it
     this.customiseModal.querySelectorAll('.customise-level-option').forEach((option) => {

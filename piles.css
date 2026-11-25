@@ -3908,7 +3908,7 @@ body.game-entering .shot-controls {
 .beer-pair {
   display: flex;
   align-items: flex-start;
-  gap: clamp(2px, 0.6cqi, 5px);
+  gap: clamp(0px, 0.25cqi, 2px);
 }
 
 .beer-arch svg,
@@ -3959,40 +3959,48 @@ body.game-entering .shot-controls {
   }
 }
 
-/* Hands: larger, thinner; both sweep in sync through the screen's four corners in
-   clockwise order (top-left, top-right, bottom-right, bottom-left), holding at each */
+/* Hands: four of them on an arch above the crest. Each one aims at a real screen
+   corner: app.js computes the exact angle per hand (atan2 from hand to corner) into
+   --p0..--p3, and the keyframes sweep through those — hold at each, bounce back at
+   the fourth — so the hands converge on corners instead of pointing in parallel */
 
 .point-arch {
-  gap: clamp(28px, 7cqi, 64px);
+  gap: clamp(10px, 3cqi, 30px);
 }
 
 .point-arch svg {
   width: clamp(32px, 10cqi, 104px);
   height: clamp(32px, 10cqi, 104px);
-  transform: rotate(calc(var(--point, 0deg) * var(--point-dir, 1)));
+  transform: translateY(var(--arch-y, 0px)) rotate(var(--point, 0deg));
   transform-origin: 50% 60%;
-  animation: point-corners 5.2s ease-in-out 2s infinite;
+  animation: point-corners 7.4s ease-in-out 2s infinite;
 }
 
-/* The mirrored hand negates the angle so it still aims at the same screen corner */
-.point-arch > .arch-flip svg { --point-dir: -1; }
+/* The arch: the outer hands sit lower than the inner two */
+.point-arch > :nth-child(1) svg,
+.point-arch > :nth-child(4) {
+  --arch-y: clamp(8px, 2.4cqi, 28px);
+}
 
-/* Animate the pointing angle as a registered custom property, so the mirrored
-   hand can negate it and the two still point together */
+/* Animate the pointing angle as a registered custom property, so var()-fed per-hand
+   corner angles interpolate smoothly */
 @property --point {
   syntax: '<angle>';
   inherits: false;
   initial-value: 0deg;
 }
 
-/* 5.2s loop: ~0.9s held at each corner, ~0.4s sweeping to the next */
+/* 7.4s loop: ~1s held at each corner, ~0.5s between; the wait before the fourth
+   corner and at it is the longest, then the sweep bounces back the way it came */
 
 @keyframes point-corners {
-  0%, 18% { --point: -45deg; }   /* top-left */
-  26%, 43% { --point: 45deg; }   /* top-right */
-  51%, 68% { --point: 135deg; }  /* bottom-right */
-  76%, 93% { --point: 225deg; }  /* bottom-left */
-  100% { --point: 315deg; }      /* back to top-left for the seamless loop */
+  0%, 13% { --point: var(--p0, -45deg); }
+  19%, 31% { --point: var(--p1, 45deg); }
+  38%, 53% { --point: var(--p2, 135deg); }
+  61%, 79% { --point: var(--p3, 225deg); }
+  87% { --point: var(--p2, 135deg); }
+  94% { --point: var(--p1, 45deg); }
+  100% { --point: var(--p0, -45deg); }
 }
 
 /* Fade handover into the game: every illustration holds still underneath the black curtain
