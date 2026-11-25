@@ -51,8 +51,12 @@ const SHOT_GLASS_SVG = '<svg viewBox="0 0 24 24"><path d="M5 4h14l-2 17H7z" /><p
 // Beer mug, handle on the right, for the Classic card back (the left mug is mirrored in CSS)
 const BEER_MUG_SVG = '<svg viewBox="0 0 24 24"><path d="M7 8h9.5l-.9 12.1a1.1 1.1 0 0 1-1.1 1H9a1.1 1.1 0 0 1-1.1-1z" /><path d="M7 8c-.3-1.5.9-2.9 2.4-2.9.4-1 1.3-1.6 2.3-1.6 1 0 2 .6 2.3 1.6 1.5 0 2.7 1.4 2.5 2.9" /><path d="M16.5 11h1.6a2 2 0 0 1 2 2v2.4a2 2 0 0 1-2 2h-1.6" /></svg>';
 
-// Pointing hand, index finger up, for the Who's Most Likely card back (the left hand is mirrored in CSS)
-const POINTING_HAND_SVG = '<svg viewBox="0 0 24 24"><path d="M7.6 11.2V4.5a1.2 1.2 0 0 1 2.4 0v6.7" /><path d="M10 11.2V7.6a1.2 1.2 0 0 1 2.4 0v3.6" /><path d="M12.4 11.4V8.9a1.2 1.2 0 0 1 2.4 0v2.7" /><path d="M15.6 12V9.9a1.1 1.1 0 0 1 2.2 0v2.3" /><path d="M7.6 11.2V15c0 3 2.2 5.2 5.1 5.2 2.9 0 5.1-2.2 5.1-5.2v-2.8" /><path d="M7.6 12.8 5.7 15.1a1.5 1.5 0 0 0 2.3 1.9l1.5-1.5" /></svg>';
+// Pointing hands for the Who's Most Likely card back: a man's hand showing shirt cuff
+// and jacket sleeve, and a woman's hand wearing a pearl bracelet below a frilled cuff.
+// Two drawings only — the left hands are mirrored with .arch-flip.
+const MAN_HAND_SVG = '<svg viewBox="0 0 24 24"><path d="M8 10.9V5.1a1.1 1.1 0 0 1 2.2 0v5.8" /><path d="M10.2 11V8.1a1.05 1.05 0 0 1 2.1 0V11" /><path d="M12.3 11.2V9a1 1 0 0 1 2 0v2.4" /><path d="M14.5 11.8V10.2a1.05 1.05 0 0 1 2.1 0v2" /><path d="M8 10.9v3.6c0 2.5 1.8 4.3 4.4 4.3s4.4-1.8 4.4-4.3v-3" /><path d="M8 12.4 6.6 14a1.3 1.3 0 0 0 1.9 1.7l1.3-1.3" /><path d="M7.5 19.7h9" /><path d="m6.6 23.7.7-3.6" /><path d="m17.4 23.7-.7-3.6" /></svg>';
+
+const WOMAN_HAND_SVG = '<svg viewBox="0 0 24 24"><path d="M8 10.9V5.1a1.1 1.1 0 0 1 2.2 0v5.8" /><path d="M10.2 11V8.1a1.05 1.05 0 0 1 2.1 0V11" /><path d="M12.3 11.2V9a1 1 0 0 1 2 0v2.4" /><path d="M14.5 11.8V10.2a1.05 1.05 0 0 1 2.1 0v2" /><path d="M8 10.9v3.6c0 2.5 1.8 4.3 4.4 4.3s4.4-1.8 4.4-4.3v-3" /><path d="M8 12.4 6.6 14a1.3 1.3 0 0 0 1.9 1.7l1.3-1.3" /><circle cx="8.7" cy="19.6" r="0.9" /><circle cx="10.9" cy="19.9" r="0.9" /><circle cx="13.1" cy="19.9" r="0.9" /><circle cx="15.3" cy="19.6" r="0.9" /><path d="M7.2 22.4c1.5.8 3.1 1.2 4.8 1.2 1.7 0 3.3-.4 4.8-1.2" /></svg>';
 
 // Cocktail glass with a pick and olive, same line style, for the middle slot of the Classic card back
 const COCKTAIL_SVG = '<svg viewBox="0 0 24 24"><path d="M4.5 4.5h15L12 12z" /><path d="M12 12v9" /><path d="M8.3 21h7.4" /><path d="M16 4.5l3.2-2.2" /><circle cx="20.2" cy="1.7" r="1.1" /></svg>';
@@ -1162,6 +1166,28 @@ class NeverHaveIEverApp {
     title.appendChild(layer);
   }
 
+  // Sparkles scattered over a card-back illustration arch, in the deck's own hue.
+  // The layer reuses .card-sparkle, so size/duration/delay come from the same vars.
+  addArchSparkles(arch) {
+    const layer = document.createElement('div');
+    layer.className = 'card-sparkles arch-sparkles';
+    layer.setAttribute('aria-hidden', 'true');
+    const hue = DECK_COLORS[this.gameMode];
+    const phi = 0.6180339887;
+    for (let i = 0; i < 8; i += 1) {
+      const spark = document.createElement('span');
+      spark.className = 'card-sparkle';
+      spark.style.left = `${(6 + ((i + 1) * phi * 3 % 1) * 88).toFixed(2)}%`;
+      spark.style.top = `${(4 + ((i + 1) * phi * 5 % 1) * 82).toFixed(2)}%`;
+      spark.style.setProperty('--sparkle-size', `${(3 + (i * phi) % 2.4).toFixed(1)}px`);
+      spark.style.setProperty('--sparkle-duration', `${(6 + (i * 1.71) % 3).toFixed(2)}s`);
+      spark.style.setProperty('--sparkle-delay', `${(2.2 + i * 0.9).toFixed(2)}s`);
+      spark.style.setProperty('--sparkle-color', hue);
+      layer.appendChild(spark);
+    }
+    arch.appendChild(layer);
+  }
+
   // Sparkles on a card's back: a border set, plus a few over the title
   addIntroSparkles(card) {
     const back = card.querySelector('.card-back');
@@ -1212,16 +1238,17 @@ class NeverHaveIEverApp {
   }
 
   emblemFooterMarkup() {
+    const hue = DECK_COLORS[this.gameMode];
     if (this.gameMode === 'shot-dare') {
-      return `<div class="shot-arch" aria-hidden="true">${SHOT_GLASS_SVG.repeat(5)}</div>`;
+      return `<div class="shot-arch" style="--arch-hue: ${hue}" aria-hidden="true">${SHOT_GLASS_SVG.repeat(5)}</div>`;
     }
     if (this.gameMode === 'classic') {
       // Mug on the left (mirrored, handle outward), then a raised cocktail and a mug close together
-      return `<div class="beer-arch" aria-hidden="true"><span class="arch-flip">${BEER_MUG_SVG}</span><span class="beer-pair">${COCKTAIL_SVG}${BEER_MUG_SVG}</span></div><div class="emblem-sub">Swipe to Reveal</div>`;
+      return `<div class="beer-arch" style="--arch-hue: ${hue}" aria-hidden="true"><span class="arch-flip">${BEER_MUG_SVG}</span><span class="beer-pair">${COCKTAIL_SVG}${BEER_MUG_SVG}</span></div><div class="emblem-sub">Swipe to Reveal</div>`;
     }
     if (this.gameMode === 'most-likely') {
-      // Four pointing hands on an arch; the left two are mirrored
-      return `<div class="point-arch" aria-hidden="true"><span class="arch-flip">${POINTING_HAND_SVG}</span><span class="arch-flip">${POINTING_HAND_SVG}</span>${POINTING_HAND_SVG}${POINTING_HAND_SVG}</div><div class="emblem-sub">Swipe to Reveal</div>`;
+      // Man and woman hands alternating on the arch; the left two are mirrored
+      return `<div class="point-arch" style="--arch-hue: ${hue}" aria-hidden="true"><span class="arch-flip">${MAN_HAND_SVG}</span><span class="arch-flip">${WOMAN_HAND_SVG}</span>${WOMAN_HAND_SVG}${MAN_HAND_SVG}</div><div class="emblem-sub">Swipe to Reveal</div>`;
     }
     return '<div class="emblem-sub">Swipe to Reveal</div>';
   }
@@ -1345,6 +1372,10 @@ class NeverHaveIEverApp {
     `;
 
     this.addIntroSparkles(card);
+
+    // The moving illustrations (glasses, beers, hands) wear deck-hued sparkles too
+    const arch = card.querySelector('.shot-arch, .beer-arch, .point-arch');
+    if (arch) this.addArchSparkles(arch);
 
     return card;
   }
