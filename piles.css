@@ -4122,6 +4122,12 @@ body.entry-instant .point-arch svg {
 /* Sparkles over the arches take the deck hue too; --sparkle-color comes in from
    app.js (addArchSparkles), everything without it keeps the card's violet */
 
+/* Hands: flat, capped stroke — they never thicken with screen width */
+
+.point-arch svg {
+  stroke-width: clamp(1.3px, 0.15cqi, 2px);
+}
+
 .card-back .card-sparkle {
   background: var(--sparkle-color, #c9a9ff);
   filter: drop-shadow(0 0 3px color-mix(in srgb, var(--sparkle-color, #c9a9ff) 80%, transparent));
