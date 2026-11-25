@@ -4119,13 +4119,6 @@ body.entry-instant .point-arch svg {
 
 /* ===== Revisions 76: deck hue + sparks on the moving illustrations ===== */
 
-/* Hands stay fine on big screens: flatter stroke growth with a low cap, and no
-   coloured halo, so the lines never read thicker than they are */
-
-.point-arch svg {
-  stroke-width: clamp(1.3px, 0.15cqi, 2px);
-}
-
 /* Sparkles over the arches take the deck hue too; --sparkle-color comes in from
    app.js (addArchSparkles), everything without it keeps the card's violet */
 
